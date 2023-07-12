@@ -6,14 +6,4 @@ export class AppService {
   getHello(): string {
     return 'Backend is running ...';
   }
-
-  getData(
-    request: Request,
-    body: object,
-    param: number,
-    query: string,
-  ): object {
-    console.log('request :', request);
-    return { data: { body, param, query } };
-  }
 }
