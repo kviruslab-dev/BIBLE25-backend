@@ -18,7 +18,6 @@ export class AdvertisementService {
   async getAddress(lat: string, lon: string) {
     const url = KAKAO_URL + `?x=${lon}&y=${lat}&input_coord=WGS84`;
 
-    console.log({ url });
     const axiosResult = await axios({
       url: url,
       method: 'get',
