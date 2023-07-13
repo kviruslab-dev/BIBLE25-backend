@@ -33,7 +33,6 @@ export class QueryRunnerService {
   }
 
   async getTotal(condition: any) {
-    console.log(condition);
     const SQL = `
     SELECT count(*) as total
     FROM ${condition.table}

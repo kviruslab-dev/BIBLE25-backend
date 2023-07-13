@@ -9,13 +9,14 @@ import {
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { AdvertisementService } from './advertisement.service';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { ONE_ADVERTISEMENT } from 'src/common/const';
 
 @UseInterceptors(SuccessInterceptor)
 @Controller('advertisement')
 export class AdvertisementController {
   constructor(
-    private readonly queryRunnerService: QueryRunnerService,
     private readonly advertisementService: AdvertisementService,
+    private readonly queryRunnerService: QueryRunnerService,
   ) {}
 
   @Get()
@@ -23,7 +24,7 @@ export class AdvertisementController {
     @Query('type') type: string,
     @Query('lat') lat: string,
     @Query('lon') lon: string,
-    @Query('location') location: number,
+    @Query('jang') jang: number,
     @Query('take') take?: number,
     @Query('page') page?: number,
   ) {
@@ -34,35 +35,92 @@ export class AdvertisementController {
       );
     }
 
+    const pageFromType = await this.advertisementService.getPageFromType(type);
+
     const { timezone, city } = await this.advertisementService.getAddress(
       lat,
       lon,
     );
 
-    const pageFromType = 1;
+    if (type === '메인') {
+      try {
+        const condition = {
+          select: 'id, location, title, image, link',
+          table: 'market',
+          where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+          orderBy: 'id asc',
+          limit: String(take ? take : 10),
+          offset: String(page ? take * (page - 1) : 0),
+        };
 
-    const condition = {
-      select: 'id, title, image, link',
-      table: 'market',
-      where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
-      orderBy: 'id asc',
-      limit: String(take ? take : 10),
-      offset: String(page ? take * (page - 1) : 0),
-    };
+        return await this.advertisementService.findAndCountInMain(condition);
+      } catch (error) {
+        const condition = {
+          select: 'id, location, title, image, link',
+          table: 'market',
+          where: `page=${pageFromType} and city='base' and active=1`,
+          orderBy: 'id asc',
+          limit: String(take ? take : 10),
+          offset: String(page ? take * (page - 1) : 0),
+        };
 
-    try {
-      return await this.queryRunnerService.findAndCount(condition);
-    } catch (error) {
-      const condition = {
-        select: 'id, title, image, link',
-        table: 'market',
-        where: `page=${pageFromType} and city='base' and active=1`,
-        orderBy: 'id asc',
-        limit: String(take ? take : 10),
-        offset: String(page ? take * (page - 1) : 0),
-      };
+        return await this.advertisementService.findAndCountInMain(condition);
+      }
+    }
 
-      return await this.queryRunnerService.findAndCount(condition);
+    if (ONE_ADVERTISEMENT.includes(type)) {
+      if (type === '성경') {
+        if (!jang) {
+          throw new HttpException(
+            `jang 값을 입력하지 않았습니다.`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+        try {
+          const condition = {
+            select: 'id, title, image, link',
+            table: 'market',
+            where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+            orderBy: 'id asc',
+            limit: String(take ? take : 10),
+            offset: String(page ? take * (page - 1) : 0),
+          };
+
+          return await this.advertisementService.findOneInBible(
+            condition,
+            jang,
+          );
+        } catch (err) {
+          const condition = {
+            select: 'id, title, image, link',
+            table: 'market',
+            where: `page=${pageFromType} and city='base' and active=1`,
+          };
+
+          return await this.advertisementService.findOneInBible(
+            condition,
+            jang,
+          );
+        }
+      }
+
+      try {
+        const condition = {
+          select: 'id, title, image, link',
+          table: 'market',
+          where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+        };
+
+        return await this.queryRunnerService.findOne(condition);
+      } catch (error) {
+        const condition = {
+          select: 'id, title, image, link',
+          table: 'market',
+          where: `page=${pageFromType} and city='base' and active=1`,
+        };
+
+        return await this.queryRunnerService.findOne(condition);
+      }
     }
   }
 }
