@@ -35,6 +35,13 @@ export class AdvertisementController {
       );
     }
 
+    if (!lat || !lon) {
+      throw new HttpException(
+        `lat, lon 값을 입력하지 않았습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const pageFromType = await this.advertisementService.getPageFromType(type);
 
     const { timezone, city } = await this.advertisementService.getAddress(
