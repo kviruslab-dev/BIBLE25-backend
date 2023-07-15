@@ -61,4 +61,37 @@ export class QueryRunnerService {
     }
     return data;
   }
+
+  async update(condition: any) {
+    try {
+      const SQL = `
+      UPDATE ${condition.table}
+      SET ${condition.set}
+      WHERE ${condition.where}
+      `;
+
+      await this.queryRunner.query(SQL);
+    } catch {
+      throw new HttpException(
+        `UPDATE 조건을 다시 확인해주세요.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async insert(condition: any) {
+    try {
+      const SQL = `
+      INSERT INTO ${condition.table}(${condition.column})
+      VALUES ${condition.values}
+      `;
+
+      await this.queryRunner.query(SQL);
+    } catch {
+      throw new HttpException(
+        `INSERT 조건을 다시 확인해주세요.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
