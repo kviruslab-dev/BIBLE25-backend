@@ -3,6 +3,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Patch,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -129,5 +130,23 @@ export class AdvertisementController {
         return await this.queryRunnerService.findOne(condition);
       }
     }
+  }
+
+  @Patch()
+  async updateTick(@Query('id') id: number) {
+    if (!id) {
+      throw new HttpException(
+        `id 값을 입력하지 않았습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const condition = {
+      table: 'market',
+      set: 'tick=tick+1',
+      where: `id=${id}`,
+    };
+
+    await this.queryRunnerService.update(condition);
   }
 }
