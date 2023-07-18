@@ -26,3 +26,58 @@ export const ONE_ADVERTISEMENT = [
   'QA',
   '포토',
 ];
+
+export const TODAY_CONTENTS = [
+  '',
+  'malsum',
+  'good',
+  'kido',
+  'calum',
+  'today',
+  'book',
+  'cross',
+  'letter',
+];
+
+//! TODAY 컨텐츠 각각의 SELECT 조건
+export const TODAY_SELECT_CONDITION = [
+  [],
+  [
+    `id`,
+    `today`,
+    `content`,
+    `title`,
+    'yojul',
+    'song',
+    'sungchal',
+    'kido',
+    'bible',
+  ],
+  [
+    `id`,
+    `today`,
+    `content`,
+    `title`,
+    `writer`,
+    'yojul as chodae',
+    'sungchal as muksang',
+    'kido',
+    'bible',
+    'song',
+  ],
+  [`id`, `today`, `content`, `title`, `writer`, 'yojul as slogan ', 'bible'],
+  [`id`, `today`, `content`, `title`, `writer`],
+  [
+    `id`,
+    `today`,
+    `content`,
+    `writer`,
+    `title`,
+    'yojul as middle',
+    'song as bible',
+    'bible as start',
+  ],
+  [`id`, `today`, `content`, `title`, `writer`],
+  [`id`, `today`, `image`, `title`],
+  [`id`, `today`, `image`, `title`],
+];

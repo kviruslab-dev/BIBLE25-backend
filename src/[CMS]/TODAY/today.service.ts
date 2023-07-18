@@ -1,49 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CHANSONG_URL } from 'src/common/const';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
 export class TodayService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
-  async getGubunFromType(type: string) {
-    const typeList = [
-      'malsum',
-      'good',
-      'kido',
-      'calum',
-      'today',
-      'book',
-      'cross',
-      'letter',
-    ];
-
-    return typeList.indexOf(type);
-  }
-
-  async findAndCountInMainContent(condition: any) {
-    if (condition.limit === 1) {
-      const today = new Date();
-      const data = [];
-
-      for (let gubun = 1; gubun < 7; gubun++) {
-        const condition = {
-          select:
-            'id, SUBSTRING(content, 1, 40) as content, name, title, image',
-          table: 'today_content',
-          where: `gubun=${gubun} and today<=${today}`,
-          orderBy: 'today desc',
-          limit: 1,
-          offset: 0,
-        };
-
-        data[data.length] = await this.queryRunnerService.findOne(condition);
-      }
-
-      return data;
-    }
-
-    if (condition.limit > 1) {
+  async findAndCountInMainContents(condition: any) {
+    if (typeof condition == 'object') {
       const data = await this.queryRunnerService.findAndCount(condition);
       const total = data.total;
 
@@ -56,6 +19,50 @@ export class TodayService {
 
       return { list: data, total };
     }
+
+    if (typeof condition === 'function') {
+      const data = [];
+
+      for (let gubun = 1; gubun < 7; gubun++) {
+        const temp = await this.queryRunnerService.findAndCount(
+          condition(gubun),
+        );
+        data[data.length] = temp.list[0];
+      }
+      const total = data.length;
+
+      if (total < 6) {
+        throw new HttpException(
+          `조건을 만족하는 데이터가 6개 미만입니다.`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      return { list: data, total };
+    }
+  }
+
+  async findAndCountInMainImages(condition: any) {
+    const crossData = await this.queryRunnerService.findAndCount(condition(7));
+    const letterData = await this.queryRunnerService.findAndCount(condition(8));
+    const total = crossData.total + letterData.total;
+
+    if (total < 6) {
+      throw new HttpException(
+        `조건을 만족하는 데이터가 6개 미만입니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return {
+      list: { cross: crossData.list, letter: letterData.list },
+      total: crossData.total + letterData.total,
+    };
+  }
+
+  async findOneInActive(condition: any) {
+    const data = await this.queryRunnerService.findAndCount(condition);
+    return data.list[0];
   }
 
   getToday() {

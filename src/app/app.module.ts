@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChansongModule } from 'src/[CMS]/CHANSONG/chansong.module';
 import { AdvertisementModule } from 'src/[CMS]/ADVERTISEMENT/advertisement.module';
+import { TodayModule } from 'src/[CMS]/TODAY/today.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AdvertisementModule } from 'src/[CMS]/ADVERTISEMENT/advertisement.modul
     }),
     AdvertisementModule,
     ChansongModule,
+    TodayModule,
   ],
   controllers: [AppController],
   providers: [AppService],
