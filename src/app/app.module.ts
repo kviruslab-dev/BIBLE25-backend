@@ -9,6 +9,7 @@ import { AdvertisementModule } from 'src/[CMS]/ADVERTISEMENT/advertisement.modul
 import { TodayModule } from 'src/[CMS]/TODAY/today.module';
 import { AutoModule } from 'src/[CMS]/AUTO/auto.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ProductModule } from 'src/[CMS]/PRODUCT/product.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ChansongModule,
     TodayModule,
     ScheduleModule.forRoot(),
+    ProductModule,
   ],
   controllers: [AppController],
   providers: [AppService],
