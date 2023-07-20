@@ -7,6 +7,8 @@ import { AppService } from './app.service';
 import { ChansongModule } from 'src/[CMS]/CHANSONG/chansong.module';
 import { AdvertisementModule } from 'src/[CMS]/ADVERTISEMENT/advertisement.module';
 import { TodayModule } from 'src/[CMS]/TODAY/today.module';
+import { AutoModule } from 'src/[CMS]/AUTO/auto.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -26,8 +28,10 @@ import { TodayModule } from 'src/[CMS]/TODAY/today.module';
       logging: process.env.MODE === 'development' ? ['query', 'error'] : false,
     }),
     AdvertisementModule,
+    AutoModule,
     ChansongModule,
     TodayModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

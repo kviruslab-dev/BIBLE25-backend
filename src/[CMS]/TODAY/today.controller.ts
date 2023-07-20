@@ -10,6 +10,7 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 import { TodayService } from './today.service';
 import { TODAY_CONTENTS, TODAY_SELECT_CONDITION } from 'src/common/const';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { getToday } from 'src/common/utils/functions';
 
 @UseInterceptors(SuccessInterceptor)
 @Controller('today')
@@ -57,7 +58,7 @@ export class TodayController {
 
         return await this.todayService.findAndCountInMainContents(condition);
       } catch {
-        const today = this.todayService.getToday();
+        const today = getToday();
 
         const condition = (gubun: number) => {
           return {
@@ -91,7 +92,7 @@ export class TodayController {
 
         return await this.todayService.findAndCountInMainImages(condition);
       } catch {
-        const today = this.todayService.getToday();
+        const today = getToday();
 
         const condition = (gubun: number) => {
           return {
@@ -112,7 +113,7 @@ export class TodayController {
      */
     if (TODAY_CONTENTS.includes(type)) {
       const gubun = TODAY_CONTENTS.indexOf(type);
-      const today = this.todayService.getToday();
+      const today = getToday();
 
       if (!id) {
         // TODO [GET] today/['malsumlist', ... , 'letterlist'] (keyword 있음)
