@@ -23,7 +23,7 @@ export class AutoController {
       where: 'TRUE',
     };
 
-    await this.queryRunnerService.update(conditionForReset);
+    // await this.queryRunnerService.update(conditionForReset);
 
     const conditionForUpToDate = {
       table: 'today_content',
@@ -31,7 +31,7 @@ export class AutoController {
       where: `today = '${today}'`,
     };
 
-    await this.queryRunnerService.update(conditionForUpToDate);
+    // await this.queryRunnerService.update(conditionForUpToDate);
 
     const conditionForResetImage = {
       table: 'today_image',
@@ -39,7 +39,7 @@ export class AutoController {
       where: 'TRUE',
     };
 
-    await this.queryRunnerService.update(conditionForResetImage);
+    // await this.queryRunnerService.update(conditionForResetImage);
 
     const oneDaysAgo = getNDaysAgo(1);
     const twoDaysAgo = getNDaysAgo(2);
@@ -50,7 +50,7 @@ export class AutoController {
       where: `today='${today}' or today='${oneDaysAgo}' or today='${twoDaysAgo}'`,
     };
 
-    await this.queryRunnerService.update(conditionForUpToDateImage);
+    // await this.queryRunnerService.update(conditionForUpToDateImage);
 
     this.logger.debug('TODAY 컨텐츠들의 active 값을 최신화합니다.');
 
