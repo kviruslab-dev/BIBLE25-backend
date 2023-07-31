@@ -114,13 +114,14 @@ export class TodayController {
     if (TODAY_CONTENTS.includes(type)) {
       const gubun = TODAY_CONTENTS.indexOf(type);
       const today = getToday();
+      const tableCondition = gubun <= 6 ? 'today_content' : 'today_image';
 
       if (!id) {
         // TODO [GET] today/['malsumlist', ... , 'letterlist'] (keyword 있음)
         if (keyword) {
           const condition = {
             select: 'id, title',
-            table: 'today_content',
+            table: tableCondition,
             where: `title like '%${keyword.trim()}%' and today <= '${today}' and gubun=${gubun}`,
             orderBy: 'today desc',
             limit: String(take ? take : 10),
@@ -134,7 +135,7 @@ export class TodayController {
         if (!keyword) {
           const condition = {
             select: 'id, title',
-            table: 'today_content',
+            table: tableCondition,
             where: `today <= '${today}' and gubun=${gubun}`,
             orderBy: 'today desc',
             limit: String(take ? take : 10),
@@ -146,8 +147,6 @@ export class TodayController {
       }
 
       if (id) {
-        const tableCondition = gubun <= 6 ? 'today_content' : 'today_image';
-
         // TODO [GET] today/['malsum',...,'letter'] -> id = -1;
         if (id === -1) {
           const condition = {
