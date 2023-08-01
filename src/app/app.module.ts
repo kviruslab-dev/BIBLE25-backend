@@ -10,6 +10,7 @@ import { TodayModule } from 'src/[CMS]/TODAY/today.module';
 import { AutoModule } from 'src/[CMS]/AUTO/auto.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ProductModule } from 'src/[CMS]/PRODUCT/product.module';
+import { BibleModule } from 'src/[CMS]/BIBLE/bible.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ProductModule } from 'src/[CMS]/PRODUCT/product.module';
     }),
     AdvertisementModule,
     AutoModule,
+    BibleModule,
     ChansongModule,
     TodayModule,
     ScheduleModule.forRoot(),
