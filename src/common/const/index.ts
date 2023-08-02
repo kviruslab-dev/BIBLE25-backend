@@ -3,15 +3,15 @@ export const CHANSONG_URL = 'https://ch2ho.bible25.co.kr/kviruslab/chansong/';
 export const KAKAO_URL =
   'https://dapi.kakao.com/v2/local/geo/coord2address.json';
 
-//! 포토 URL
+export const BIBLE_AUDIO_URL =
+  'https://ch2ho.bible25.co.kr/kviruslab/bible/audio_ver02/';
+
 export const BIBLE_PHOTO_URL =
   'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/';
 
-//! 성경지도 URL
 export const BIBLE_MAP_URL =
   'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblemap/';
 
-//! 포토성경사전 URL
 export const BIBLE_PHOTODIC_URL =
   'https://ch2ho.bible25.co.kr/kviruslab/intellectual/bibledic/';
 
@@ -51,7 +51,6 @@ export const TODAY_CONTENTS = [
   'letter',
 ];
 
-//! TODAY 컨텐츠 각각의 SELECT 조건
 export const TODAY_SELECT_CONDITION = [
   [],
   [

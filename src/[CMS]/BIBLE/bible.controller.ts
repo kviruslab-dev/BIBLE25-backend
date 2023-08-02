@@ -18,7 +18,6 @@ export class BibleController {
     private readonly queryRunnerService: QueryRunnerService,
   ) {}
 
-  // TODO [GET] 성경음성
   @Get()
   async getData(
     @Query('type') type: string,
@@ -74,7 +73,6 @@ export class BibleController {
       }
     }
 
-    // TODO 성경지도 (biblemap)
     if (type === 'biblemap') {
       if (id) {
         const condition = {
@@ -224,15 +222,14 @@ export class BibleController {
       return await this.bibleService.findAndCountPhoto(condition);
     }
 
-    //TODO [작업 진행 중]
     if (type === 'bibleaudio') {
       const condition = {
-        select: 'id, name',
-        table: 'bible_dic',
-        where: `id = ${id}`,
+        select: 'id, book, jang, name',
+        table: 'sys_bible_mp',
+        where: `book = '${book}' and jang = '${jang}'`,
       };
 
-      return await this.bibleService.findAndCountPhoto(condition);
+      return await this.bibleService.findOneBibleAudio(condition);
     }
   }
 }

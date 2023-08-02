@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { BIBLE_MAP_URL, BIBLE_PHOTO_URL } from 'src/common/const';
+import {
+  BIBLE_AUDIO_URL,
+  BIBLE_MAP_URL,
+  BIBLE_PHOTO_URL,
+} from 'src/common/const';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -9,7 +13,7 @@ export class BibleService {
   async findOnePhotodic(condition: any) {
     const data = await this.queryRunnerService.findOne(condition);
 
-    const conditionForImage = {
+    const conditionToGetImage = {
       select: 'title, image',
       table: 'img_info',
       where: `image_gubun = 'photo_bible_dic' and imgidx = ${data.imgidx}`,
@@ -19,7 +23,7 @@ export class BibleService {
     };
 
     const { list } = await this.queryRunnerService.findAndCount(
-      conditionForImage,
+      conditionToGetImage,
     );
 
     data['image'] = list.map((val: any) => {
@@ -36,7 +40,7 @@ export class BibleService {
   async findOneBibleMap(condition: any) {
     const data = await this.queryRunnerService.findOne(condition);
 
-    const conditionForImage = {
+    const conditionToGetImage = {
       select: 'title, image',
       table: 'img_info',
       where: `image_gubun = 'bible_map' and imgidx = ${data.imgidx}`,
@@ -46,7 +50,7 @@ export class BibleService {
     };
 
     const { list } = await this.queryRunnerService.findAndCount(
-      conditionForImage,
+      conditionToGetImage,
     );
 
     data['image'] = list.map((val: any) => {
@@ -66,14 +70,12 @@ export class BibleService {
     );
 
     if (total === 0) {
-      const data = {
+      return {
         id: -1,
         content: '\n',
         image:
           'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/default.png',
       };
-
-      return data;
     }
 
     list.map((val: any) => {
@@ -81,5 +83,13 @@ export class BibleService {
     });
 
     return { list, total };
+  }
+
+  async findOneBibleAudio(condition: any) {
+    const data = await this.queryRunnerService.findOne(condition);
+
+    data.name = BIBLE_AUDIO_URL + data.name;
+
+    return data;
   }
 }
