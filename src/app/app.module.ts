@@ -11,6 +11,7 @@ import { AutoModule } from 'src/[CMS]/AUTO/auto.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ProductModule } from 'src/[CMS]/PRODUCT/product.module';
 import { BibleModule } from 'src/[CMS]/BIBLE/bible.module';
+import { BoardModule } from 'src/[CMS]/BOARD/board.module';
 
 @Module({
   imports: [
@@ -29,13 +30,14 @@ import { BibleModule } from 'src/[CMS]/BIBLE/bible.module';
       synchronize: JSON.parse(process.env.DATABASE_SYNCHRONIZE),
       logging: process.env.MODE === 'development' ? ['query', 'error'] : false,
     }),
+    ScheduleModule.forRoot(),
     AdvertisementModule,
     AutoModule,
     BibleModule,
+    BoardModule,
     ChansongModule,
-    TodayModule,
-    ScheduleModule.forRoot(),
     ProductModule,
+    TodayModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -82,8 +82,8 @@ export class QueryRunnerService {
   async insert(condition: any) {
     try {
       const SQL = `
-      INSERT INTO ${condition.table}(${condition.column})
-      VALUES ${condition.values}
+      INSERT INTO ${condition.table} (${condition.column})
+      VALUES (${condition.values})
       `;
 
       await this.queryRunner.query(SQL);
