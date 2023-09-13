@@ -94,4 +94,15 @@ export class QueryRunnerService {
       );
     }
   }
+
+  async query(SQL: string) {
+    try {
+      return this.queryRunner.query(SQL);
+    } catch {
+      throw new HttpException(
+        `qeury를 다시 확인해주세요.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }

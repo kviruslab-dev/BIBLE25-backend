@@ -12,6 +12,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ProductModule } from 'src/[CMS]/PRODUCT/product.module';
 import { BibleModule } from 'src/[CMS]/BIBLE/bible.module';
 import { BoardModule } from 'src/[CMS]/BOARD/board.module';
+import { SearchModule } from 'src/[CMS]/SEARCH/search.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { BoardModule } from 'src/[CMS]/BOARD/board.module';
     ChansongModule,
     ProductModule,
     TodayModule,
+    SearchModule,
   ],
   controllers: [AppController],
   providers: [AppService],

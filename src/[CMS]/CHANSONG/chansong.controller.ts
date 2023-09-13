@@ -82,6 +82,22 @@ export class ChansongController {
       return await this.chansongService.findAndCount(condition);
     }
 
+    if (type === 'kido') {
+      if (!version) {
+        throw new HttpException(
+          `version 값을 입력하지 않았습니다. ( 1 : 2 )`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      const condition = {
+        select: 'content',
+        table: 'sys_kido',
+        where: `version = ${version}`,
+      };
+
+      return await this.chansongService.findOne(condition);
+    }
+
     if (type === 'sado') {
       if (!version) {
         throw new HttpException(
@@ -89,6 +105,7 @@ export class ChansongController {
           HttpStatus.BAD_REQUEST,
         );
       }
+
       const condition = {
         select: 'content',
         table: 'sys_sado',
@@ -98,7 +115,4 @@ export class ChansongController {
       return await this.chansongService.findOne(condition);
     }
   }
-
-  // TODO [GET] hymm/category
-  // TODO [POST] hymm/list
 }
