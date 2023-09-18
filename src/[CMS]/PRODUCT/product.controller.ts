@@ -7,18 +7,20 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ProductService } from './product.service';
-
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('PRODUCT')
 @Controller('product')
+@UseInterceptors(SuccessInterceptor)
 export class ProductController {
   constructor(
     private readonly productService: ProductService,
     private readonly queryRunnerService: QueryRunnerService,
   ) {}
 
+  @ApiOperation({ summary: '상품 데이터 가져오기' })
   @Get()
   async getData() {
     const condition = (gubun: number) => {
@@ -35,6 +37,8 @@ export class ProductController {
     return await this.productService.findAndCount(condition);
   }
 
+  @ApiQuery({ name: 'id', required: true, type: String })
+  @ApiOperation({ summary: '상품 클릭 수 증가시키기' })
   @Patch()
   async updateTick(@Query('id') id: number) {
     if (!id) {

@@ -6,18 +6,34 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { BibleService } from './bible.service';
 
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('BIBLE')
 @Controller('bible')
+@UseInterceptors(SuccessInterceptor)
 export class BibleController {
   constructor(
     private readonly bibleService: BibleService,
     private readonly queryRunnerService: QueryRunnerService,
   ) {}
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description:
+      '타입 : photodic, biblemap, dic, study, note, muksang, qna, photo, bibleaudio',
+  })
+  @ApiQuery({ name: 'id', required: false, type: String })
+  @ApiQuery({ name: 'take', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: String })
+  @ApiQuery({ name: 'keyword', required: false, type: String })
+  @ApiQuery({ name: 'book', required: false, type: String })
+  @ApiQuery({ name: 'jang', required: false, type: String })
+  @ApiOperation({ summary: '성경 관련 데이터 가져오기' })
   @Get()
   async getData(
     @Query('type') type: string,
@@ -30,7 +46,7 @@ export class BibleController {
   ) {
     if (!type) {
       throw new HttpException(
-        `type 값을 입력하지 않았습니다. ( photodic | biblemap | dic | study | note | muksang | qna | photo | bibleaudio )`,
+        `type 값을 입력하지 않았습니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -147,6 +163,13 @@ export class BibleController {
 
         return await this.queryRunnerService.findAndCount(condition);
       }
+    }
+
+    if (!book || !jang) {
+      throw new HttpException(
+        `book, jang 값을 입력하지 않았습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     if (type === 'study') {

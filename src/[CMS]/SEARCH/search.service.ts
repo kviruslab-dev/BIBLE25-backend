@@ -37,7 +37,7 @@ export class SearchService {
     const condition = {
       select: 'recno as id, bname as title, SUBSTRING(krv, 1, 30) as content',
       table: 'com_mbe_tbl',
-      where: `krv like '%${keyword.trim}%'`,
+      where: `krv like '%${keyword.trim()}%'`,
       orderBy: 'recno asc',
       limit: String(take ? take : 10),
       offset: String(page ? take * (page - 1) : 0),
@@ -58,9 +58,9 @@ export class SearchService {
 
   async findAndCountDic(take: number, page: number, keyword: string) {
     const condition = {
-      select: 'id, title, SUBSTRING(content, 1, 30) as content',
+      select: 'id, title, SUBSTRING(content, 1, 50) as content',
       table: 'bible_dic',
-      where: `title like '%${keyword.trim}%'`,
+      where: `title like '%${keyword.trim()}%'`,
       orderBy: 'id asc',
       limit: String(take ? take : 10),
       offset: String(page ? take * (page - 1) : 0),
@@ -104,9 +104,9 @@ export class SearchService {
 
   async findAndCountPhotodic(take: number, page: number, keyword: string) {
     const condition = {
-      select: 'id, title, SUBSTRING(content, 1, 30) as content',
+      select: 'id, title, SUBSTRING(content, 1, 50) as content',
       table: 'bible_photodic',
-      where: `title like '%${keyword.trim}%'`,
+      where: `title like '%${keyword.trim()}%'`,
       orderBy: 'id asc',
       limit: String(take ? take : 10),
       offset: String(page ? take * (page - 1) : 0),
@@ -152,7 +152,7 @@ export class SearchService {
     const condition = {
       select: 'id, title, SUBSTRING(content, 1, 30) as content',
       table: 'bible_map',
-      where: `title like '%${keyword.trim}%'`,
+      where: `title like '%${keyword.trim()}%'`,
       orderBy: 'id asc',
       limit: String(take ? take : 10),
       offset: String(page ? take * (page - 1) : 0),
@@ -190,16 +190,13 @@ export class SearchService {
   }
 
   async findAndCountJusuk(take: number, page: number, keyword: string) {
-    const condition = {
-      select: 'id, title, SUBSTRING(content, 1, 30) as content',
-      table: 'deluxe_nadb',
-      where: `title like '%${keyword.trim}%'`,
-      orderBy: 'id asc',
-      limit: String(take ? take : 10),
-      offset: String(page ? take * (page - 1) : 0),
-    };
+    const sTake = String(take ? take : 10);
+    const sPage = String(page ? take * (page - 1) : 0);
+    const skeyword = `%${keyword.trim()}%`;
 
-    return await this.queryRunnerService.findAndCount(condition);
+    const sql = `SELECT 1 as sequence, concat(11, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_matt_new WHERE title like '${skeyword}'  UNION ALL SELECT 2 as sequence, concat(12, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_ben WHERE title like '${skeyword}'  UNION ALL SELECT 3 as sequence, concat(13, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_nadb WHERE title like '${skeyword}'  UNION ALL SELECT 4 as sequence, concat(14, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_cannon WHERE title like '${skeyword}'  UNION ALL SELECT 5 as sequence, concat(15, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_range WHERE title like '${skeyword}'  UNION ALL SELECT 6 as sequence, concat(16, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_pulpit WHERE title like '${skeyword}'  UNION ALL SELECT 7 as sequence, concat(17, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_emet WHERE title like '${skeyword}'  UNION ALL SELECT 8 as sequence, concat(18, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_jang WHERE title like '${skeyword}'  UNION ALL SELECT 9 as sequence, concat(19, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_season WHERE title like '${skeyword}'  UNION ALL SELECT 10 as sequence, concat(20, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_mipung WHERE title like '${skeyword}'  UNION ALL SELECT 11 as sequence, concat(21, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_meyer WHERE title like '${skeyword}'  UNION ALL SELECT 12 as sequence, concat(22, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_chong WHERE title like '${skeyword}'  UNION ALL SELECT 13 as sequence, concat(23, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_wil WHERE title like '${skeyword}'  UNION ALL SELECT 14 as sequence, concat(24, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_grace WHERE title like '${skeyword}'  UNION ALL SELECT 15 as sequence, concat(25, id) as id, title, SUBSTRING(content, 1, 30) as content FROM deluxe_seven WHERE title like '${skeyword}' ORDER BY sequence, id ASC  limit ${sTake} offset ${sPage};`;
+
+    return await this.queryRunnerService.query(sql);
   }
 
   async findOneKanghae(id: number) {
@@ -238,7 +235,7 @@ export class SearchService {
   async findAndCountKanghae(take: number, page: number, keyword: string) {
     const sTake = String(take ? take : 10);
     const sPage = String(page ? take * (page - 1) : 0);
-    const skeyword = `%${keyword.trim}%`;
+    const skeyword = `%${keyword.trim()}%`;
 
     const sql = `
         SELECT 1 as sequence, concat(51, wr_id) as id, wr_subject as title, SUBSTRING(wr_content, 1, 30) as content FROM g5_write_g71 WHERE wr_subject like '${skeyword}' UNION ALL SELECT 2 as sequence, concat(52, wr_id) as id, wr_subject as title, SUBSTRING(wr_content, 1, 30) as content FROM g5_write_Sagun1 WHERE wr_subject like '${skeyword}' UNION ALL SELECT 3 as sequence, concat(53, wr_id) as id, wr_subject as title, SUBSTRING(wr_content, 1, 30) as content FROM g5_write_Sagun2 WHERE wr_subject like '${skeyword}' UNION ALL SELECT 4 as sequence, concat(54, wr_id) as id, wr_subject as title, SUBSTRING(wr_content, 1, 30) as content FROM g5_write_Dtp WHERE wr_subject like '${skeyword}' UNION ALL SELECT 5 as sequence, concat(55, wr_id) as id, wr_subject as title, SUBSTRING(wr_content, 1, 30) as content FROM g5_write_Dtp_Chong WHERE wr_subject like '${skeyword}' UNION ALL SELECT 6 as sequence, concat(56, idx) as id, title, SUBSTRING(context, 1, 30) as content FROM BIBLE_KANG WHERE title like '${skeyword}' ORDER BY sequence, id ASC  limit ${sTake} offset ${sPage};`;

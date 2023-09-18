@@ -35,8 +35,10 @@ const bootstrap = async () => {
   });
 
   const config = new DocumentBuilder()
-    .setTitle(`API 문서`)
-    .setDescription(`This is osuolfou's api documentation.`)
+    .setTitle(`BIBLE25 API`)
+    .setDescription(
+      `여호와는 나의 목자시니, 내가 부족함이 없으리로다. (시편 21:1)`,
+    )
     .setVersion('1.0.0')
     .addBearerAuth(
       {

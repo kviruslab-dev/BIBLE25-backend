@@ -11,27 +11,42 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 import { AdvertisementService } from './advertisement.service';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('ADVERTISEMENT')
 @Controller('advertisement')
+@UseInterceptors(SuccessInterceptor)
 export class AdvertisementController {
   constructor(
     private readonly advertisementService: AdvertisementService,
     private readonly queryRunnerService: QueryRunnerService,
   ) {}
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description:
+      '타입 : main, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo',
+  })
+  @ApiQuery({ name: 'lat', required: true, type: String })
+  @ApiQuery({ name: 'lon', required: true, type: String })
+  @ApiQuery({ name: 'take', required: false, type: Number })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'jang', required: false, type: Number })
+  @ApiOperation({ summary: '광고 데이터 가져오기' })
   @Get()
   async getData(
     @Query('type') type: string,
     @Query('lat') lat: string,
     @Query('lon') lon: string,
-    @Query('jang') jang: number,
     @Query('take') take?: number,
     @Query('page') page?: number,
+    @Query('jang') jang?: number,
   ) {
     if (!type) {
       throw new HttpException(
-        `type 값을 입력하지 않았습니다. ( 메인 | 첫화면 | 마지막종료 | 성경 | 찬송 | 말씀따라 | 굿모닝하나님 | 오늘의말씀 | 축복기도 | 칼럼 | 십자가 | 손편지 | 오늘의책 | 성경일독 | 성경사전 | 성서지도 | 포토성경사전 | 스터디 | 핵심 | 묵상 | QA | 포토 )`,
+        `type 값을 입력하지 않았습니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -50,7 +65,7 @@ export class AdvertisementController {
       lon,
     );
 
-    if (type === '메인') {
+    if (type === 'main') {
       try {
         const condition = {
           select: 'id, location, title, image, link',
@@ -77,7 +92,7 @@ export class AdvertisementController {
     }
 
     if (ONE_ADVERTISEMENT.includes(type)) {
-      if (type === '성경') {
+      if (type === 'bible') {
         if (!jang) {
           throw new HttpException(
             `jang 값을 입력하지 않았습니다.`,
@@ -135,6 +150,7 @@ export class AdvertisementController {
     }
   }
 
+  @ApiOperation({ summary: '광고 클릭 수 증가시키기' })
   @Patch()
   async updateTick(@Query('id') id: number) {
     if (!id) {

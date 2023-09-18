@@ -6,14 +6,27 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { ChansongService } from './chansong.service';
 
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('CHANSONG')
 @Controller('chansong')
+@UseInterceptors(SuccessInterceptor)
 export class ChansongController {
   constructor(private readonly chansongService: ChansongService) {}
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description: '타입 : song, gyodok, kido, sado',
+  })
+  @ApiQuery({ name: 'id', required: false, type: String })
+  @ApiQuery({ name: 'take', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: String })
+  @ApiQuery({ name: 'version', required: false, type: String })
+  @ApiOperation({ summary: '찬송가 관련 데이터 가져오기' })
   @Get()
   async getData(
     @Query('type') type: string,
@@ -24,7 +37,7 @@ export class ChansongController {
   ) {
     if (!type) {
       throw new HttpException(
-        `type 값을 입력하지 않았습니다. ( song | gyodok | kido | sado )`,
+        `type 값을 입력하지 않았습니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }

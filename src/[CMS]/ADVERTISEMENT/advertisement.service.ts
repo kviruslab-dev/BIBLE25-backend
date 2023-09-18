@@ -32,10 +32,37 @@ export class AdvertisementService {
   }
 
   async getPageFromType(type: string) {
+    const typeToHangul = {
+      main: '메인',
+      first: '첫화면',
+      last: '마지막종료',
+      bible: '성경',
+      chansong: '찬송',
+      malsum: '말씀따라',
+      good: '굿모닝하나님',
+      today: '오늘의말씀',
+      kido: '축복기도',
+      calum: '칼럼',
+      cross: '십자가',
+      letter: '손편지',
+      book: '오늘의책',
+      ildok: '성경일독',
+      dic: '성경사전',
+      biblemap: '성서지도',
+      photodic: '포토성경사전',
+      study: '스터디',
+      note: '핵심',
+      muksnag: '묵상',
+      qna: 'QA',
+      photo: '포토',
+    };
+
+    const hansulName = typeToHangul[type];
+
     const condition = {
       select: 'page',
       table: 'market_page',
-      where: `name='${type}'`,
+      where: `name='${hansulName}'`,
     };
 
     const data = await this.queryRunnerService.findOne(condition);
@@ -65,8 +92,15 @@ export class AdvertisementService {
 
   async findOneInBible(condition: any, jang: number) {
     const data = await this.queryRunnerService.findAndCount(condition);
-    const index = jang % 10;
 
-    return data.list[index];
+    if (jang <= 10) {
+      const index = jang - 1;
+      return data.list[index];
+    }
+
+    if (jang > 10) {
+      const index = (jang % 10) - 1;
+      return data.list[index];
+    }
   }
 }

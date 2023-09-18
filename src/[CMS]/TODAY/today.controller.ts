@@ -11,15 +11,28 @@ import { TodayService } from './today.service';
 import { TODAY_CONTENTS, TODAY_SELECT_CONDITION } from 'src/common/const';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { getToday } from 'src/common/utils/functions';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('TODAY')
 @Controller('today')
+@UseInterceptors(SuccessInterceptor)
 export class TodayController {
   constructor(
     private readonly todayService: TodayService,
     private readonly queryRunnerService: QueryRunnerService,
   ) {}
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description:
+      '타입 : maincontents, mainimages, malsum, good, kido, calum, today, book, cross, letter',
+  })
+  @ApiQuery({ name: 'id', required: false, type: String })
+  @ApiQuery({ name: 'take', required: false, type: String })
+  @ApiQuery({ name: 'page', required: false, type: String })
+  @ApiQuery({ name: 'keyword', required: false, type: String })
   @Get()
   async getData(
     @Query('type') type: string,
@@ -33,12 +46,11 @@ export class TodayController {
     // TODO [GET] today/contents_gubun  -- 어드민 툴에서 사용하는 API
     // TODO [POST] today/content_cal -- 어드민 툴 API 만들기 전 테스트로 만든 API
     // TODO [GET] today/content_name -- ??? 어드민 툴에서 사용하는지 모름
-
     // TODO [GET] today/lifecycle
 
     if (!type) {
       throw new HttpException(
-        `type 값을 입력하지 않았습니다. ( maincontents | mainimages | malsum | good | kido | calum | today | book | cross | letter )`,
+        `type 값을 입력하지 않았습니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }

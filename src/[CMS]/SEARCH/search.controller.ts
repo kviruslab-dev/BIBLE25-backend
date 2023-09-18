@@ -6,15 +6,22 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SearchService } from './search.service';
 
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('SEARCH')
 @Controller('search')
+@UseInterceptors(SuccessInterceptor)
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description: '타입 : total, bible, dic, photodic, biblemap, jusuk, kanghae',
+  })
   @ApiQuery({ name: 'id', required: false, type: Number })
   @ApiQuery({ name: 'take', required: false, type: Number })
   @ApiQuery({ name: 'page', required: false, type: Number })
@@ -29,90 +36,56 @@ export class SearchController {
   ) {
     if (!type) {
       throw new HttpException(
-        `type 값을 입력하지 않았습니다. ( maincontents | mainimages | malsum | good | kido | calum | today | book | cross | letter )`,
+        `type 값을 입력하지 않았습니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    //! 전체 검색 (keyword, take, page)
+    //! 전체 검색
     if (type === 'total') {
       return await this.searchService.findSearchingData(5, 0, keyword);
     }
 
-    //! 성경 검색 (keyword, take, page 또는 id)
+    //! 성경 검색
     if (type === 'bible') {
-      if (id) {
-        return await this.searchService.findOneBible(id);
-      }
-
-      if (!id) {
-        return await this.searchService.findAndCountBible(take, page, keyword);
-      }
+      return id
+        ? await this.searchService.findOneBible(id)
+        : await this.searchService.findAndCountBible(take, page, keyword);
     }
 
-    //! 사전 검색 (keyword, take, page 또는 id)
+    //! 사전 검색
     if (type === 'dic') {
-      if (id) {
-        return await this.searchService.findOneDic(id);
-      }
-
-      if (!id) {
-        return await this.searchService.findAndCountDic(take, page, keyword);
-      }
+      return id
+        ? await this.searchService.findOneDic(id)
+        : await this.searchService.findAndCountDic(take, page, keyword);
     }
 
-    //! 포토사전 검색 (keyword, take, page 또는 id)
+    //! 포토사전 검색
     if (type === 'photodic') {
-      if (id) {
-        return await this.searchService.findOnePhotodic(id);
-      }
-
-      if (!id) {
-        return await this.searchService.findAndCountPhotodic(
-          take,
-          page,
-          keyword,
-        );
-      }
+      return id
+        ? await this.searchService.findOnePhotodic(id)
+        : await this.searchService.findAndCountPhotodic(take, page, keyword);
     }
 
-    //! 성서 지도 검색 (keyword, take, page 또는 id)
+    //! 성서 지도 검색
     if (type === 'biblemap') {
-      if (id) {
-        return await this.searchService.findOneBiblemap(id);
-      }
-
-      if (!id) {
-        return await this.searchService.findAndCountBiblemap(
-          take,
-          page,
-          keyword,
-        );
-      }
+      return id
+        ? await this.searchService.findOneBiblemap(id)
+        : await this.searchService.findAndCountBiblemap(take, page, keyword);
     }
 
-    //! 주석 검색 (keyword, take, page 또는 id)
+    //! 주석 검색
     if (type === 'jusuk') {
-      if (id) {
-        return this.searchService.findOneJusuk(id);
-      }
-
-      if (!id) {
-        return this.searchService.findAndCountJusuk(take, page, keyword);
-      }
+      return id
+        ? await this.searchService.findOneJusuk(id)
+        : await this.searchService.findAndCountJusuk(take, page, keyword);
     }
 
-    //! 강해 검색 (keyword, take, page 또는 id)
+    //! 강해 검색
     if (type === 'kanghae') {
-      if (id) {
-        return this.searchService.findOneKanghae(id);
-      }
-
-      if (!id) {
-        return this.searchService.findAndCountKanghae(take, page, keyword);
-      }
+      return id
+        ? await this.searchService.findOneKanghae(id)
+        : await this.searchService.findAndCountKanghae(take, page, keyword);
     }
   }
-
-  //! 찬송가 검색 (keyword, take, page 또는 id)
 }

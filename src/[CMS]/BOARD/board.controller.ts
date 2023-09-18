@@ -6,13 +6,15 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { BoardService } from './board.service';
 import { InquireDto } from './dtos/board.dto';
 
-@UseInterceptors(SuccessInterceptor)
+@ApiTags('BOARD')
 @Controller('board')
+@UseInterceptors(SuccessInterceptor)
 export class BoardController {
   constructor(
     private readonly boardService: BoardService,
@@ -30,6 +32,12 @@ export class BoardController {
     await this.queryRunnerService.insert(condition);
   }
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description: '타입 : 1, 2, 3',
+  })
   @Get()
   async getData(@Query('type') type: string) {
     if (['1', '2', '3'].includes(type)) {
