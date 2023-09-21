@@ -5,7 +5,7 @@ import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 export class TodayService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
-  async findAndCountInMainContents(condition: any) {
+  async findInMainContents(condition: any) {
     if (typeof condition == 'object') {
       const data = await this.queryRunnerService.findAndCount(condition);
       const total = data.total;
@@ -17,7 +17,7 @@ export class TodayService {
         );
       }
 
-      return { list: data, total };
+      return data;
     }
 
     if (typeof condition === 'function') {
@@ -38,11 +38,11 @@ export class TodayService {
         );
       }
 
-      return { list: data, total };
+      return data;
     }
   }
 
-  async findAndCountInMainImages(condition: any) {
+  async findInMainImages(condition: any) {
     const crossData = await this.queryRunnerService.findAndCount(condition(7));
     const letterData = await this.queryRunnerService.findAndCount(condition(8));
     const total = crossData.total + letterData.total;
@@ -54,10 +54,7 @@ export class TodayService {
       );
     }
 
-    return {
-      list: { cross: crossData.list, letter: letterData.list },
-      total: crossData.total + letterData.total,
-    };
+    return { cross: crossData.list, letter: letterData.list };
   }
 
   async findOneInActive(condition: any) {

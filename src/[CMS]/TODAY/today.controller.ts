@@ -68,7 +68,7 @@ export class TodayController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.todayService.findAndCountInMainContents(condition);
+        return await this.todayService.findInMainContents(condition);
       } catch {
         const today = getToday();
 
@@ -84,7 +84,7 @@ export class TodayController {
           };
         };
 
-        return await this.todayService.findAndCountInMainContents(condition);
+        return await this.todayService.findInMainContents(condition);
       }
     }
 
@@ -102,7 +102,7 @@ export class TodayController {
           };
         };
 
-        return await this.todayService.findAndCountInMainImages(condition);
+        return await this.todayService.findInMainImages(condition);
       } catch {
         const today = getToday();
 
@@ -117,7 +117,7 @@ export class TodayController {
           };
         };
 
-        return await this.todayService.findAndCountInMainImages(condition);
+        return await this.todayService.findInMainImages(condition);
       }
     }
     /**
