@@ -44,6 +44,10 @@ export class AdvertisementController {
     @Query('page') page?: number,
     @Query('jang') jang?: number,
   ) {
+    if (true) {
+      throw new HttpException('500 에러 테스트', 500);
+    }
+
     if (!type) {
       throw new HttpException(
         `type 값을 입력하지 않았습니다.`,
