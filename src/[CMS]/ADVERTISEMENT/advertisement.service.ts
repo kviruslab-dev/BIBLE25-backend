@@ -74,23 +74,7 @@ export class AdvertisementService {
 
   async findAndCountInMain(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
-    const total = data.total;
-
-    return { list: this.groupByLocation(data.list), total };
-  }
-
-  groupByLocation(inputArray: any) {
-    const groups = [];
-
-    inputArray.forEach((obj: any) => {
-      const location = obj.location - 1;
-      if (!groups[location]) {
-        groups[location] = [];
-      }
-      groups[location].push(obj);
-    });
-
-    return groups;
+    return data.list;
   }
 
   async findAndCountInBible(condition: any, jang: number) {
