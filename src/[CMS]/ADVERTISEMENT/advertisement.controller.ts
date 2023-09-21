@@ -27,7 +27,7 @@ export class AdvertisementController {
     required: true,
     type: String,
     description:
-      '타입 : main, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo',
+      '타입 : main01, main02, main03, main04, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo',
   })
   @ApiQuery({ name: 'lat', required: true, type: String })
   @ApiQuery({ name: 'lon', required: true, type: String })
@@ -65,12 +65,14 @@ export class AdvertisementController {
       lon,
     );
 
-    if (type === 'main') {
+    if (['main01', 'main02', 'main03', 'main04'].includes(type)) {
+      const location = { main01: 1, main02: 2, main03: 3, main04: 4 };
+
       try {
         const condition = {
           select: 'id, location, title, image, link',
           table: 'market',
-          where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+          where: `page=${pageFromType} and location =${location[type]} and timezone='${timezone}' and city='${city}' and active=1`,
           orderBy: 'id asc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
@@ -81,7 +83,7 @@ export class AdvertisementController {
         const condition = {
           select: 'id, location, title, image, link',
           table: 'market',
-          where: `page=${pageFromType} and city='base' and active=1`,
+          where: `page=${pageFromType} and location =${location[type]} and city='base' and active=1`,
           orderBy: 'id asc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),

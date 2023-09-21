@@ -33,7 +33,10 @@ export class AdvertisementService {
 
   async getPageFromType(type: string) {
     const typeToHangul = {
-      main: '메인',
+      main01: '메인',
+      main02: '메인',
+      main03: '메인',
+      main04: '메인',
       first: '첫화면',
       last: '마지막종료',
       bible: '성경',
