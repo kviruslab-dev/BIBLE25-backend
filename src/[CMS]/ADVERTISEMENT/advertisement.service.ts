@@ -90,17 +90,17 @@ export class AdvertisementService {
     return groups;
   }
 
-  async findOneInBible(condition: any, jang: number) {
+  async findAndCountInBible(condition: any, jang: number) {
     const data = await this.queryRunnerService.findAndCount(condition);
 
     if (jang <= 10) {
       const index = jang - 1;
-      return data.list[index];
+      return { list: [data.list[index]], total: 1 };
     }
 
     if (jang > 10) {
       const index = (jang % 10) - 1;
-      return data.list[index];
+      return { list: [data.list[index]], total: 1 };
     }
   }
 }

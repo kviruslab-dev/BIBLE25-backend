@@ -109,7 +109,7 @@ export class AdvertisementController {
             offset: String(page ? take * (page - 1) : 0),
           };
 
-          return await this.advertisementService.findOneInBible(
+          return await this.advertisementService.findAndCountInBible(
             condition,
             jang,
           );
@@ -123,7 +123,7 @@ export class AdvertisementController {
             offset: String(page ? take * (page - 1) : 0),
           };
 
-          return await this.advertisementService.findOneInBible(
+          return await this.advertisementService.findAndCountInBible(
             condition,
             jang,
           );
@@ -135,17 +135,23 @@ export class AdvertisementController {
           select: 'id, title, image, link',
           table: 'market',
           where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+          orderBy: 'id asc',
+          limit: String(take ? take : 10),
+          offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.queryRunnerService.findOne(condition);
+        return await this.queryRunnerService.findAndCount(condition);
       } catch (error) {
         const condition = {
           select: 'id, title, image, link',
           table: 'market',
           where: `page=${pageFromType} and city='base' and active=1`,
+          orderBy: 'id asc',
+          limit: String(take ? take : 10),
+          offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.queryRunnerService.findOne(condition);
+        return await this.queryRunnerService.findAndCount(condition);
       }
     }
   }
