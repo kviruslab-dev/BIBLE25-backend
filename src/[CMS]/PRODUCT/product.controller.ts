@@ -34,7 +34,7 @@ export class ProductController {
       };
     };
 
-    return await this.productService.findAndCount(condition);
+    return await this.productService.find(condition);
   }
 
   @ApiQuery({ name: 'id', required: true, type: String })
