@@ -78,7 +78,7 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findAndCountInMain(condition);
+        return await this.advertisementService.findInMain(condition);
       } catch (error) {
         const condition = {
           select: 'id, location, title, image, link',
@@ -89,7 +89,7 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findAndCountInMain(condition);
+        return await this.advertisementService.findInMain(condition);
       }
     }
 
@@ -111,10 +111,7 @@ export class AdvertisementController {
             offset: String(page ? take * (page - 1) : 0),
           };
 
-          return await this.advertisementService.findAndCountInBible(
-            condition,
-            jang,
-          );
+          return await this.advertisementService.findInBible(condition, jang);
         } catch (err) {
           const condition = {
             select: 'id, title, image, link',
@@ -125,10 +122,7 @@ export class AdvertisementController {
             offset: String(page ? take * (page - 1) : 0),
           };
 
-          return await this.advertisementService.findAndCountInBible(
-            condition,
-            jang,
-          );
+          return await this.advertisementService.findInBible(condition, jang);
         }
       }
 
@@ -142,7 +136,7 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.queryRunnerService.findAndCount(condition);
+        return await this.advertisementService.findInEtc(condition);
       } catch (error) {
         const condition = {
           select: 'id, title, image, link',
@@ -153,7 +147,7 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.queryRunnerService.findAndCount(condition);
+        return await this.advertisementService.findInEtc(condition);
       }
     }
   }

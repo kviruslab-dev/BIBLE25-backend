@@ -72,22 +72,27 @@ export class AdvertisementService {
     return data.page;
   }
 
-  async findAndCountInMain(condition: any) {
+  async findInMain(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
     return data.list;
   }
 
-  async findAndCountInBible(condition: any, jang: number) {
+  async findInBible(condition: any, jang: number) {
     const data = await this.queryRunnerService.findAndCount(condition);
 
     if (jang <= 10) {
       const index = jang - 1;
-      return { list: [data.list[index]], total: 1 };
+      return [data.list[index]];
     }
 
     if (jang > 10) {
       const index = (jang % 10) - 1;
-      return { list: [data.list[index]], total: 1 };
+      return [data.list[index]];
     }
+  }
+
+  async findInEtc(condition: any) {
+    const data = await this.queryRunnerService.findAndCount(condition);
+    return data.list;
   }
 }
