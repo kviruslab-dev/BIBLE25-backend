@@ -54,7 +54,7 @@ export class ChansongController {
 
     if (type === 'song' && !id) {
       const condition = {
-        select: 'id, title, num, oldnum, audio',
+        select: 'id, title, num, oldnum',
         table: 'sys_hymm',
         where: 'TRUE',
         orderBy: 'id asc',
