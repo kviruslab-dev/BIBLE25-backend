@@ -93,7 +93,13 @@ export class TodayController {
     }
   }
 
-  @ApiParam({ name: 'name', required: true, type: String })
+  @ApiParam({
+    name: 'name',
+    required: true,
+    type: String,
+    description:
+      '이름 : malsum, good, kido, calum, today, book, cross, letter 또는 malsumlist, goodlist, kidolist, calumlist, todaylist, booklist, crosslist, letterlist',
+  })
   @ApiQuery({ name: 'take', required: false, type: String })
   @ApiQuery({ name: 'page', required: false, type: String })
   @ApiQuery({ name: 'keyword', required: false, type: String })
@@ -161,7 +167,12 @@ export class TodayController {
     }
   }
 
-  @ApiParam({ name: 'name', required: true, type: String })
+  @ApiParam({
+    name: 'name',
+    required: true,
+    type: String,
+    description: '이름 : malsum, good, kido, calum, today, book, cross, letter',
+  })
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiOperation({ summary: 'id를 통해 TODAY 데이터 가져오기' })
   @Get(':name/:id')

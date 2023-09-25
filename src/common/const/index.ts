@@ -104,3 +104,13 @@ export const TODAY_SELECT_CONDITION = [
   [`id`, `today`, `image`, `title`],
   [`id`, `today`, `image`, `title`],
 ];
+
+export const SEARCH_CONTENTS = [
+  '',
+  'bible',
+  'dic',
+  'photodic',
+  'biblemap',
+  'jusuk',
+  'kanghae',
+];

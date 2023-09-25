@@ -3,10 +3,12 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { SEARCH_CONTENTS } from 'src/common/const';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SearchService } from './search.service';
 
@@ -16,76 +18,99 @@ import { SearchService } from './search.service';
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
-  @ApiQuery({
-    name: 'type',
+  @ApiQuery({ name: 'keyword', required: true, type: String })
+  @ApiOperation({ summary: '전체 검색 결과 가져오기' })
+  @Get('total')
+  async getTotal(@Query('keyword') keyword: string) {
+    return await this.searchService.findSearchingData(5, 0, keyword);
+  }
+
+  @ApiParam({
+    name: 'name',
     required: true,
     type: String,
-    description: '타입 : total, bible, dic, photodic, biblemap, jusuk, kanghae',
+    description: '이름 : bible, dic, photodic, biblemap, jusuk, kanghae',
   })
-  @ApiQuery({ name: 'id', required: false, type: Number })
   @ApiQuery({ name: 'take', required: false, type: Number })
   @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiQuery({ name: 'keyword', required: false, type: String })
-  @Get()
-  async getData(
-    @Query('type') type: string,
-    @Query('id') id: number,
+  @ApiQuery({ name: 'keyword', required: true, type: String })
+  @ApiOperation({ summary: '컨텐츠에 대한 검색 데이터 가져오기' })
+  @Get(':name')
+  async getContent(
+    @Param('name') name: string,
     @Query('take') take?: number,
     @Query('page') page?: number,
     @Query('keyword') keyword?: string,
   ) {
-    if (!type) {
+    if (!SEARCH_CONTENTS.includes(name)) {
       throw new HttpException(
-        `type 값을 입력하지 않았습니다.`,
+        `올바른 name 값을 입력해주세요.`,
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    //! 전체 검색
-    if (type === 'total') {
-      return await this.searchService.findSearchingData(5, 0, keyword);
+    if (name === 'bible') {
+      return await this.searchService.findAndCountBible(take, page, keyword);
+    }
+    if (name === 'dic') {
+      return await this.searchService.findAndCountDic(take, page, keyword);
     }
 
-    //! 성경 검색
-    if (type === 'bible') {
-      return id
-        ? await this.searchService.findOneBible(id)
-        : await this.searchService.findAndCountBible(take, page, keyword);
+    if (name === 'photodic') {
+      return await this.searchService.findAndCountPhotodic(take, page, keyword);
     }
 
-    //! 사전 검색
-    if (type === 'dic') {
-      return id
-        ? await this.searchService.findOneDic(id)
-        : await this.searchService.findAndCountDic(take, page, keyword);
+    if (name === 'biblemap') {
+      return await this.searchService.findAndCountBiblemap(take, page, keyword);
     }
 
-    //! 포토사전 검색
-    if (type === 'photodic') {
-      return id
-        ? await this.searchService.findOnePhotodic(id)
-        : await this.searchService.findAndCountPhotodic(take, page, keyword);
+    if (name === 'jusuk') {
+      return await this.searchService.findAndCountJusuk(take, page, keyword);
     }
 
-    //! 성서 지도 검색
-    if (type === 'biblemap') {
-      return id
-        ? await this.searchService.findOneBiblemap(id)
-        : await this.searchService.findAndCountBiblemap(take, page, keyword);
+    if (name === 'kanghae') {
+      return await this.searchService.findAndCountKanghae(take, page, keyword);
+    }
+  }
+
+  @ApiParam({
+    name: 'name',
+    required: true,
+    type: String,
+    description: '이름 : bible, dic, photodic, biblemap, jusuk, kanghae',
+  })
+  @ApiParam({ name: 'id', required: true, type: Number })
+  @ApiOperation({ summary: 'id를 통해 검색 데이터 가져오기' })
+  @Get(':name/:id')
+  async getContentById(@Param('name') name: string, @Param('id') id: number) {
+    if (!SEARCH_CONTENTS.includes(name)) {
+      throw new HttpException(
+        `올바른 name 값을 입력해주세요.`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    //! 주석 검색
-    if (type === 'jusuk') {
-      return id
-        ? await this.searchService.findOneJusuk(id)
-        : await this.searchService.findAndCountJusuk(take, page, keyword);
+    if (name === 'bible') {
+      return await this.searchService.findOneBible(id);
+    }
+    if (name === 'dic') {
+      return await this.searchService.findOneDic(id);
     }
 
-    //! 강해 검색
-    if (type === 'kanghae') {
-      return id
-        ? await this.searchService.findOneKanghae(id)
-        : await this.searchService.findAndCountKanghae(take, page, keyword);
+    if (name === 'photodic') {
+      return await this.searchService.findOnePhotodic(id);
+    }
+
+    if (name === 'biblemap') {
+      return await this.searchService.findOneBiblemap(id);
+    }
+
+    if (name === 'jusuk') {
+      return await this.searchService.findOneJusuk(id);
+    }
+
+    if (name === 'kanghae') {
+      return await this.searchService.findOneKanghae(id);
     }
   }
 }
