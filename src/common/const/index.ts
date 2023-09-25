@@ -51,6 +51,18 @@ export const TODAY_CONTENTS = [
   'letter',
 ];
 
+export const TODAY_LISTS = [
+  '',
+  'malsumlist',
+  'goodlist',
+  'kidolist',
+  'calumlist',
+  'todaylist',
+  'booklist',
+  'crosslist',
+  'letterlist',
+];
+
 export const TODAY_SELECT_CONDITION = [
   [],
   [
