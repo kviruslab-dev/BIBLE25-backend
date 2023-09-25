@@ -16,33 +16,17 @@ import { ChansongService } from './chansong.service';
 export class ChansongController {
   constructor(private readonly chansongService: ChansongService) {}
 
-  @ApiQuery({
-    name: 'type',
-    required: true,
-    type: String,
-    description: '타입 : song, gyodok, kido, sado',
-  })
-  @ApiQuery({ name: 'id', required: false, type: String })
-  @ApiQuery({ name: 'take', required: false, type: String })
-  @ApiQuery({ name: 'page', required: false, type: String })
-  @ApiQuery({ name: 'version', required: false, type: String })
-  @ApiOperation({ summary: '찬송가 관련 데이터 가져오기' })
-  @Get()
-  async getData(
-    @Query('type') type: string,
+  @ApiQuery({ name: 'id', required: false, type: Number })
+  @ApiQuery({ name: 'take', required: false, type: Number })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiOperation({ summary: '찬송가 가져오기' })
+  @Get('song')
+  async getSong(
     @Query('id') id: number,
     @Query('take') take: number,
     @Query('page') page: number,
-    @Query('version') version: number,
   ) {
-    if (!type) {
-      throw new HttpException(
-        `type 값을 입력하지 않았습니다.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (type === 'song' && id) {
+    if (id) {
       const condition = {
         select: 'id, title, content, num, oldnum, audio, image',
         table: 'sys_hymm',
@@ -52,7 +36,7 @@ export class ChansongController {
       return await this.chansongService.findOne(condition);
     }
 
-    if (type === 'song' && !id) {
+    if (!id) {
       const condition = {
         select: 'id, title, num, oldnum',
         table: 'sys_hymm',
@@ -64,8 +48,14 @@ export class ChansongController {
 
       return await this.chansongService.findAndCount(condition);
     }
+  }
 
-    if (type === 'gyodok' && id) {
+  @ApiQuery({ name: 'id', required: false, type: Number })
+  @ApiQuery({ name: 'version', required: false, type: Number })
+  @ApiOperation({ summary: '교독문 가져오기' })
+  @Get('gyodok')
+  async getGyodok(@Query('id') id: number, @Query('version') version: number) {
+    if (id) {
       const condition = {
         select: 'id, title, content, together',
         table: 'sys_gyo',
@@ -75,7 +65,7 @@ export class ChansongController {
       return await this.chansongService.findOne(condition);
     }
 
-    if (type === 'gyodok' && !id) {
+    if (!id) {
       if (!version) {
         throw new HttpException(
           `version 값을 입력하지 않았습니다. ( 1 : 2 )`,
@@ -88,44 +78,51 @@ export class ChansongController {
         table: 'sys_gyo',
         where: `version = ${version}`,
         orderBy: 'gyoidx asc',
-        limit: String(take ? take : 10),
-        offset: String(page ? take * (page - 1) : 0),
+        limit: '150',
+        offset: 0,
       };
 
       return await this.chansongService.findAndCount(condition);
     }
+  }
 
-    if (type === 'kido') {
-      if (!version) {
-        throw new HttpException(
-          `version 값을 입력하지 않았습니다. ( 1 : 2 )`,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      const condition = {
-        select: 'content',
-        table: 'sys_kido',
-        where: `version = ${version}`,
-      };
-
-      return await this.chansongService.findOne(condition);
+  @ApiQuery({ name: 'version', required: true, type: Number })
+  @ApiOperation({ summary: '주기도문 가져오기' })
+  @Get('kido')
+  async getKido(@Query('version') version: number) {
+    if (!version) {
+      throw new HttpException(
+        `version 값을 입력하지 않았습니다. ( 1 : 2 )`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    if (type === 'sado') {
-      if (!version) {
-        throw new HttpException(
-          `version 값을 입력하지 않았습니다. ( 1 : 2 )`,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+    const condition = {
+      select: 'content',
+      table: 'sys_kido',
+      where: `version = ${version}`,
+    };
 
-      const condition = {
-        select: 'content',
-        table: 'sys_sado',
-        where: `version = ${version}`,
-      };
+    return await this.chansongService.findOne(condition);
+  }
 
-      return await this.chansongService.findOne(condition);
+  @ApiQuery({ name: 'version', required: true, type: Number })
+  @ApiOperation({ summary: '사도신경 가져오기' })
+  @Get('sado')
+  async getSado(@Query('version') version: number) {
+    if (!version) {
+      throw new HttpException(
+        `version 값을 입력하지 않았습니다. ( 1 : 2 )`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
+
+    const condition = {
+      select: 'content',
+      table: 'sys_sado',
+      where: `version = ${version}`,
+    };
+
+    return await this.chansongService.findOne(condition);
   }
 }
