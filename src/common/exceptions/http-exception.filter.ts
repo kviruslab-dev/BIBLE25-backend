@@ -32,11 +32,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
           error,
         },
       });
-      // sendMessageToSlack(`
-      // 🚨🚨🚨 STATUS CODE : ${status} 🚨🚨🚨
-      // 오류 메세지 : Cannot ${request.method} ${request.url},
-      // ${error}
-      // `);
+      sendMessageToSlack(`
+      🚨🚨🚨 STATUS CODE : ${status} 🚨🚨🚨
+      오류 메세지 : Cannot ${request.method} ${request.url},
+      ${error}
+      `);
     } else {
       response.status(status).json({
         success: false,
@@ -44,9 +44,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
         data: { ...error },
       });
 
-      // sendMessageToSlack(`
-      // ${{ ...error }}
-      // `);
+      sendMessageToSlack(`
+      ${{ ...error }}
+      `);
     }
   }
 }
