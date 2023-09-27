@@ -47,6 +47,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
       sendMessageToSlack(`
       ${{ ...error }}
       `);
+
+      sendMessageToSlack(`
+      🚨🚨🚨 STATUS CODE : ${status} 🚨🚨🚨
+      오류 메세지 : Cannot ${request.method} ${request.url},
+      ${error.error}
+      `);
     }
   }
 }
