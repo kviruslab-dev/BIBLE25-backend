@@ -13,6 +13,7 @@ import { ProductModule } from 'src/[CMS]/PRODUCT/product.module';
 import { BibleModule } from 'src/[CMS]/BIBLE/bible.module';
 import { BoardModule } from 'src/[CMS]/BOARD/board.module';
 import { SearchModule } from 'src/[CMS]/SEARCH/search.module';
+import { LogModule } from 'src/[CMS]/LOG/log.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { SearchModule } from 'src/[CMS]/SEARCH/search.module';
     ProductModule,
     TodayModule,
     SearchModule,
+    LogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

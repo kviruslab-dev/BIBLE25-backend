@@ -70,4 +70,17 @@ export class ErrorLog {
   @IsString()
   @IsNotEmpty()
   error: string;
+
+  //! 동일 오류 횟수
+  @ApiProperty({
+    example: 10,
+    description: 'count',
+    required: false,
+  })
+  @Column({
+    comment: 'count',
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  count: number;
 }
