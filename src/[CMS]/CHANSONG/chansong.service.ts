@@ -7,7 +7,8 @@ export class ChansongService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   async findAndCount(condition: any) {
-    return await this.queryRunnerService.findAndCount(condition);
+    const data = await this.queryRunnerService.findAndCount(condition);
+    return data.list;
   }
 
   async findOne(condition: any) {
