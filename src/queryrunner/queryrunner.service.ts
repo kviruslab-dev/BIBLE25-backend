@@ -51,15 +51,16 @@ export class QueryRunnerService {
     WHERE ${condition.where}
     `;
 
-    const [data] = await this.queryRunner.query(SQL);
+    const data = await this.queryRunner.query(SQL);
 
-    if (!data) {
+    if (data.length === 0) {
       throw new HttpException(
         `데이터가 존재하지 않습니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }
-    return data;
+
+    return data[0];
   }
 
   async update(condition: any) {
