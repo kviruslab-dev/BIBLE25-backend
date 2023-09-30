@@ -9,8 +9,14 @@ export class LogService {
 
   async SaveErrror(data: ErrorLogDto) {
     const { status_code, method, url, error } = data;
+    const findOneCondition = {
+      select: 'id, count',
+      table: 'error_log',
+      where: `status_code=${status_code} and method='${method}' and url='${url}' and error='${error}'`,
+    };
 
-    try {
+    const isExist = await this.queryRunnerService.findOne(findOneCondition);
+    if (isExist) {
       const findOneCondition = {
         select: 'id, count',
         table: 'error_log',
@@ -24,7 +30,9 @@ export class LogService {
       const updateQuery = `UPDATE error_log SET count = ${newCount} WHERE id = ${targetId}`;
       await this.queryRunnerService.query(updateQuery);
       return;
-    } catch {
+    }
+
+    if (!isExist) {
       const condition = {
         table: 'error_log',
         columns: `status_code, method, url, error, count`,
