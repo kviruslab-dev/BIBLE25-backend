@@ -54,10 +54,11 @@ export class QueryRunnerService {
     const data = await this.queryRunner.query(SQL);
 
     if (data.length === 0) {
-      throw new HttpException(
-        `데이터가 존재하지 않습니다.`,
-        HttpStatus.BAD_REQUEST,
-      );
+      // throw new HttpException(
+      //   `데이터가 존재하지 않습니다.`,
+      //   HttpStatus.BAD_REQUEST,
+      // );
+      return;
     }
 
     return data[0];
