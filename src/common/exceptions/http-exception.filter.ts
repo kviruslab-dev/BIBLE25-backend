@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { sendMessageToSlack } from '../utils/slackBot';
+import { saveErrorLog } from '../utils/saveErrorLog';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -32,11 +32,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
           error,
         },
       });
-      sendMessageToSlack(`
-      🚨🚨🚨 STATUS CODE : ${status} 🚨🚨🚨
-      오류 메세지 : Cannot ${request.method} ${request.url},
-      ${error}
-      `);
+
+      saveErrorLog(status, request.method, request.url, error);
     } else {
       response.status(status).json({
         success: false,
@@ -44,11 +41,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         data: { ...error },
       });
 
-      sendMessageToSlack(`
-      🚨🚨🚨 STATUS CODE : ${status} 🚨🚨🚨
-      오류 메세지 : Cannot ${request.method} ${request.url},
-      ${error.error}
-      `);
+      saveErrorLog(status, request.method, request.url, error.error);
     }
   }
 }

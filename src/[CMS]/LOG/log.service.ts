@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { sendMessageToSlack } from 'src/common/utils/slackBot';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ErrorLogDto } from './dtos/log.dto';
 
@@ -31,6 +32,13 @@ export class LogService {
       };
 
       await this.queryRunnerService.insert(condition);
+
+      // 슬랙으로 메세지 전송
+      sendMessageToSlack(`
+      🚨🚨🚨 STATUS CODE : ${status_code} 🚨🚨🚨
+      오류 메세지 : Cannot ${method} ${url},
+      ${error}
+      `);
       return;
     }
   }
