@@ -66,7 +66,7 @@ export class QueryRunnerService {
     try {
       const SQL = `
       UPDATE ${condition.table}
-      SET ${condition.set}
+      SET (${condition.columns}) = (${condition.values})
       WHERE ${condition.where}
       `;
 
@@ -82,7 +82,7 @@ export class QueryRunnerService {
   async insert(condition: any) {
     try {
       const SQL = `
-      INSERT INTO ${condition.table} (${condition.column})
+      INSERT INTO ${condition.table}(${condition.columns})
       VALUES (${condition.values})
       `;
 
@@ -90,6 +90,23 @@ export class QueryRunnerService {
     } catch {
       throw new HttpException(
         `INSERT 조건을 다시 확인해주세요.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async delete(condition: any) {
+    try {
+      const SQL = `
+      DELETE
+      FROM ${condition.table}
+      WHERE ${condition.where}
+      `;
+
+      await this.queryRunner.query(SQL);
+    } catch {
+      throw new HttpException(
+        `UPDATE 조건을 다시 확인해주세요.`,
         HttpStatus.BAD_REQUEST,
       );
     }
