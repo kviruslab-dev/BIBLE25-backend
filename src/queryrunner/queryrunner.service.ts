@@ -22,12 +22,12 @@ export class QueryRunnerService {
     const list = await this.queryRunner.query(SQL);
     const total = await this.getTotal(condition);
 
-    if (!total) {
-      throw new HttpException(
-        `데이터가 존재하지 않습니다.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // if (!total) {
+    //   throw new HttpException(
+    //     `데이터가 존재하지 않습니다.`,
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
 
     return { list, total };
   }
