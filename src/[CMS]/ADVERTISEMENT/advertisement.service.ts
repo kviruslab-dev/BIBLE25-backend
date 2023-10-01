@@ -19,9 +19,9 @@ export class AdvertisementService {
     });
 
     const si =
-      axiosResult.data.documents[0]?.address?.region_1depth_name ?? 'ETC';
+      axiosResult.data.documents[0]?.address?.region_1depth_name ?? '서울';
     const gu =
-      axiosResult.data.documents[0]?.address?.region_2depth_name ?? 'unknown';
+      axiosResult.data.documents[0]?.address?.region_2depth_name ?? 'base';
     const country = si === 'ETC' && gu === 'unknown' ? 'unknown' : 'KR';
 
     return {
