@@ -120,6 +120,13 @@ export class Market {
     comment: '실제내려가는데이터',
   })
   active: number;
+
+  @Column({
+    nullable: false,
+    default: 10,
+    comment: '가중치',
+  })
+  rate: number;
 }
 
 @Entity('iplocal')
