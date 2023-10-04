@@ -1,19 +1,15 @@
-export const CHANSONG_URL = 'https://ch2ho.bible25.co.kr/kviruslab/chansong/';
+export const CHANSONG_URL = 'https://data.bible25.com/chansong/';
 
 export const KAKAO_URL =
   'https://dapi.kakao.com/v2/local/geo/coord2address.json';
 
-export const BIBLE_AUDIO_URL =
-  'https://ch2ho.bible25.co.kr/kviruslab/bible/audio_ver02/';
+export const BIBLE_AUDIO_URL = 'https://data.bible25.com/bible/audio/';
 
-export const BIBLE_PHOTO_URL =
-  'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/';
+export const BIBLE_PHOTO_URL = 'https://data.bible25.com/bible/biblephoto/';
 
-export const BIBLE_MAP_URL =
-  'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblemap/';
+export const BIBLE_MAP_URL = 'https://data.bible25.com/bible/biblemap/';
 
-export const BIBLE_PHOTODIC_URL =
-  'https://ch2ho.bible25.co.kr/kviruslab/intellectual/bibledic/';
+export const BIBLE_PHOTODIC_URL = 'https://data.bible25.com/bible/bibledic/';
 
 export const ONE_ADVERTISEMENT = [
   'first',
