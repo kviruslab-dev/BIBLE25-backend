@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   BIBLE_AUDIO_URL,
   BIBLE_MAP_URL,
+  BIBLE_PHOTODIC_URL,
   BIBLE_PHOTO_URL,
 } from 'src/common/const';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
@@ -28,7 +29,7 @@ export class BibleService {
 
     data['image'] = list.map((val: any) => {
       val.title = val.title.substring(0, val.title.length - 4);
-      val.image = BIBLE_PHOTO_URL + val.image;
+      val.image = BIBLE_PHOTODIC_URL + val.image;
       return val;
     });
 
