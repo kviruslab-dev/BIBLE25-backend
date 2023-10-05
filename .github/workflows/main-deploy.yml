@@ -21,6 +21,7 @@ jobs:
           script_stop: true
           script: |
             su - ubuntu
+            ${{ secrets.PASSWORD }}
             cd bible25
             cd back-refact
             node -v
