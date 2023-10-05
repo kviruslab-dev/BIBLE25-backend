@@ -13,7 +13,7 @@ jobs:
       - name: SSH Commands
         uses: appleboy/ssh-action@v0.1.6
         with:
-          node-version: '16.17.1'
+          node-version: '16'
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
