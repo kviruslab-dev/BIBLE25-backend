@@ -19,7 +19,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            cd bible25/back-refact
+            cd bible25
+            ls
+            cd back-refact
             git pull
             yarn
             yarn build
