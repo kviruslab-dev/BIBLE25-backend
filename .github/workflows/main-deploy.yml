@@ -22,7 +22,7 @@ jobs:
           script: |
             cd bible25
             cd back-refact
-            pm2 list
+            node -v
             yarn
             # yarn build
             # pm2 reload backend-refact
