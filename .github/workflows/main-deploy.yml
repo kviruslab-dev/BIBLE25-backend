@@ -21,6 +21,6 @@ jobs:
           script: |
             cd bible25/back-refact
             git pull
-            yarn
+            yarn add
             yarn build
             pm2 reload backend-refact
