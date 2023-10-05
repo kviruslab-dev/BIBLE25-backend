@@ -19,13 +19,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            # cd bible25
-            # cd back-refact
-            echo ${{secrets.PASSWORD}} | sudo -S nvm -v
-
-            # echo ${{secrets.PASSWORD}} | sudo -S yarn
-            # echo ${{secrets.PASSWORD}} | sudo -S yarn build
-
+            cd bible25
+            cd back-refact
+            pm2 list
             # yarn
             # yarn build
             # pm2 reload backend-refact
