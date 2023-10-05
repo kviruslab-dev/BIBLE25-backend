@@ -20,7 +20,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            echo "Giveme$0806" | su ubuntu
+            whoami
             cd bible25
             cd back-refact
             node -v
