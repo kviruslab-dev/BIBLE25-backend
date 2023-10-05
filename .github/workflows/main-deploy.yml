@@ -20,7 +20,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            whoami
             cd bible25
             cd back-refact
             node -v
