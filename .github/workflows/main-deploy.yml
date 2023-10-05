@@ -20,9 +20,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            cd bible25
-            cd back-refact
-            node -v
-            yarn
-            # yarn build
-            # pm2 reload backend-refact
+            # cd bible25
+            # cd back-refact
+            # node -v
+            # yarn
+            # # yarn build
+            # # pm2 reload backend-refact
