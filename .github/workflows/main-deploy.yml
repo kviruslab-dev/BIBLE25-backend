@@ -20,10 +20,14 @@ jobs:
           script_stop: true
           script: |
             ls
-            cd bible25
-            cd back-refact
-            git pull
             node -v
+            nvm install 16.17.1
+            nvm use 16.17.1
+            node -v
+            # cd bible25
+            # cd back-refact
+            # git pull
+            # node -v
             # yarn
             # yarn build
             # pm2 reload backend-refact
