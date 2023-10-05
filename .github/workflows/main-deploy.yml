@@ -23,6 +23,7 @@ jobs:
             cd back-refact
             git pull
             node -v
-            yarn
+            whoami
+            yarn#
             # yarn build
             # pm2 reload backend-refact
