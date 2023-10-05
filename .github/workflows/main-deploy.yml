@@ -13,14 +13,15 @@ jobs:
       - name: SSH Commands
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.AWS_SSH_HOST }}
-          username: ${{ secrets.AWS_SSH_USERNAME }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          port: ${{ secrets.AWS_SSH_PORT }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
           script_stop: true
           script: |
-            cd backend
-            git pull
-            yarn
-            yarn build
-            pm2 reload 0
+            ls -al
+            # cd backend
+            # git pull
+            # yarn
+            # yarn build
+            # pm2 reload 0
