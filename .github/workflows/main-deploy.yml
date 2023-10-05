@@ -20,10 +20,8 @@ jobs:
           script_stop: true
           script: |
             cd bible25
-            ls
             cd back-refact
-            ls
             git pull
-            # yarn
+            yarn
             # yarn build
             # pm2 reload backend-refact
