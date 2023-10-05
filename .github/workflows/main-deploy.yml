@@ -21,8 +21,6 @@ jobs:
           script: |
             # cd bible25
             # cd back-refact
-            echo ${{secrets.PASSWORD}} | sudo -S curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-            echo ${{secrets.PASSWORD}} | sudo -S source ~/.bashrc
             echo ${{secrets.PASSWORD}} | sudo -S nvm -v
 
             # echo ${{secrets.PASSWORD}} | sudo -S yarn
