@@ -23,7 +23,7 @@ jobs:
             ls
             cd back-refact
             ls
-            # git pull
+            git pull
             # yarn
             # yarn build
             # pm2 reload backend-refact
