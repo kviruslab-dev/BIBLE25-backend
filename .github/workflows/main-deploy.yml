@@ -24,6 +24,7 @@ jobs:
             echo ${{secrets.PASSWORD}} | sudo -S git pull
             echo ${{secrets.PASSWORD}} | sudo -S yarn
             echo ${{secrets.PASSWORD}} | sudo -S yarn build
+
             # yarn
             # yarn build
             # pm2 reload backend-refact
