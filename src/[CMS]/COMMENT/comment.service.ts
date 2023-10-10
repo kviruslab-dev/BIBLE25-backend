@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { transformDate } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { CommentDto } from './dtos/comment.dto';
 
@@ -14,5 +15,13 @@ export class CommentService {
     };
 
     return await this.queryRunnerService.insert(conditionForInsert);
+  }
+
+  async findAndCount(condition: any) {
+    const { list, total } = await this.queryRunnerService.findAndCount(
+      condition,
+    );
+
+    return { list: transformDate(list), total };
   }
 }

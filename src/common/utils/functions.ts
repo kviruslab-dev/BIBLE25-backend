@@ -16,3 +16,16 @@ export const getNDaysAgo = (N: number) => {
 
   return year + '-' + month + '-' + day;
 };
+
+export const transformDate = (arr: any) => {
+  const transformedArr = arr.map((item: any) => {
+    const dateOnly = new Date(item.createAt).toISOString().split('T')[0];
+    return {
+      createAt: dateOnly,
+      phone: item.phone,
+      comment: item.comment,
+    };
+  });
+
+  return transformedArr;
+};
