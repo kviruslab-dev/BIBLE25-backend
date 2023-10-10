@@ -14,6 +14,7 @@ import { BibleModule } from 'src/[CMS]/BIBLE/bible.module';
 import { BoardModule } from 'src/[CMS]/BOARD/board.module';
 import { SearchModule } from 'src/[CMS]/SEARCH/search.module';
 import { LogModule } from 'src/[CMS]/LOG/log.module';
+import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { LogModule } from 'src/[CMS]/LOG/log.module';
     TodayModule,
     SearchModule,
     LogModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
