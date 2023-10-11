@@ -7,14 +7,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { CustomedSuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 
 import { CommentService } from './comment.service';
 import { CommentDto } from './dtos/comment.dto';
 
 @ApiTags('COMMENT')
 @Controller('comment')
-@UseInterceptors(SuccessInterceptor)
+@UseInterceptors(CustomedSuccessInterceptor)
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
