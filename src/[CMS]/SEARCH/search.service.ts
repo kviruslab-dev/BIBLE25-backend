@@ -10,8 +10,8 @@ export class SearchService {
     const dic = await this.findAndCountDic(take, page, keyword);
     const photodic = await this.findAndCountPhotodic(take, page, keyword);
     const biblemap = await this.findAndCountBiblemap(take, page, keyword);
-    const jusuk = await this.findAndCountJusuk(take, page, keyword);
-    const kanghae = await this.findAndCountKanghae(take, page, keyword);
+    const jusuk = await this.findAndCountJusuk(take, page, keyword, false);
+    const kanghae = await this.findAndCountKanghae(take, page, keyword, false);
 
     return {
       list: {
@@ -191,7 +191,12 @@ export class SearchService {
     return await this.queryRunnerService.findOne(condition);
   }
 
-  async findAndCountJusuk(take: number, page: number, keyword: string) {
+  async findAndCountJusuk(
+    take: number,
+    page: number,
+    keyword: string,
+    calcutaleTotal: boolean,
+  ) {
     const sTake = String(take ? take : 10);
     const sPage = String(page ? take * (page - 1) : 0);
     const skeyword = `%${keyword.trim()}%`;
@@ -237,31 +242,36 @@ export class SearchService {
     LIMIT ${sTake} OFFSET ${sPage};
     `;
 
-    const sqlForEachCount = `
-    SELECT SUM(count_result) AS total_count
-    FROM (
-        SELECT COUNT(*) AS count_result FROM deluxe_matt_new WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_ben WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_nadb WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_cannon WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_range WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_pulpit WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_emet WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_jang WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_season WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_mipung WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_meyer WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_chong WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_wil WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_grace WHERE title LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM deluxe_seven WHERE title LIKE '${skeyword}'
-    ) AS counts;
-    `;
+    if (calcutaleTotal) {
+      const sqlForEachCount = `
+        SELECT SUM(count_result) AS total_count
+        FROM (
+            SELECT COUNT(*) AS count_result FROM deluxe_matt_new WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_ben WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_nadb WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_cannon WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_range WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_pulpit WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_emet WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_jang WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_season WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_mipung WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_meyer WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_chong WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_wil WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_grace WHERE title LIKE '${skeyword}' UNION ALL
+            SELECT COUNT(*) AS count_result FROM deluxe_seven WHERE title LIKE '${skeyword}'
+        ) AS counts;
+        `;
+
+      const list = await this.queryRunnerService.query(sql);
+      const total = await this.queryRunnerService.query(sqlForEachCount);
+
+      return { list, total: total[0].total_count };
+    }
 
     const list = await this.queryRunnerService.query(sql);
-    const total = await this.queryRunnerService.query(sqlForEachCount);
-
-    return { list, total: total[0].total_count };
+    return { list, total: 10 };
   }
 
   async findOneKanghae(id: number) {
@@ -297,7 +307,12 @@ export class SearchService {
     }
   }
 
-  async findAndCountKanghae(take: number, page: number, keyword: string) {
+  async findAndCountKanghae(
+    take: number,
+    page: number,
+    keyword: string,
+    calcutaleTotal: boolean,
+  ) {
     const sTake = String(take ? take : 10);
     const sPage = String(page ? take * (page - 1) : 0);
     const skeyword = `%${keyword.trim()}%`;
@@ -344,20 +359,25 @@ export class SearchService {
     LIMIT ${sTake} OFFSET ${sPage};
     `;
 
-    const sqlForEachCount = `
-    SELECT SUM(count_result) AS total_count
-    FROM (
-        SELECT COUNT(*) AS count_result FROM g5_write_g71 WHERE wr_subject LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM g5_write_Sagun1 WHERE wr_subject LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM g5_write_Sagun2 WHERE wr_subject LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM g5_write_Dtp WHERE wr_subject LIKE '${skeyword}' UNION ALL
-        SELECT COUNT(*) AS count_result FROM g5_write_Dtp_Chong WHERE wr_subject LIKE '${skeyword}'
-    ) AS counts;
-    `;
+    if (calcutaleTotal) {
+      const sqlForEachCount = `
+      SELECT SUM(count_result) AS total_count
+      FROM (
+          SELECT COUNT(*) AS count_result FROM g5_write_g71 WHERE wr_subject LIKE '${skeyword}' UNION ALL
+          SELECT COUNT(*) AS count_result FROM g5_write_Sagun1 WHERE wr_subject LIKE '${skeyword}' UNION ALL
+          SELECT COUNT(*) AS count_result FROM g5_write_Sagun2 WHERE wr_subject LIKE '${skeyword}' UNION ALL
+          SELECT COUNT(*) AS count_result FROM g5_write_Dtp WHERE wr_subject LIKE '${skeyword}' UNION ALL
+          SELECT COUNT(*) AS count_result FROM g5_write_Dtp_Chong WHERE wr_subject LIKE '${skeyword}'
+      ) AS counts;
+      `;
+
+      const list = await this.queryRunnerService.query(sql);
+      const total = await this.queryRunnerService.query(sqlForEachCount);
+
+      return { list, total: total[0].total_count };
+    }
 
     const list = await this.queryRunnerService.query(sql);
-    const total = await this.queryRunnerService.query(sqlForEachCount);
-
-    return { list, total: total[0].total_count };
+    return { list, total: 10 };
   }
 }

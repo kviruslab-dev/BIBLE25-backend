@@ -65,11 +65,23 @@ export class SearchController {
     }
 
     if (name === 'jusuk') {
-      return await this.searchService.findAndCountJusuk(take, page, keyword);
+      const calcutaleTotal = true;
+      return await this.searchService.findAndCountJusuk(
+        take,
+        page,
+        keyword,
+        calcutaleTotal,
+      );
     }
 
     if (name === 'kanghae') {
-      return await this.searchService.findAndCountKanghae(take, page, keyword);
+      const calcutaleTotal = true;
+      return await this.searchService.findAndCountKanghae(
+        take,
+        page,
+        keyword,
+        calcutaleTotal,
+      );
     }
   }
 
