@@ -9,12 +9,12 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { SEARCH_CONTENTS } from 'src/common/const';
-import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { CustomedSuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { SearchService } from './search.service';
 
 @ApiTags('SEARCH')
 @Controller('search')
-@UseInterceptors(SuccessInterceptor)
+@UseInterceptors(CustomedSuccessInterceptor)
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
@@ -91,26 +91,32 @@ export class SearchController {
     }
 
     if (name === 'bible') {
-      return await this.searchService.findOneBible(id);
+      const list = await this.searchService.findOneBible(id);
+      return { list };
     }
     if (name === 'dic') {
-      return await this.searchService.findOneDic(id);
+      const list = await this.searchService.findOneDic(id);
+      return { list };
     }
 
     if (name === 'photodic') {
-      return await this.searchService.findOnePhotodic(id);
+      const list = await this.searchService.findOnePhotodic(id);
+      return { list };
     }
 
     if (name === 'biblemap') {
-      return await this.searchService.findOneBiblemap(id);
+      const list = await this.searchService.findOneBiblemap(id);
+      return { list };
     }
 
     if (name === 'jusuk') {
-      return await this.searchService.findOneJusuk(id);
+      const list = await this.searchService.findOneJusuk(id);
+      return { list };
     }
 
     if (name === 'kanghae') {
-      return await this.searchService.findOneKanghae(id);
+      const list = await this.searchService.findOneKanghae(id);
+      return { list };
     }
   }
 }
