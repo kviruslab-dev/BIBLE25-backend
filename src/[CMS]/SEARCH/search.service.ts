@@ -223,10 +223,7 @@ export class SearchService {
         where: `wr_id = ${Number(String(id).substring(2))}`,
       };
 
-      const list = await this.queryRunnerService.findOne(condition);
-      const total = list?.length ?? 0;
-
-      return { list, total };
+      return await this.queryRunnerService.findOne(condition);
     }
 
     if (arrayType > 56) {
@@ -236,10 +233,7 @@ export class SearchService {
         where: `idx = ${Number(String(id).substring(2))}`,
       };
 
-      const list = await this.queryRunnerService.findOne(condition);
-      const total = list?.length ?? 0;
-
-      return { list, total };
+      return await this.queryRunnerService.findOne(condition);
     }
   }
 
