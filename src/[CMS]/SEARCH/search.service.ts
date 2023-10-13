@@ -14,12 +14,14 @@ export class SearchService {
     const jusuk = await this.findAndCountJusuk(take, page, keyword);
 
     return {
-      bible: bible.list,
-      dic: dic.list,
-      photodic: photodic.list,
-      biblemap: biblemap.list,
-      jusuk: kanghae.list,
-      kanghae: jusuk.list,
+      list: {
+        bible: bible.list,
+        dic: dic.list,
+        photodic: photodic.list,
+        biblemap: biblemap.list,
+        jusuk: kanghae.list,
+        kanghae: jusuk.list,
+      },
     };
   }
 
