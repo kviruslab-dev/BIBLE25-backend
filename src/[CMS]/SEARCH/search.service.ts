@@ -18,8 +18,8 @@ export class SearchService {
       dic: dic.list,
       photodic: photodic.list,
       biblemap: biblemap.list,
-      jusuk: jusuk.list,
-      kanghae: kanghae.list,
+      jusuk: [],
+      kanghae: [],
     };
   }
 
