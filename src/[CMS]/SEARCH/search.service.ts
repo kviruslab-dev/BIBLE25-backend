@@ -14,12 +14,12 @@ export class SearchService {
     const jusuk = await this.findAndCountJusuk(take, page, keyword);
 
     return {
-      bible,
-      dic,
-      photodic,
-      biblemap,
-      jusuk,
-      kanghae,
+      bible: bible.list,
+      dic: dic.list,
+      photodic: photodic.list,
+      biblemap: biblemap.list,
+      jusuk: jusuk.list,
+      kanghae: kanghae.list,
     };
   }
 
@@ -218,7 +218,10 @@ export class SearchService {
         where: `wr_id = ${Number(String(id).substring(2))}`,
       };
 
-      return await this.queryRunnerService.findOne(condition);
+      const list = await this.queryRunnerService.findOne(condition);
+      const total = list?.length ?? 0;
+
+      return { list, total };
     }
 
     if (arrayType > 56) {
@@ -228,7 +231,10 @@ export class SearchService {
         where: `idx = ${Number(String(id).substring(2))}`,
       };
 
-      return await this.queryRunnerService.findOne(condition);
+      const list = await this.queryRunnerService.findOne(condition);
+      const total = list?.length ?? 0;
+
+      return { list, total };
     }
   }
 
