@@ -10,8 +10,8 @@ export class SearchService {
     const dic = await this.findAndCountDic(take, page, keyword);
     const photodic = await this.findAndCountPhotodic(take, page, keyword);
     const biblemap = await this.findAndCountBiblemap(take, page, keyword);
-    const kanghae = await this.findAndCountKanghae(take, page, keyword);
     const jusuk = await this.findAndCountJusuk(take, page, keyword);
+    const kanghae = await this.findAndCountKanghae(take, page, keyword);
 
     return {
       list: {
@@ -19,8 +19,8 @@ export class SearchService {
         dic: dic.list,
         photodic: photodic.list,
         biblemap: biblemap.list,
-        jusuk: kanghae.list,
-        kanghae: jusuk.list,
+        jusuk: jusuk.list,
+        kanghae: kanghae.list,
       },
     };
   }
@@ -74,7 +74,7 @@ export class SearchService {
   async findOnePhotodic(id: number) {
     const condition = {
       select: 'id, imgidx, title, content, detail',
-      table: 'bible_dic',
+      table: 'bible_photodic',
       where: `id = ${id}`,
     };
 
