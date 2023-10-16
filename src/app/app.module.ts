@@ -15,6 +15,7 @@ import { BoardModule } from 'src/[CMS]/BOARD/board.module';
 import { SearchModule } from 'src/[CMS]/SEARCH/search.module';
 import { LogModule } from 'src/[CMS]/LOG/log.module';
 import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
+import { DeviceModule } from 'src/[CMS]/DEVICE/device.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
     AutoModule,
     BibleModule,
     BoardModule,
+    DeviceModule,
     ChansongModule,
     ProductModule,
     TodayModule,

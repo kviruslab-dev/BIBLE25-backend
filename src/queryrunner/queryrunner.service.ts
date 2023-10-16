@@ -81,6 +81,23 @@ export class QueryRunnerService {
     }
   }
 
+  async updateMySQL(condition: any) {
+    try {
+      const SQL = `
+      UPDATE ${condition.table}
+      SET ${condition.set}
+      WHERE ${condition.where}
+      `;
+
+      await this.queryRunner.query(SQL);
+    } catch {
+      throw new HttpException(
+        `UPDATE 조건을 다시 확인해주세요.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   async insert(condition: any) {
     try {
       const SQL = `
