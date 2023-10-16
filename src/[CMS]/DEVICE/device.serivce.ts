@@ -19,7 +19,7 @@ export class DeviceService {
     const deviceInfo = await this.queryRunnerService.findOne(condition);
 
     if (deviceInfo) {
-      axios
+      await axios
         .post(
           `https://fcm.googleapis.com/fcm/send`,
           {
@@ -62,7 +62,7 @@ export class DeviceService {
     const num = Math.floor(total / 1000) + 1;
 
     for (let i = 0; i < num; i++) {
-      axios
+      await axios
         .post(
           `https://fcm.googleapis.com/fcm/send`,
           {
