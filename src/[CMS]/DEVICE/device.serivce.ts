@@ -13,7 +13,7 @@ export class DeviceService {
     const condition = {
       select: 'id, deviceId, pushyn',
       table: 'device_info',
-      where: `"deviceId" = ${data.deviceId} and pushyn = 1`,
+      where: `deviceId = '${data.deviceId}' and pushyn = 1`,
     };
 
     const deviceInfo = await this.queryRunnerService.findOne(condition);
