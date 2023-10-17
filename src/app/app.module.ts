@@ -16,6 +16,7 @@ import { SearchModule } from 'src/[CMS]/SEARCH/search.module';
 import { LogModule } from 'src/[CMS]/LOG/log.module';
 import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
 import { DeviceModule } from 'src/[CMS]/DEVICE/device.module';
+import { AdminModule } from 'src/[CMS]/ADMIN/admin.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { DeviceModule } from 'src/[CMS]/DEVICE/device.module';
       logging: process.env.MODE === 'development' ? ['query', 'error'] : false,
     }),
     ScheduleModule.forRoot(),
+    AdminModule,
     AdvertisementModule,
     AutoModule,
     BibleModule,
