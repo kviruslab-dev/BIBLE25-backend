@@ -29,3 +29,56 @@ export const transformDate = (arr: any) => {
 
   return transformedArr;
 };
+
+export const convertArrayToString = (arr: any, type: string) => {
+  if (!Array.isArray(arr)) {
+    return null;
+  }
+
+  if (type === 'columns') {
+    return `"${arr.join('", "')}"`;
+  }
+
+  if (type === 'values') {
+    const convertedArr = arr.map((item) => {
+      return typeof item === 'string' ? `'${item}'` : item;
+    });
+
+    return convertedArr.join(', ');
+  }
+};
+
+export const formatKeyValuePairs = (keys: any[], values: any[]) => {
+  if (
+    !Array.isArray(keys) ||
+    !Array.isArray(values) ||
+    keys.length !== values.length
+  ) {
+    return 'Invalid input: Keys and values must be arrays of the same length.';
+  }
+
+  const formattedPairs = keys
+    .map((key, index) => {
+      const value =
+        typeof values[index] === 'number'
+          ? values[index]
+          : `'${values[index]}'`;
+      return `${key} = ${value}`;
+    })
+    .join(', ');
+
+  return formattedPairs;
+};
+
+export const arrayToFormattedString = (arr: number[]) => {
+  if (!Array.isArray(arr)) {
+    return 'Input is not an array.';
+  }
+
+  if (arr.length === 0) {
+    return '()';
+  }
+
+  const formattedString = `(${arr.join(',')})`;
+  return formattedString;
+};

@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { KAKAO_URL } from 'src/common/const';
+import {
+  arrayToFormattedString,
+  formatKeyValuePairs,
+} from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { UpdateDto } from './dtos/update.dto';
 
 @Injectable()
 export class AdvertisementService {
@@ -108,5 +113,18 @@ export class AdvertisementService {
     };
 
     return await this.queryRunnerService.findAndCount(condition);
+  }
+
+  async update(data: UpdateDto) {
+    const setQuery = formatKeyValuePairs(data.columns, data.values);
+    const idString = arrayToFormattedString(data.id);
+
+    const conditionForUpdate = {
+      table: 'market',
+      set: setQuery,
+      where: `id in ${idString}`,
+    };
+
+    return await this.queryRunnerService.updateMySQL(conditionForUpdate);
   }
 }

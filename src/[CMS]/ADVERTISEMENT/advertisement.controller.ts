@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Patch,
+  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,6 +17,7 @@ import { AdvertisementService } from './advertisement.service';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { UpdateDto } from './dtos/update.dto';
 
 @ApiTags('ADVERTISEMENT')
 @Controller('advertisement')
@@ -178,11 +181,22 @@ export class AdvertisementController {
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiOperation({ summary: '광고 데이터 가져오기 (어드민)' })
   @UseInterceptors(advertisementInterceptor)
-  @Get('admin')
+  @Get('select')
   async findAndCount(
     @Query('take') take?: number,
     @Query('page') page?: number,
   ) {
     return await this.advertisementService.findAndCount(take, page);
   }
+
+  @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
+  @Patch('update')
+  async update(@Body() body: UpdateDto) {
+    return await this.advertisementService.update(body);
+  }
+
+  // @Post('insert')
+  // async insert(@Body() body: insertDto) {
+  //   return await this.advertisementService.insert(body);
+  // }
 }
