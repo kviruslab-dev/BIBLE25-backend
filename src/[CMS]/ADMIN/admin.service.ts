@@ -1,7 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ADMIN_TYPE_OBJECT } from 'src/common/const';
-import { arrayToFormattedString } from 'src/common/utils/functions';
+import {
+  arrayToFormattedString,
+  formatKeyValuePairs,
+  stringToArray,
+} from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { UpdateDto } from '../ADVERTISEMENT/dtos/update.dto';
+import * as fs from 'fs';
 
 @Injectable()
 export class AdminService {
@@ -14,7 +20,7 @@ export class AdminService {
     if (marketType.includes(type)) {
       const condition = {
         select:
-          'id, create_at, title, tick, start_date, end_date, page, location, rate, image, link, active, city, rate',
+          'id, create_at, title, tick, start_date, end_date, page, location, rate, image, link, active, city, timezone',
         table: 'market',
         where: `page in ${pageString}`,
         orderBy: 'id asc',
@@ -53,24 +59,64 @@ export class AdminService {
     }
   }
 
-  // async update(data: UpdateDto) {
-  //   if (data.columns.includes('tick')) {
-  //     return 0;
-  //   }
+  async update(data: UpdateDto) {
+    const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
 
-  //   const cantUpdate = ['id', 'create_at', 'tick'];
+    if (marketType.includes(data.type)) {
+      if (data.columns.includes('id, tick, create_at')) {
+        throw new HttpException(
+          `업데이트 할 수 없는 정보입니다.`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
-  //   const isAvailable = cantUpdate.some((i) => data.columns.includes(i));
+      const setQuery = formatKeyValuePairs(data.columns, data.values);
+      const idString = arrayToFormattedString(data.id);
 
-  //   const setQuery = formatKeyValuePairs(data.columns, data.values);
-  //   const idString = arrayToFormattedString(data.id);
+      const conditionForUpdate = {
+        table: 'market',
+        set: setQuery,
+        where: `id in ${idString}`,
+      };
 
-  //   const conditionForUpdate = {
-  //     table: 'market',
-  //     set: setQuery,
-  //     where: `id in ${idString}`,
-  //   };
+      return await this.queryRunnerService.updateMySQL(conditionForUpdate);
+    }
 
-  //   return await this.queryRunnerService.updateMySQL(conditionForUpdate);
-  // }
+    if (data.columns.includes('id, tick')) {
+      return 0;
+    }
+  }
+
+  async getLocal(type: string | undefined) {
+    const typeArr = stringToArray(type);
+
+    const cities = fs.readFileSync('src/common/json/cities.json', 'utf8');
+    const citiesJson = JSON.parse(cities);
+
+    function getNeighbourhoods(locationArray: string[]) {
+      if (!Array.isArray(locationArray) || locationArray.length === 0) {
+        throw new Error('Please provide a valid location array.');
+      }
+
+      let currentData = citiesJson;
+      for (const loc of locationArray) {
+        currentData = currentData[loc];
+        if (!currentData) {
+          throw new Error(`${loc} not found.`);
+        }
+      }
+
+      return currentData;
+    }
+
+    function isArray(data) {
+      return Array.isArray(data);
+    }
+
+    if (!isArray(getNeighbourhoods(typeArr))) {
+      return Object.keys(getNeighbourhoods(typeArr));
+    } else {
+      return getNeighbourhoods(typeArr);
+    }
+  }
 }

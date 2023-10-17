@@ -82,3 +82,11 @@ export const arrayToFormattedString = (arr: number[]) => {
   const formattedString = `(${arr.join(',')})`;
   return formattedString;
 };
+
+export const stringToArray = (str: string) => {
+  if (typeof str !== 'string') {
+    throw new Error('Input is not a string.');
+  }
+
+  return str.split(' ');
+};

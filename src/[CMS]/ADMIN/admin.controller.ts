@@ -42,4 +42,15 @@ export class AdminController {
   // async insert(@Body() body: insertDto) {
   //   return await this.advertisementService.insert(body);
   // }
+
+  @ApiQuery({
+    name: 'type',
+    required: false,
+    type: String,
+  })
+  @ApiOperation({ summary: '지역 정보 가져오기' })
+  @Get('local')
+  async getLocal(@Query('type') type: string | undefined) {
+    return await this.adminService.getLocal(type);
+  }
 }
