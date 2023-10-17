@@ -83,7 +83,11 @@ export const arrayToFormattedString = (arr: number[]) => {
   return formattedString;
 };
 
-export const stringToArray = (str: string) => {
+export const stringToArray = (str: string | undefined) => {
+  if (typeof str === 'undefined') {
+    return [];
+  }
+
   if (typeof str !== 'string') {
     throw new Error('Input is not a string.');
   }

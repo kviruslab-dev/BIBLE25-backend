@@ -93,6 +93,10 @@ export class AdminService {
     const cities = fs.readFileSync('src/common/json/cities.json', 'utf8');
     const citiesJson = JSON.parse(cities);
 
+    if (type === undefined) {
+      return Object.keys(citiesJson);
+    }
+
     function getNeighbourhoods(locationArray: string[]) {
       if (!Array.isArray(locationArray) || locationArray.length === 0) {
         throw new Error('Please provide a valid location array.');
