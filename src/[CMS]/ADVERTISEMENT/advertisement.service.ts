@@ -100,31 +100,4 @@ export class AdvertisementService {
     const data = await this.queryRunnerService.findAndCount(condition);
     return data.list;
   }
-
-  async findAndCount(take: number, page: number) {
-    const condition = {
-      select:
-        'id, create_at, title, tick, start_date, end_date, page, location, rate, image, link, active, city, rate',
-      table: 'market',
-      where: `TRUE`,
-      orderBy: 'id asc',
-      limit: String(take ? take : 10),
-      offset: String(page ? take * (page - 1) : 0),
-    };
-
-    return await this.queryRunnerService.findAndCount(condition);
-  }
-
-  async update(data: UpdateDto) {
-    const setQuery = formatKeyValuePairs(data.columns, data.values);
-    const idString = arrayToFormattedString(data.id);
-
-    const conditionForUpdate = {
-      table: 'market',
-      set: setQuery,
-      where: `id in ${idString}`,
-    };
-
-    return await this.queryRunnerService.updateMySQL(conditionForUpdate);
-  }
 }

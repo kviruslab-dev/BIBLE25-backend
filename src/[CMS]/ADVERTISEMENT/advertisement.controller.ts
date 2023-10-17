@@ -176,27 +176,4 @@ export class AdvertisementController {
 
     await this.queryRunnerService.update(condition);
   }
-
-  @ApiQuery({ name: 'take', required: false, type: Number })
-  @ApiQuery({ name: 'page', required: false, type: Number })
-  @ApiOperation({ summary: '광고 데이터 가져오기 (어드민)' })
-  @UseInterceptors(advertisementInterceptor)
-  @Get('select')
-  async findAndCount(
-    @Query('take') take?: number,
-    @Query('page') page?: number,
-  ) {
-    return await this.advertisementService.findAndCount(take, page);
-  }
-
-  @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
-  @Patch('update')
-  async update(@Body() body: UpdateDto) {
-    return await this.advertisementService.update(body);
-  }
-
-  // @Post('insert')
-  // async insert(@Body() body: insertDto) {
-  //   return await this.advertisementService.insert(body);
-  // }
 }
