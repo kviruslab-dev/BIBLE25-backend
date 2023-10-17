@@ -19,6 +19,12 @@ import { AdminService } from './admin.service';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
+  })
   @ApiOperation({ summary: '광고 데이터 가져오기 (어드민)' })
   @UseInterceptors(advertisementInterceptor)
   @Get('select')
