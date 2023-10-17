@@ -17,7 +17,6 @@ import { AdvertisementService } from './advertisement.service';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { UpdateDto } from './dtos/update.dto';
 
 @ApiTags('ADVERTISEMENT')
 @Controller('advertisement')

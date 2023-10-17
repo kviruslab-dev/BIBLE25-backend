@@ -6,7 +6,6 @@ import {
   formatKeyValuePairs,
 } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
-import { UpdateDto } from './dtos/update.dto';
 
 @Injectable()
 export class AdvertisementService {

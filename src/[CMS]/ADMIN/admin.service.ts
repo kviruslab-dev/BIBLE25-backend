@@ -6,8 +6,8 @@ import {
   stringToArray,
 } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
-import { UpdateDto } from '../ADVERTISEMENT/dtos/update.dto';
 import * as fs from 'fs';
+import { UpdateDto } from './dtos/update.dto';
 
 @Injectable()
 export class AdminService {
@@ -62,29 +62,36 @@ export class AdminService {
   async update(data: UpdateDto) {
     const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
 
+    if (data.columns.includes('id, tick, create_at')) {
+      throw new HttpException(
+        `업데이트 할 수 없는 정보입니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const setQuery = formatKeyValuePairs(data.columns, data.values);
+    const idString = arrayToFormattedString(data.id);
+
+    let table: string;
     if (marketType.includes(data.type)) {
-      if (data.columns.includes('id, tick, create_at')) {
-        throw new HttpException(
-          `업데이트 할 수 없는 정보입니다.`,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      const setQuery = formatKeyValuePairs(data.columns, data.values);
-      const idString = arrayToFormattedString(data.id);
-
-      const conditionForUpdate = {
-        table: 'market',
-        set: setQuery,
-        where: `id in ${idString}`,
-      };
-
-      return await this.queryRunnerService.updateMySQL(conditionForUpdate);
+      table = 'market';
     }
 
-    if (data.columns.includes('id, tick')) {
-      return 0;
+    if (data.type === 'product') {
+      table = 'market_item';
     }
+
+    if (data.type === 'donate') {
+      table = 'board';
+    }
+
+    const conditionForUpdate = {
+      table,
+      set: setQuery,
+      where: `id in ${idString}`,
+    };
+
+    return await this.queryRunnerService.updateMySQL(conditionForUpdate);
   }
 
   async getLocal(type: string | undefined) {

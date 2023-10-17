@@ -12,6 +12,7 @@ import {
 } from 'src/common/interceptors/success.interceptor';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
+import { UpdateDto } from './dtos/update.dto';
 
 @ApiTags('ADMIN')
 @Controller('admin')
@@ -32,11 +33,11 @@ export class AdminController {
     return await this.adminService.findAndCount(type);
   }
 
-  // @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
-  // @Patch('update')
-  // async update(@Body() body: UpdateDto) {
-  //   return await this.adminService.update(body);
-  // }
+  @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
+  @Patch('update')
+  async update(@Body() body: UpdateDto) {
+    return await this.adminService.update(body);
+  }
 
   // @Post('insert')
   // async insert(@Body() body: insertDto) {
@@ -54,5 +55,3 @@ export class AdminController {
     return await this.adminService.getLocal(type);
   }
 }
-
-//123
