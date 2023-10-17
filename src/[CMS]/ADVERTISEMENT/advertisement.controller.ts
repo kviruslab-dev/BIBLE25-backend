@@ -7,7 +7,10 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import {
+  advertisementInterceptor,
+  SuccessInterceptor,
+} from 'src/common/interceptors/success.interceptor';
 import { AdvertisementService } from './advertisement.service';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
@@ -169,5 +172,17 @@ export class AdvertisementController {
     };
 
     await this.queryRunnerService.update(condition);
+  }
+
+  @ApiQuery({ name: 'take', required: false, type: Number })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiOperation({ summary: '광고 데이터 가져오기 (어드민)' })
+  @UseInterceptors(advertisementInterceptor)
+  @Get('admin')
+  async findAndCount(
+    @Query('take') take?: number,
+    @Query('page') page?: number,
+  ) {
+    return await this.advertisementService.findAndCount(take, page);
   }
 }

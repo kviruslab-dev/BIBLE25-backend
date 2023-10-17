@@ -32,3 +32,16 @@ export class CustomedSuccessInterceptor implements NestInterceptor {
     );
   }
 }
+
+export class advertisementInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    return next.handle().pipe(
+      map((data) => ({
+        success: true,
+        timestamp: new Date().toISOString(),
+        total: data?.total,
+        data: data?.list,
+      })),
+    );
+  }
+}
