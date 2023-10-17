@@ -106,7 +106,7 @@ export class AdminService {
       for (const loc of locationArray) {
         currentData = currentData[loc];
         if (!currentData) {
-          throw new Error(`${loc} not found.`);
+          return '';
         }
       }
 
