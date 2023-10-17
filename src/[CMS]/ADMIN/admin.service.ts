@@ -2,12 +2,14 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ADMIN_TYPE_OBJECT } from 'src/common/const';
 import {
   arrayToFormattedString,
+  convertArrayToStringMySQL,
   formatKeyValuePairs,
   stringToArray,
 } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import * as fs from 'fs';
 import { UpdateDto } from './dtos/update.dto';
+import { InsertMarketDto } from './dtos/insertMarket.dto';
 
 @Injectable()
 export class AdminService {
@@ -129,5 +131,35 @@ export class AdminService {
     } else {
       return getNeighbourhoods(typeArr);
     }
+  }
+
+  async insertMarket(data: InsertMarketDto) {
+    const columnsString = convertArrayToStringMySQL(
+      Object.keys(data),
+      'values',
+    );
+    const valuesString = convertArrayToStringMySQL(
+      Object.values(data),
+      'values',
+    );
+
+    console.log(columnsString);
+    console.log(valuesString);
+    const condition = {
+      table: 'market',
+      columns: columnsString,
+      values: valuesString,
+    };
+
+    await this.queryRunnerService.insert(condition);
+    return;
+  }
+
+  async insertProduct(body: any) {
+    return 0;
+  }
+
+  async insertDonate(body: any) {
+    return 0;
   }
 }

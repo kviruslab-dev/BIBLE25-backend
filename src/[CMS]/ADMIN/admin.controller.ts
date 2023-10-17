@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Patch,
+  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { UpdateDto } from './dtos/update.dto';
+import { InsertMarketDto } from './dtos/insertMarket.dto';
 
 @ApiTags('ADMIN')
 @Controller('admin')
@@ -39,10 +41,27 @@ export class AdminController {
     return await this.adminService.update(body);
   }
 
-  // @Post('insert')
-  // async insert(@Body() body: insertDto) {
-  //   return await this.advertisementService.insert(body);
-  // }
+  @Post('insert')
+  async insert(@Body() body: any) {
+    const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
+
+    if (marketType.includes(body.type)) {
+      return this.adminService.insertMarket(body);
+    }
+
+    if (body.type === 'product') {
+      return this.adminService.insertProduct(body);
+    }
+
+    if (body.type === 'donate') {
+      return this.adminService.insertDonate(body);
+    }
+  }
+
+  @Post('insert/market')
+  async insertMarket(@Body() body: InsertMarketDto) {
+    return this.adminService.insertMarket(body);
+  }
 
   @ApiQuery({
     name: 'type',

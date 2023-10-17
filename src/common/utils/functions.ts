@@ -48,6 +48,24 @@ export const convertArrayToString = (arr: any, type: string) => {
   }
 };
 
+export const convertArrayToStringMySQL = (arr: any, type: string) => {
+  if (!Array.isArray(arr)) {
+    return null;
+  }
+
+  if (type === 'columns') {
+    return `'${arr.join('", "')}'`;
+  }
+
+  if (type === 'values') {
+    const convertedArr = arr.map((item) => {
+      return typeof item === 'string' ? `'${item}'` : item;
+    });
+
+    return convertedArr.join(', ');
+  }
+};
+
 export const formatKeyValuePairs = (keys: any[], values: any[]) => {
   if (
     !Array.isArray(keys) ||
