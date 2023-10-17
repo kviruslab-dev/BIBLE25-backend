@@ -3,6 +3,14 @@ import { IsArray, IsString } from 'class-validator';
 
 export class UpdateDto {
   @ApiProperty({
+    example: 'main',
+    description: 'type',
+    required: true,
+  })
+  @IsString()
+  type: string;
+
+  @ApiProperty({
     example: ['start_date', 'end_date', 'note', 'rate'],
     description: 'columns',
     required: true,
