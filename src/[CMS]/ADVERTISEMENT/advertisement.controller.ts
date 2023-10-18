@@ -173,6 +173,6 @@ export class AdvertisementController {
       where: `id=${id}`,
     };
 
-    await this.queryRunnerService.update(condition);
+    await this.queryRunnerService.updateMySQL(condition);
   }
 }

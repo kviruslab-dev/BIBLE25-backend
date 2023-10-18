@@ -54,6 +54,6 @@ export class ProductController {
       where: `id=${id}`,
     };
 
-    await this.queryRunnerService.update(condition);
+    await this.queryRunnerService.updateMySQL(condition);
   }
 }
