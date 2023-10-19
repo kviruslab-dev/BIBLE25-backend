@@ -199,4 +199,28 @@ export class AdminService {
 
     await this.queryRunnerService.insert(condition);
   }
+
+  async delete(type: string, id: number) {
+    const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
+
+    let table: string;
+    if (marketType.includes(type)) {
+      table = 'market';
+    }
+
+    if (type === 'product') {
+      table = 'market_item';
+    }
+
+    if (type === 'donate') {
+      table = 'board';
+    }
+
+    const condition = {
+      table,
+      where: `id = ${id}`,
+    };
+
+    return await this.queryRunnerService.delete(condition);
+  }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -50,25 +51,25 @@ export class AdminController {
     type: String,
     description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
   })
-  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민)' })
+  @ApiOperation({ summary: '데이터 추가하기 (어드민)' })
   @Post('insert')
   async insert(@Query('type') type: string, @Body() body: InsertDto) {
     return await this.adminService.insert(type, body);
   }
 
-  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민, 광고)' })
+  @ApiOperation({ summary: '데이터 추가하기 (어드민, 광고)' })
   @Post('insertAd')
   async insertAd(@Body() body: InsertAdvertisementDto) {
     return await this.adminService.insertAd(body);
   }
 
-  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민, 상품)' })
+  @ApiOperation({ summary: '데이터 추가하기 (어드민, 상품)' })
   @Post('insertPd')
   async insertPd(@Body() body: InsertProductDto) {
     return await this.adminService.insertPd(body);
   }
 
-  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민, 후원)' })
+  @ApiOperation({ summary: '데이터 추가하기 (어드민, 후원)' })
   @Post('insertBd')
   async insertBd(@Body() body: InsertBoardDto) {
     return await this.adminService.insertBd(body);
@@ -83,5 +84,23 @@ export class AdminController {
   @Get('local')
   async getLocal(@Query('type') type: string | undefined) {
     return await this.adminService.getLocal(type);
+  }
+
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
+  })
+  @ApiQuery({
+    name: 'id',
+    required: true,
+    type: Number,
+    description: '데이터의 아이디',
+  })
+  @ApiOperation({ summary: '데이터 삭제하기 (어드민)' })
+  @Delete('delete')
+  async delete(@Query('type') type: string, @Query('id') id: number) {
+    return await this.adminService.delete(type, id);
   }
 }
