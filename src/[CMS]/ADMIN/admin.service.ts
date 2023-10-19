@@ -8,6 +8,9 @@ import {
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import * as fs from 'fs';
 import { UpdateDto } from './dtos/update.dto';
+import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
+import { InsertProductDto } from './dtos/insertProduct.dto';
+import { InsertBoardDto } from './dtos/insertBoard.dto';
 
 @Injectable()
 export class AdminService {
@@ -120,7 +123,7 @@ export class AdminService {
       return currentData;
     }
 
-    function isArray(data) {
+    function isArray(data: any) {
       return Array.isArray(data);
     }
 
@@ -129,5 +132,71 @@ export class AdminService {
     } else {
       return getNeighbourhoods(typeArr);
     }
+  }
+
+  async insert(type: string, data: any) {
+    const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
+
+    if (marketType.includes(type)) {
+      await this.insertAd(data);
+      return;
+    }
+
+    if (type === 'product') {
+      await this.insertPd(data);
+      return;
+    }
+
+    if (type === 'donate') {
+      await this.insertBd(data);
+      return;
+    }
+
+    return;
+  }
+
+  async insertAd(data: InsertAdvertisementDto) {
+    const condition = {
+      table: 'market',
+      columns: `
+        location, page, tick, image, link, start_date, end_date, admin, note, country, city, title, timezone, showyn, active, rate
+      `,
+      values: `
+        ${data.location}, ${data.page}, ${data.tick}, '${data.image}', '${data.link}', 
+        '${data.start_date}', '${data.end_date}', '${data.admin}', '${data.note}',
+        '${data.country}',  '${data.city}', '${data.title}', '${data.timezone}', 
+        ${data.showyn}, ${data.active}, ${data.rate}
+      `,
+    };
+
+    await this.queryRunnerService.insert(condition);
+  }
+
+  async insertPd(data: InsertProductDto) {
+    const condition = {
+      table: 'market_item',
+      columns: `
+        gubun, tick, title, money, star, dc, image, link, showyn, admin, note, sequence, active
+      `,
+      values: `
+        ${data.gubun}, ${data.tick}, '${data.title}', ${data.money}, '${data.star}', 
+        ${data.dc}, '${data.image}', '${data.link}', ${data.showyn},  '${data.admin}', 
+        '${data.note}', ${data.sequence}, ${data.active}
+      `,
+    };
+
+    await this.queryRunnerService.insert(condition);
+  }
+
+  async insertBd(data: InsertBoardDto) {
+    const condition = {
+      table: 'board',
+      columns: `title, link, image, type`,
+      values: `
+        '${data.title}', '${data.link}', '${data.image}', ${data.type}
+      `,
+    };
+
+    await this.queryRunnerService.insert(condition);
   }
 }

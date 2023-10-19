@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Patch,
+  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,6 +14,10 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { UpdateDto } from './dtos/update.dto';
+import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
+import { InsertProductDto } from './dtos/insertProduct.dto';
+import { InsertBoardDto } from './dtos/insertBoard.dto';
+import { InsertDto } from './dtos/insert.dto';
 
 @ApiTags('ADMIN')
 @Controller('admin')
@@ -39,10 +44,35 @@ export class AdminController {
     return await this.adminService.update(body);
   }
 
-  // @Post('insert')
-  // async insert(@Body() body: insertDto) {
-  //   return await this.advertisementService.insert(body);
-  // }
+  @ApiQuery({
+    name: 'type',
+    required: true,
+    type: String,
+    description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
+  })
+  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민)' })
+  @Post('insert')
+  async insert(@Query('type') type: string, @Body() body: InsertDto) {
+    return await this.adminService.insert(type, body);
+  }
+
+  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민, 광고)' })
+  @Post('insertAd')
+  async insertAd(@Body() body: InsertAdvertisementDto) {
+    return await this.adminService.insertAd(body);
+  }
+
+  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민, 상품)' })
+  @Post('insertPd')
+  async insertPd(@Body() body: InsertProductDto) {
+    return await this.adminService.insertPd(body);
+  }
+
+  @ApiOperation({ summary: '광고 데이터 추가하기 (어드민, 후원)' })
+  @Post('insertBd')
+  async insertBd(@Body() body: InsertBoardDto) {
+    return await this.adminService.insertBd(body);
+  }
 
   @ApiQuery({
     name: 'type',
