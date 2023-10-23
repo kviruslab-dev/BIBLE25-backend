@@ -89,7 +89,7 @@ export class Bible25Service {
         list: [
           {
             id: 9999999,
-            content: '\n',
+            content: '',
             image:
               'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/default.png',
           },
