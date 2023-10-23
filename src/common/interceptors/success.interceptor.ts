@@ -45,3 +45,17 @@ export class advertisementInterceptor implements NestInterceptor {
     );
   }
 }
+
+export class bible25Interceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    return next.handle().pipe(
+      map((data) => ({
+        code: 1000,
+        message: 'complete',
+        time: new Date().toISOString(),
+        data: data?.list,
+        total: data?.total,
+      })),
+    );
+  }
+}

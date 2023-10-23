@@ -17,6 +17,7 @@ import { LogModule } from 'src/[CMS]/LOG/log.module';
 import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
 import { DeviceModule } from 'src/[CMS]/DEVICE/device.module';
 import { AdminModule } from 'src/[CMS]/ADMIN/admin.module';
+import { Bible25Module } from 'src/[CMS]/BIBLE25/bible25.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { AdminModule } from 'src/[CMS]/ADMIN/admin.module';
     AdvertisementModule,
     AutoModule,
     BibleModule,
+    Bible25Module,
     BoardModule,
     DeviceModule,
     ChansongModule,
