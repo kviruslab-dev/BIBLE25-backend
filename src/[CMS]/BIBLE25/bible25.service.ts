@@ -86,10 +86,15 @@ export class Bible25Service {
 
     if (total === 0) {
       return {
-        id: -1,
-        content: '\n',
-        image:
-          'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/default.png',
+        list: [
+          {
+            id: -1,
+            content: '\n',
+            image:
+              'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/default.png',
+          },
+        ],
+        total: 1,
       };
     }
 
