@@ -7,14 +7,31 @@ import { CommentDto } from './dtos/comment.dto';
 export class CommentService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
-  async createComment(body: CommentDto) {
+  async createComment(data: CommentDto) {
+    const condition = {
+      select: 'id',
+      table: 'comment',
+      where: `phone ='${data.phone}'`,
+    };
+
+    const findByPhone = await this.queryRunnerService.findOne(condition);
+
+    if (findByPhone) {
+      return {
+        list: '이미 응원댓글을 남기셨습니다.',
+      };
+    }
+
     const conditionForInsert = {
       table: 'comment',
       columns: ['phone', 'comment'],
-      values: [`'${body.phone}'`, `'${body.comment}'`],
+      values: [`'${data.phone}'`, `'${data.comment}'`],
     };
 
-    return await this.queryRunnerService.insert(conditionForInsert);
+    await this.queryRunnerService.insert(conditionForInsert);
+    return {
+      list: '응원에 참여해주셔서 감사합니다.',
+    };
   }
 
   async findAndCount(condition: any) {
