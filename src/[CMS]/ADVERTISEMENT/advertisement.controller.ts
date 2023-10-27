@@ -1,18 +1,13 @@
 import {
-  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Patch,
-  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import {
-  advertisementInterceptor,
-  SuccessInterceptor,
-} from 'src/common/interceptors/success.interceptor';
+import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { AdvertisementService } from './advertisement.service';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
@@ -77,7 +72,7 @@ export class AdvertisementController {
         const condition = {
           select: 'id, location, title, image, link',
           table: 'market',
-          where: `page=${pageFromType} and location =${location[type]} and timezone='${timezone}' and city='${city}' and active=1`,
+          where: `page=${pageFromType} and location =${location[type]} and city='${city}' and active=1`,
           orderBy: 'id asc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
@@ -110,7 +105,7 @@ export class AdvertisementController {
           const condition = {
             select: 'id, title, image, link',
             table: 'market',
-            where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+            where: `page=${pageFromType} and city='${city}' and active=1`,
             orderBy: 'id asc',
             limit: String(take ? take : 10),
             offset: String(page ? take * (page - 1) : 0),
@@ -135,7 +130,7 @@ export class AdvertisementController {
         const condition = {
           select: 'id, title, image, link',
           table: 'market',
-          where: `page=${pageFromType} and timezone='${timezone}' and city='${city}' and active=1`,
+          where: `page=${pageFromType} and city='${city}' and active=1`,
           orderBy: 'id asc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
