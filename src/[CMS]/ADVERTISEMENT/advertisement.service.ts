@@ -86,11 +86,14 @@ export class AdvertisementService {
 
     if (jang <= 10) {
       const index = jang - 1;
+
       return [data.list[index]];
     }
 
     if (jang > 10) {
-      const index = (jang % 10) - 1;
+      let index = (jang % 10) - 1;
+      index = index === -1 ? 9 : index;
+
       return [data.list[index]];
     }
   }
