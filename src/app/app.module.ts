@@ -18,7 +18,7 @@ import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
 import { DeviceModule } from 'src/[CMS]/DEVICE/device.module';
 import { AdminModule } from 'src/[CMS]/ADMIN/admin.module';
 import { Bible25Module } from 'src/[CMS]/BIBLE25/bible25.module';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+// import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
@@ -38,12 +38,12 @@ import { APP_GUARD } from '@nestjs/core';
       synchronize: JSON.parse(process.env.DATABASE_SYNCHRONIZE),
       logging: process.env.MODE === 'development' ? ['query', 'error'] : false,
     }),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 1000,
-        limit: 10,
-      },
-    ]),
+    // ThrottlerModule.forRoot([
+    //   {
+    //     ttl: 1000,
+    //     limit: 10,
+    //   },
+    // ]),
     ScheduleModule.forRoot(),
     AdminModule,
     AdvertisementModule,
@@ -62,10 +62,10 @@ import { APP_GUARD } from '@nestjs/core';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule implements NestModule {
