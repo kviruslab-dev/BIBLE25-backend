@@ -66,20 +66,11 @@ export class AdvertisementController {
       const location = { main01: 1, main02: 2, main03: 3, main04: 4 };
 
       try {
-        // const condition = {
-        //   select: 'id, location, title, image, link',
-        //   table: 'market',
-        //   where: `page=${pageFromType} and location =${location[type]} and city='${city}' and active=1`,
-        //   orderBy: 'id asc',
-        //   limit: String(take ? take : 10),
-        //   offset: String(page ? take * (page - 1) : 0),
-        // };
-
-        //! 지역 상관 없이, 메인 광고는 디폴트 값으로 지정
         const condition = {
           select: 'id, location, title, image, link',
           table: 'market',
-          where: `page=${pageFromType} and location =${location[type]} and city='base' and active=1`,
+          // where: `page=${pageFromType} and location =${location[type]} and city='${city}' and active=1`,
+          where: `page=${pageFromType} and location =${location[type]} and city='강서구' and active=1`,
           orderBy: 'id asc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
