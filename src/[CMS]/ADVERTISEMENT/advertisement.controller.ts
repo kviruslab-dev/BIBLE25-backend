@@ -51,12 +51,12 @@ export class AdvertisementController {
       );
     }
 
-    // if (!lat || !lon) {
-    //   throw new HttpException(
-    //     `lat, lon 값을 입력하지 않았습니다.`,
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
+    if (!lat || !lon) {
+      throw new HttpException(
+        `lat, lon 값을 입력하지 않았습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
 
     const pageFromType = await this.advertisementService.getPageFromType(type);
 
@@ -69,14 +69,23 @@ export class AdvertisementController {
         const condition = {
           select: 'id, location, title, image, link',
           table: 'market',
-          // where: `page=${pageFromType} and location =${location[type]} and city='${city}' and active=1`,
-          where: `page=${pageFromType} and location =${location[type]} and city='강서구' and active=1`,
+          where: `page=${pageFromType} and location =${location[type]} and city='${city}' and active=1`,
           orderBy: 'id asc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findInMain(condition);
+        //! 데이터가 존재하지 않는 경우, base 광고 반환
+        const data = await this.advertisementService.findInMain(condition);
+
+        if (data.length === 0) {
+          throw new HttpException(
+            `데이터가 존재하지 않습니다.`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        return data;
       } catch (error) {
         const condition = {
           select: 'id, location, title, image, link',
@@ -109,7 +118,20 @@ export class AdvertisementController {
             offset: String(page ? take * (page - 1) : 0),
           };
 
-          return await this.advertisementService.findInBible(condition, jang);
+          //! 데이터가 존재하지 않는 경우, base 광고 반환
+          const data = await this.advertisementService.findInBible(
+            condition,
+            jang,
+          );
+
+          if (!data[0]) {
+            throw new HttpException(
+              `데이터가 존재하지 않습니다.`,
+              HttpStatus.BAD_REQUEST,
+            );
+          }
+
+          return data;
         } catch (err) {
           const condition = {
             select: 'id, title, image, link',
@@ -134,7 +156,17 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findInEtc(condition);
+        //! 데이터가 존재하지 않는 경우, base 광고 반환
+        const data = await this.advertisementService.findInEtc(condition);
+
+        if (data.length === 0) {
+          throw new HttpException(
+            `데이터가 존재하지 않습니다.`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        return data;
       } catch (error) {
         const condition = {
           select: 'id, title, image, link',
