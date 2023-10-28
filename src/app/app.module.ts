@@ -18,8 +18,9 @@ import { CommentModule } from 'src/[CMS]/COMMENT/comment.module';
 import { DeviceModule } from 'src/[CMS]/DEVICE/device.module';
 import { AdminModule } from 'src/[CMS]/ADMIN/admin.module';
 import { Bible25Module } from 'src/[CMS]/BIBLE25/bible25.module';
+import { FcmPushModule } from 'src/[CMS]/FCMPUSH/fcmpush.module';
 // import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+// import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { APP_GUARD } from '@nestjs/core';
     Bible25Module,
     BoardModule,
     DeviceModule,
+    FcmPushModule,
     ChansongModule,
     ProductModule,
     TodayModule,
