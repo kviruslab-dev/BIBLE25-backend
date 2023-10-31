@@ -81,21 +81,10 @@ export class AdvertisementService {
     return data.list;
   }
 
-  async findInBible(condition: any, jang: number) {
+  async findInBible(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
 
-    if (jang <= 10) {
-      const index = jang - 1;
-
-      return [data.list[index]];
-    }
-
-    if (jang > 10) {
-      let index = (jang % 10) - 1;
-      index = index === -1 ? 9 : index;
-
-      return [data.list[index]];
-    }
+    return data.list;
   }
 
   async findInEtc(condition: any) {

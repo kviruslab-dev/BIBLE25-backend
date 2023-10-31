@@ -108,21 +108,27 @@ export class AdvertisementController {
             HttpStatus.BAD_REQUEST,
           );
         }
+
+        let index: number;
+        if (jang < 10) {
+          index = jang;
+        }
+
+        if (jang >= 10) {
+          index = jang % 10;
+        }
+
         try {
           const condition = {
             select: 'id, title, image, link',
             table: 'market',
-            where: `page=${pageFromType} and city='${city}' and active=1`,
+            where: `title='성경ㅁ${index}장' and city='${city}' and active=1`,
             orderBy: 'id asc',
-            limit: String(take ? take : 10),
-            offset: String(page ? take * (page - 1) : 0),
+            limit: '10',
+            offset: '0',
           };
 
-          //! 데이터가 존재하지 않는 경우, base 광고 반환
-          const data = await this.advertisementService.findInBible(
-            condition,
-            jang,
-          );
+          const data = await this.advertisementService.findInBible(condition);
 
           if (!data[0]) {
             throw new HttpException(
@@ -136,13 +142,13 @@ export class AdvertisementController {
           const condition = {
             select: 'id, title, image, link',
             table: 'market',
-            where: `page=${pageFromType} and city='base' and active=1`,
+            where: `title='성경ㅁ${index}장' and city='base' and active=1`,
             orderBy: 'id asc',
-            limit: String(take ? take : 10),
-            offset: String(page ? take * (page - 1) : 0),
+            limit: '10',
+            offset: '0',
           };
 
-          return await this.advertisementService.findInBible(condition, jang);
+          return await this.advertisementService.findInBible(condition);
         }
       }
 
