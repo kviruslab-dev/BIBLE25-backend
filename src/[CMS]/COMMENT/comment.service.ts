@@ -3,6 +3,8 @@ import { transformDate } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { CommentDto } from './dtos/comment.dto';
 
+import Filter = require('badwords-ko');
+
 @Injectable()
 export class CommentService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
@@ -22,10 +24,13 @@ export class CommentService {
       };
     }
 
+    const filter = new Filter();
+    const filteredComment = filter.clean(data.comment);
+
     const conditionForInsert = {
       table: 'comment',
       columns: ['phone', 'comment'],
-      values: [`'${data.phone}'`, `'${data.comment}'`],
+      values: [`'${data.phone}'`, `'${filteredComment}'`],
     };
 
     await this.queryRunnerService.insert(conditionForInsert);
