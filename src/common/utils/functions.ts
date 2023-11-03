@@ -94,3 +94,68 @@ export const stringToArray = (str: string | undefined) => {
 
   return str.split(' ');
 };
+
+//! 광고 순서 변경을 위한 함수들입니다.
+export const reorderArray = (arr01: any) => {
+  //! 길이가 0인 경우, 그대로 반환
+  if (arr01.length === 0) {
+    return arr01;
+  }
+
+  //! 길이가 7 이상인 경우, 그대로 반환
+  if (arr01.length >= 7) {
+    return arr01;
+  }
+
+  //! 길이가 1이상 6이하인 경우
+  const arr02 = orderArray(arr01.length);
+
+  const result = [];
+  for (let i = 0; i < arr02.length; i++) {
+    const index = arr02.indexOf(i + 1); // arr2에서 현재 인덱스의 위치를 찾습니다.
+    if (index === -1) {
+      throw new Error(
+        'Second array must contain values 1, 2, 3, ... in some order',
+      );
+    }
+    result.push(arr01[index]); // arr1에서 해당 위치의 요소를 결과 배열에 추가합니다.
+  }
+  return result;
+};
+
+export const orderCase = {
+  1: { 1: [1] },
+  2: { 1: [1, 2], 2: [2, 1] },
+  3: { 1: [1, 2, 3], 2: [2, 1, 3], 3: [1, 3, 2] },
+  4: { 1: [1, 2, 3, 4], 2: [2, 1, 3, 4], 3: [1, 3, 2, 4], 4: [1, 2, 4, 3] },
+  5: {
+    1: [1, 2, 3, 4, 5],
+    2: [2, 1, 3, 4, 5],
+    3: [1, 3, 2, 4, 5],
+    4: [2, 1, 4, 3, 5],
+    5: [1, 2, 3, 5, 4],
+  },
+  6: {
+    1: [1, 2, 3, 4, 5, 6],
+    2: [2, 1, 3, 4, 5, 6],
+    3: [1, 3, 2, 4, 5, 6],
+    4: [2, 1, 3, 5, 4, 6],
+    5: [1, 2, 3, 4, 6, 4],
+    6: [1, 3, 2, 5, 4, 6],
+  },
+};
+
+export const getRandomNumberUpToN = (n: number) => {
+  if (n < 1 || !Number.isInteger(n)) {
+    throw new Error('n must be a positive integer.');
+  }
+
+  // 1부터 n까지의 자연수 중에서 무작위로 하나를 선택
+  const randomValue = Math.floor(Math.random() * n) + 1;
+
+  return randomValue;
+};
+
+export const orderArray = (len: number) => {
+  return orderCase[len][getRandomNumberUpToN(len)];
+};

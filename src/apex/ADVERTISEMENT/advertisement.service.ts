@@ -4,6 +4,7 @@ import { KAKAO_URL } from 'src/common/const';
 import {
   arrayToFormattedString,
   formatKeyValuePairs,
+  reorderArray,
 } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
@@ -78,17 +79,17 @@ export class AdvertisementService {
 
   async findInMain(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
-    return data.list;
+    return reorderArray(data.list);
   }
 
   async findInBible(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
 
-    return data.list;
+    return reorderArray(data.list);
   }
 
   async findInEtc(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
-    return data.list;
+    return reorderArray(data.list);
   }
 }
