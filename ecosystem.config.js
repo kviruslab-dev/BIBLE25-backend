@@ -4,7 +4,7 @@ module.exports = {
       name: 'back-refact',
       script: './dist/main.js',
       exec_mode: 'cluster',
-      instances: 25,
+      instances: 20,
       autorestart: true,
       watch: false,
       env: {
