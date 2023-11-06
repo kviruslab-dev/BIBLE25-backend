@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { KAKAO_URL } from 'src/common/const';
-import {
-  arrayToFormattedString,
-  formatKeyValuePairs,
-  reorderArray,
-} from 'src/common/utils/functions';
+import { reorderArray } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -88,8 +84,12 @@ export class AdvertisementService {
     return reorderArray(data.list);
   }
 
-  async findInEtc(condition: any) {
+  async findInEtc(condition: any, type: string) {
     const data = await this.queryRunnerService.findAndCount(condition);
+
+    if (type === 'first') {
+      return data.list;
+    }
     return reorderArray(data.list);
   }
 }

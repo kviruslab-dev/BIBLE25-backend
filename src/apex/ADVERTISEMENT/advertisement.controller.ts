@@ -7,11 +7,11 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { AdvertisementService } from './advertisement.service';
-import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
-import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ONE_ADVERTISEMENT } from 'src/common/const';
+import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { AdvertisementService } from './advertisement.service';
 
 @ApiTags('ADVERTISEMENT')
 @Controller('advertisement')
@@ -163,7 +163,7 @@ export class AdvertisementController {
         };
 
         //! 데이터가 존재하지 않는 경우, base 광고 반환
-        const data = await this.advertisementService.findInEtc(condition);
+        const data = await this.advertisementService.findInEtc(condition, type);
 
         if (data.length === 0) {
           throw new HttpException(
@@ -183,7 +183,7 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findInEtc(condition);
+        return await this.advertisementService.findInEtc(condition, type);
       }
     }
   }
