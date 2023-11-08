@@ -1,11 +1,10 @@
 import {
-  ExceptionFilter,
-  Catch,
   ArgumentsHost,
+  Catch,
+  ExceptionFilter,
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { saveErrorLog } from '../utils/saveErrorLog';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -33,7 +32,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         },
       });
 
-      saveErrorLog(status, request.method, request.url, error);
+      // saveErrorLog(status, request.method, request.url, error);
     } else {
       response.status(status).json({
         success: false,
@@ -41,7 +40,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         data: { ...error },
       });
 
-      saveErrorLog(status, request.method, request.url, error.error);
+      // saveErrorLog(status, request.method, request.url, error.error);
     }
   }
 }
