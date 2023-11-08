@@ -9,45 +9,33 @@ export class LogService {
 
   async SaveErrror(data: ErrorLogDto) {
     const { status_code, method, url, error } = data;
+
+    //! 3일 내에 같은 에러가 발생한 적이 있는지 확인한다.
     const findOneCondition = {
       select: 'id, count',
       table: 'error_log',
-      where: `status_code=${status_code} and method='${method}' and url='${url}' and error='${error}'`,
+      where: `status_code=${status_code} and method='${method}' and url='${url}' and error='${error}' and DATEDIFF(NOW(), created_at) <= 3`,
     };
 
-    const isExist = await this.queryRunnerService.findOne(findOneCondition);
-    if (isExist) {
-      const findOneCondition = {
-        select: 'id, count',
-        table: 'error_log',
-        where: `status_code=${status_code} and method='${method}' and url='${url}' and error='${error}'`,
-      };
+    const errorLog = await this.queryRunnerService.findOne(findOneCondition);
 
-      const isExist = await this.queryRunnerService.findOne(findOneCondition);
-      const newCount = isExist.count + 1;
-      const targetId = isExist.id;
-
-      const updateQuery = `UPDATE error_log SET count = ${newCount} WHERE id = ${targetId}`;
-      await this.queryRunnerService.query(updateQuery);
-      return;
-    }
-
-    if (!isExist) {
-      const condition = {
-        table: 'error_log',
-        columns: `status_code, method, url, error, count`,
-        values: `${status_code}, '${method}', '${url}', '${error}', '1'`,
-      };
-
-      await this.queryRunnerService.insert(condition);
-
-      // 슬랙으로 메세지 전송
+    //! 3일 내에 발생하지 않았던 에러인 경우, 슬랙봇을 통해 개발팀에 알린다.
+    if (!errorLog) {
       sendMessageToSlack(`
       🚨🚨🚨 STATUS CODE : ${status_code} 🚨🚨🚨
       오류 메세지 : Cannot ${method} ${url},
       ${error}
       `);
-      return;
     }
+
+    //! 에러 내용을 저장한다.
+    const condition = {
+      table: 'error_log',
+      columns: `status_code, method, url, error, count`,
+      values: `${status_code}, '${method}', '${url}', '${error}', '1'`,
+    };
+
+    await this.queryRunnerService.insert(condition);
+    return;
   }
 }
