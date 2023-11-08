@@ -1,11 +1,11 @@
 import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 
-import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
-import {} from 'src/common/utils/functions';
 import { ApiTags } from '@nestjs/swagger';
-import { LogService } from './log.service';
+import {} from 'src/common/utils/functions';
+import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ErrorLogDto } from './dtos/log.dto';
+import { LogService } from './log.service';
 
 @ApiTags('LOG')
 @Controller('log')
@@ -17,6 +17,6 @@ export class LogController {
   ) {}
   @Post('error')
   async createLog(@Body() body: ErrorLogDto) {
-    await this.logService.SaveErrror(body);
+    await this.logService.SaveError(body);
   }
 }
