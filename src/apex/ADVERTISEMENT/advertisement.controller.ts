@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Patch,
+  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -188,7 +190,7 @@ export class AdvertisementController {
     }
   }
 
-  @ApiOperation({ summary: '광고 클릭 수 증가시키기' })
+  @ApiOperation({ summary: '광고 클릭 수 증가시키기 (PATCH 버전)' })
   @Patch()
   async updateTick(@Query('id') id: number) {
     if (!id) {
@@ -202,6 +204,25 @@ export class AdvertisementController {
       table: 'market',
       set: 'tick=tick+1',
       where: `id=${id}`,
+    };
+
+    await this.queryRunnerService.updateMySQL(condition);
+  }
+
+  @ApiOperation({ summary: '광고 클릭 수 증가시키기 (POST 버전)' })
+  @Post()
+  async updateTickPostVer(@Body() body: object & { id: number }) {
+    if (!body.id) {
+      throw new HttpException(
+        `id 값을 입력하지 않았습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const condition = {
+      table: 'market',
+      set: 'tick=tick+1',
+      where: `id=${body.id}`,
     };
 
     await this.queryRunnerService.updateMySQL(condition);
