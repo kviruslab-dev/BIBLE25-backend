@@ -84,12 +84,9 @@ export class AdvertisementService {
     return reorderArray(data.list);
   }
 
-  async findInEtc(condition: any, type: string) {
+  async findInEtc(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
 
-    if (type === 'first') {
-      return data.list;
-    }
     return reorderArray(data.list);
   }
 }

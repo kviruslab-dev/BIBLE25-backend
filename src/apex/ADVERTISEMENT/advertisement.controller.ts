@@ -165,7 +165,7 @@ export class AdvertisementController {
         };
 
         //! 데이터가 존재하지 않는 경우, base 광고 반환
-        const data = await this.advertisementService.findInEtc(condition, type);
+        const data = await this.advertisementService.findInEtc(condition);
 
         if (data.length === 0) {
           throw new HttpException(
@@ -185,7 +185,7 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findInEtc(condition, type);
+        return await this.advertisementService.findInEtc(condition);
       }
     }
   }
