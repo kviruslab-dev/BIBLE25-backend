@@ -40,8 +40,8 @@ export class AdvertisementController {
   @Get()
   async getData(
     @Query('type') type: string,
-    @Query('lat') lat: string,
-    @Query('lon') lon: string,
+    // @Query('lat') lat: string,
+    // @Query('lon') lon: string,
     @Query('take') take?: number,
     @Query('page') page?: number,
     @Query('jang') jang?: number,
@@ -53,12 +53,15 @@ export class AdvertisementController {
       );
     }
 
-    if (!lat || !lon) {
-      throw new HttpException(
-        `lat, lon 값을 입력하지 않았습니다.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // if (!lat || !lon) {
+    //   throw new HttpException(
+    //     `lat, lon 값을 입력하지 않았습니다.`,
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
+
+    const lat = '0';
+    const long = '0';
 
     const pageFromType = await this.advertisementService.getPageFromType(type);
 
