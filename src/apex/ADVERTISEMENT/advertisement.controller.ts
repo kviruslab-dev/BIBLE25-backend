@@ -61,7 +61,7 @@ export class AdvertisementController {
     // }
 
     const lat = '0';
-    const long = '0';
+    const lon = '0';
 
     const pageFromType = await this.advertisementService.getPageFromType(type);
 
