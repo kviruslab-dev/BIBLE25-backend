@@ -1,34 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { KAKAO_URL } from 'src/common/const';
-import { reorderArray } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { reorderArray } from 'src/common/utils/functions';
 
 @Injectable()
 export class AdvertisementService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   async getAddress(lat: string, lon: string) {
-    const url = KAKAO_URL + `?x=${lon}&y=${lat}&input_coord=WGS84`;
+    // const url = KAKAO_URL + `?x=${lon}&y=${lat}&input_coord=WGS84`;
 
-    const axiosResult = await axios({
-      url: url,
-      method: 'get',
-      headers: {
-        Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
-      },
-    });
+    // const axiosResult = await axios({
+    //   url: url,
+    //   method: 'get',
+    //   headers: {
+    //     Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
+    //   },
+    // });
 
-    const si =
-      axiosResult.data.documents[0]?.address?.region_1depth_name ?? '서울';
-    const gu =
-      axiosResult.data.documents[0]?.address?.region_2depth_name ?? 'base';
-    const country = si === 'ETC' && gu === 'unknown' ? 'unknown' : 'KR';
+    // const si =
+    //   axiosResult.data.documents[0]?.address?.region_1depth_name ?? '서울';
+    // const gu =
+    //   axiosResult.data.documents[0]?.address?.region_2depth_name ?? 'base';
+    // const country = si === 'ETC' && gu === 'unknown' ? 'unknown' : 'KR';
+
+    // return {
+    //   timezone: si,
+    //   country,
+    //   city: gu,
+    // };
 
     return {
-      timezone: si,
-      country,
-      city: gu,
+      timezone: '서울',
+      city: 'base',
+      country: 'KR',
     };
   }
 
