@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -50,26 +49,32 @@ export class FcmPushService {
   }
 
   async getCityDong(lat: string, lon: string) {
-    const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lon}&y=${lat}&input_coord=WGS84`;
+    // const url = `https://dapi.kakao.com/v2/local/geo/coord2address.json?x=${lon}&y=${lat}&input_coord=WGS84`;
 
-    const axiosResult = await axios({
-      url,
-      method: 'get',
-      headers: {
-        Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
-      },
-    });
+    // const axiosResult = await axios({
+    //   url,
+    //   method: 'get',
+    //   headers: {
+    //     Authorization: `KakaoAK ${process.env.KAKAO_CLIENT_ID}`,
+    //   },
+    // });
 
-    const doci =
-      axiosResult.data.documents[0]?.address?.region_1depth_name ?? 'ETC';
-    const city =
-      axiosResult.data.documents[0]?.address?.region_2depth_name ?? 'base';
-    const country = doci === 'ETC' && city === 'base' ? 'base' : 'KR';
+    // const doci =
+    //   axiosResult.data.documents[0]?.address?.region_1depth_name ?? 'ETC';
+    // const city =
+    //   axiosResult.data.documents[0]?.address?.region_2depth_name ?? 'base';
+    // const country = doci === 'ETC' && city === 'base' ? 'base' : 'KR';
+
+    // return {
+    //   timezone: doci,
+    //   country,
+    //   city,
+    // };
 
     return {
-      timezone: doci,
-      country,
-      city,
+      timezone: 'ETC',
+      country: 'KR',
+      city: 'base',
     };
   }
 }
