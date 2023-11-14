@@ -121,7 +121,7 @@ export class AdvertisementController {
       // TODO 불러온 마지막광고 tick 증가
       const id_array = data.map((v: any) => v.id);
 
-      if (getRandomNumberUpToN(10) < 3) {
+      if (getRandomNumberUpToN(100) < 5) {
         await Promise.all(
           id_array.map(async (id: string) => {
             const condition = {
