@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class TodayService {
         );
       }
 
-      return data;
+      return data.list;
     }
 
     if (typeof condition === 'function') {
