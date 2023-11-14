@@ -13,7 +13,7 @@ export const BIBLE_PHOTODIC_URL = 'https://data.bible25.com/bible/bibledic/';
 
 export const ONE_ADVERTISEMENT = [
   'first',
-  'last',
+  // 'last',
   'bible',
   'chansong',
   'malsum',

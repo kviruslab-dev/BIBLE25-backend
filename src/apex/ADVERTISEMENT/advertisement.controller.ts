@@ -12,6 +12,7 @@ import {
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
+import { getRandomNumberUpToN } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { AdvertisementService } from './advertisement.service';
 
@@ -103,6 +104,37 @@ export class AdvertisementController {
 
         return await this.advertisementService.findInMain(condition);
       }
+    }
+
+    if (type === 'last') {
+      const condition = {
+        select: 'id, title, image, link',
+        table: 'market',
+        where: `page=${pageFromType} and city='base' and active=1`,
+        orderBy: 'id asc',
+        limit: String(take ? take : 10),
+        offset: String(page ? take * (page - 1) : 0),
+      };
+      const data = await this.advertisementService.findInEtc(condition);
+
+      // TODO
+      // TODO 불러온 마지막광고 tick 증가
+      const id_array = data.map((v: any) => v.id);
+
+      if (getRandomNumberUpToN(10) < 3) {
+        await Promise.all(
+          id_array.map(async (id: string) => {
+            const condition = {
+              table: 'market',
+              set: 'tick=tick+1',
+              where: `id=${id}`,
+            };
+            await this.queryRunnerService.updateMySQL(condition);
+          }),
+        );
+      }
+
+      return data;
     }
 
     if (ONE_ADVERTISEMENT.includes(type)) {
