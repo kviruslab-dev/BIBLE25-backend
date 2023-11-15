@@ -55,7 +55,8 @@ export class TodayController {
         };
       };
 
-      return await this.todayService.findInMainContents(condition);
+      const list = await this.todayService.findInMainContents(condition);
+      return { list, total: 6 };
     }
   }
 
