@@ -10,6 +10,7 @@ import { BibleModule } from 'src/apex/BIBLE/bible.module';
 import { Bible25Module } from 'src/apex/BIBLE25/bible25.module';
 import { BoardModule } from 'src/apex/BOARD/board.module';
 import { ChansongModule } from 'src/apex/CHANSONG/chansong.module';
+import { CmsModule } from 'src/apex/CMS/cms.module';
 import { CommentModule } from 'src/apex/COMMENT/comment.module';
 import { DeviceModule } from 'src/apex/DEVICE/device.module';
 import { FcmPushModule } from 'src/apex/FCMPUSH/fcmpush.module';
@@ -21,6 +22,7 @@ import { TodayModule } from 'src/apex/TODAY/today.module';
 import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+
 // import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 // import { APP_GUARD } from '@nestjs/core';
 
@@ -63,6 +65,7 @@ import { AppService } from './app.service';
     LogModule,
     CommentModule,
     SmsModule,
+    CmsModule,
   ],
   controllers: [AppController],
   providers: [
