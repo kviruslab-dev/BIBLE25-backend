@@ -1,24 +1,26 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminModule } from 'src/apex/ADMIN/admin.module';
+import { AdvertisementModule } from 'src/apex/ADVERTISEMENT/advertisement.module';
+import { AutoModule } from 'src/apex/AUTO/auto.module';
+import { BibleModule } from 'src/apex/BIBLE/bible.module';
+import { Bible25Module } from 'src/apex/BIBLE25/bible25.module';
+import { BoardModule } from 'src/apex/BOARD/board.module';
+import { ChansongModule } from 'src/apex/CHANSONG/chansong.module';
+import { CommentModule } from 'src/apex/COMMENT/comment.module';
+import { DeviceModule } from 'src/apex/DEVICE/device.module';
+import { FcmPushModule } from 'src/apex/FCMPUSH/fcmpush.module';
+import { LogModule } from 'src/apex/LOG/log.module';
+import { ProductModule } from 'src/apex/PRODUCT/product.module';
+import { SearchModule } from 'src/apex/SEARCH/search.module';
+import { SmsModule } from 'src/apex/SMS/sms.module';
+import { TodayModule } from 'src/apex/TODAY/today.module';
 import { LoggerMiddleware } from 'src/common/middlewares/logger.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ChansongModule } from 'src/apex/CHANSONG/chansong.module';
-import { AdvertisementModule } from 'src/apex/ADVERTISEMENT/advertisement.module';
-import { TodayModule } from 'src/apex/TODAY/today.module';
-import { AutoModule } from 'src/apex/AUTO/auto.module';
-import { ScheduleModule } from '@nestjs/schedule';
-import { ProductModule } from 'src/apex/PRODUCT/product.module';
-import { BibleModule } from 'src/apex/BIBLE/bible.module';
-import { BoardModule } from 'src/apex/BOARD/board.module';
-import { SearchModule } from 'src/apex/SEARCH/search.module';
-import { LogModule } from 'src/apex/LOG/log.module';
-import { CommentModule } from 'src/apex/COMMENT/comment.module';
-import { DeviceModule } from 'src/apex/DEVICE/device.module';
-import { AdminModule } from 'src/apex/ADMIN/admin.module';
-import { Bible25Module } from 'src/apex/BIBLE25/bible25.module';
-import { FcmPushModule } from 'src/apex/FCMPUSH/fcmpush.module';
 // import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 // import { APP_GUARD } from '@nestjs/core';
 
@@ -60,6 +62,7 @@ import { FcmPushModule } from 'src/apex/FCMPUSH/fcmpush.module';
     SearchModule,
     LogModule,
     CommentModule,
+    SmsModule,
   ],
   controllers: [AppController],
   providers: [

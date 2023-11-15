@@ -18,7 +18,8 @@ export class TodayService {
         );
       }
 
-      return data.list;
+      // return data.list;
+      return data;
     }
 
     if (typeof condition === 'function') {
