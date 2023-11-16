@@ -48,7 +48,7 @@ export class CmsController {
     const data = await this.queryRunnerService.findAndCount(condition);
 
     const dateInfo = (create_at: Date) => {
-      `${create_at.getFullYear()}-${
+      return `${create_at.getFullYear()}-${
         create_at.getMonth() + 1
       }-${create_at.getDate()}`;
     };
