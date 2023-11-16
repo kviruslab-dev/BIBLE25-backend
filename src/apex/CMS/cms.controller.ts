@@ -46,7 +46,10 @@ export class CmsController {
     const data = await this.queryRunnerService.findAndCount(condition);
 
     data.list.forEach(
-      (v: any) => (v.create_at = v.create_at.toLocaleString().slice(0, 34)),
+      (v: any) =>
+        (v.create_at = `${v.create_at.getFullYear()}-${
+          v.create_at.getMonth() + 1
+        }-${v.create_at.getDate()}`),
     );
 
     return data.list;
