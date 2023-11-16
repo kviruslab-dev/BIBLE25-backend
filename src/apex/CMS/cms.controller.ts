@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Query,
   UseInterceptors,
@@ -11,6 +12,7 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { CmsService } from './cms.service';
 import { CmsDto } from './dtos/cms.dto';
+import { CmsUpdateDto } from './dtos/cmsUpdate.dto';
 
 @ApiTags('CMS')
 @Controller('cms')
@@ -25,8 +27,8 @@ export class CmsController {
   async createCms(@Body() body: CmsDto) {
     const condition = {
       table: 'kviruslab_cms',
-      columns: 'name, phone',
-      values: `'${body.name}', '${body.phone}'`,
+      columns: 'name, phone, status',
+      values: `'${body.name}', '${body.phone}', '${body.status}'`,
     };
 
     await this.queryRunnerService.insert(condition);
@@ -54,5 +56,16 @@ export class CmsController {
     data.list.forEach((v: any) => (v.create_at = dateInfo(v.create_at)));
 
     return data.list;
+  }
+
+  @Patch()
+  async update(@Body() body: CmsUpdateDto) {
+    const condition = {
+      table: 'kviruslab_cms',
+      set: `status = '${body.status}'`,
+      where: `id = ${body.id}`,
+    };
+
+    await this.queryRunnerService.updateMySQL(condition);
   }
 }
