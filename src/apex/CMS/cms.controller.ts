@@ -35,7 +35,7 @@ export class CmsController {
   @Get()
   async select(@Query('take') take = 10, @Query('page') page = 1) {
     const condition = {
-      select: 'create_at, id, name, phone',
+      select: 'create_at, id, name, phone, status',
       table: 'kviruslab_cms',
       where: `TRUE`,
       orderBy: 'id asc',
@@ -45,12 +45,13 @@ export class CmsController {
 
     const data = await this.queryRunnerService.findAndCount(condition);
 
-    data.list.forEach(
-      (v: any) =>
-        (v.create_at = `${v.create_at.getFullYear()}-${
-          v.create_at.getMonth() + 1
-        }-${v.create_at.getDate()}`),
-    );
+    const dateInfo = (create_at: Date) => {
+      `${create_at.getFullYear()}-${
+        create_at.getMonth() + 1
+      }-${create_at.getDate()}`;
+    };
+
+    data.list.forEach((v: any) => (v.create_at = dateInfo(v.create_at)));
 
     return data.list;
   }
