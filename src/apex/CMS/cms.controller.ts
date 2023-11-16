@@ -35,7 +35,7 @@ export class CmsController {
   @Get()
   async select(@Query('take') take = 10, @Query('page') page = 1) {
     const condition = {
-      select: 'id, name, phone',
+      select: 'create_at, id, name, phone',
       table: 'kviruslab_cms',
       where: `TRUE`,
       orderBy: 'id asc',
@@ -44,6 +44,11 @@ export class CmsController {
     };
 
     const data = await this.queryRunnerService.findAndCount(condition);
+
+    data.list.forEach(
+      (v: any) => (v.create_at = v.create_at.toLocaleString().slice(0, 34)),
+    );
+
     return data.list;
   }
 }
