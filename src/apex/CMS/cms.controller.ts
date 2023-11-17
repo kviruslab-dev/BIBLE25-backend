@@ -59,6 +59,7 @@ export class CmsController {
 
   @Patch()
   async update(@Body() body: any) {
+    console.log('123', body);
     return body;
     await this.cmsService.updateCms(body);
   }
