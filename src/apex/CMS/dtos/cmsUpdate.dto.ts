@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -14,8 +14,18 @@ export class CmsUpdateDto {
   @ApiProperty({
     example: '상담신청',
     description: 'status',
-    required: true,
+    required: false,
   })
   @IsString()
+  @IsOptional()
   status: string;
+
+  @ApiProperty({
+    example: '메모',
+    description: 'memo',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  memo: string;
 }

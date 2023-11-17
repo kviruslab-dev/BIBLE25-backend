@@ -27,8 +27,8 @@ export class CmsController {
   async createCms(@Body() body: CmsDto) {
     const condition = {
       table: 'kviruslab_cms',
-      columns: 'name, phone, status',
-      values: `'${body.name}', '${body.phone}', '${body.status}'`,
+      columns: 'name, phone, status, memo',
+      values: `'${body.name}', '${body.phone}', '${body.status}', ''`,
     };
 
     await this.queryRunnerService.insert(condition);
@@ -37,7 +37,7 @@ export class CmsController {
   @Get()
   async select(@Query('take') take = 10, @Query('page') page = 1) {
     const condition = {
-      select: 'create_at, id, name, phone, status',
+      select: 'create_at, id, name, phone, status, memo',
       table: 'kviruslab_cms',
       where: `TRUE`,
       orderBy: 'id asc',
@@ -60,12 +60,6 @@ export class CmsController {
 
   @Patch()
   async update(@Body() body: CmsUpdateDto) {
-    const condition = {
-      table: 'kviruslab_cms',
-      set: `status = '${body.status}'`,
-      where: `id = ${body.id}`,
-    };
-
-    await this.queryRunnerService.updateMySQL(condition);
+    await this.cmsService.updateCms(body);
   }
 }
