@@ -2,7 +2,7 @@ import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CmsUpdateDto {
+class elementDto {
   @ApiProperty({
     example: 1,
     description: 'id',
@@ -28,4 +28,8 @@ export class CmsUpdateDto {
   @IsString()
   @IsOptional()
   memo: string;
+}
+
+export class CmsUpdateDto {
+  input: elementDto[];
 }

@@ -7,30 +7,28 @@ export class CmsService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   async updateCms(data: CmsUpdateDto) {
-    let setCondition: string;
+    data.input.map(async (v) => {
+      let setCondition: string;
+      if (v.status && !v.memo) {
+        setCondition = `status = '${v.status}'`;
+      }
+      if (!v.status && v.memo) {
+        setCondition = `memo = '${v.memo}'`;
+      }
+      if (v.status && v.memo) {
+        setCondition = `status = '${v.status}', memo = '${v.memo}'`;
+      }
+      if (!v.status && !v.memo) {
+        return;
+      }
+      const condition = {
+        table: 'kviruslab_cms',
+        set: setCondition,
+        where: `id = ${v.id}`,
+      };
+      this.queryRunnerService.updateMySQL(condition);
+    });
 
-    if (data.status && !data.memo) {
-      setCondition = `status = '${data.status}'`;
-    }
-
-    if (!data.status && data.memo) {
-      setCondition = `memo = '${data.memo}'`;
-    }
-
-    if (data.status && data.memo) {
-      setCondition = `status = '${data.status}', memo = '${data.memo}'`;
-    }
-
-    if (!data.status && !data.memo) {
-      return;
-    }
-
-    const condition = {
-      table: 'kviruslab_cms',
-      set: setCondition,
-      where: `id = ${data.id}`,
-    };
-
-    await this.queryRunnerService.updateMySQL(condition);
+    return;
   }
 }
