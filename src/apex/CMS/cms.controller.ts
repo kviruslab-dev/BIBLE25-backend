@@ -12,6 +12,7 @@ import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor'
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { CmsService } from './cms.service';
 import { CmsDto } from './dtos/cms.dto';
+import { elementDto } from './dtos/cmsUpdate.dto';
 
 @ApiTags('CMS')
 @Controller('cms')
@@ -58,7 +59,7 @@ export class CmsController {
   }
 
   @Patch()
-  async update(@Body() body: any) {
+  async update(@Body() body: elementDto[]) {
     console.log('123', body);
     return body;
     await this.cmsService.updateCms(body);
