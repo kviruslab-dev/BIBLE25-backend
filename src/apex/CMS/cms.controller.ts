@@ -60,8 +60,6 @@ export class CmsController {
 
   @Patch()
   async update(@Body() body: elementDto[]) {
-    console.log('123', body);
-    return body;
     await this.cmsService.updateCms(body);
   }
 }
