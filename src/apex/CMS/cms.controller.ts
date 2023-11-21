@@ -28,7 +28,7 @@ export class CmsController {
     const condition = {
       table: 'kviruslab_cms',
       columns: 'name, phone, status, memo, company',
-      values: `'${body.name}', '${body.phone}', '${body.status}', '', ''`,
+      values: `'${body.name}', '${body.phone}', '${body.status}', '', '${body.company}'`,
     };
 
     await this.queryRunnerService.insert(condition);

@@ -19,4 +19,12 @@ export class CmsDto {
   @IsString()
   @IsOptional()
   status = '상담신청';
+
+  @ApiProperty({
+    example: '통신사',
+    description: 'company',
+    required: true,
+  })
+  @IsString()
+  company: string;
 }
