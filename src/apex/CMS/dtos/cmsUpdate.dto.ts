@@ -28,4 +28,13 @@ export class elementDto {
   @IsString()
   @IsOptional()
   memo: string;
+
+  @ApiProperty({
+    example: '통신사',
+    description: 'company',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  company: string;
 }

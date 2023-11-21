@@ -27,8 +27,8 @@ export class CmsController {
   async createCms(@Body() body: CmsDto) {
     const condition = {
       table: 'kviruslab_cms',
-      columns: 'name, phone, status, memo',
-      values: `'${body.name}', '${body.phone}', '${body.status}', ''`,
+      columns: 'name, phone, status, memo, company',
+      values: `'${body.name}', '${body.phone}', '${body.status}', '', ''`,
     };
 
     await this.queryRunnerService.insert(condition);
@@ -37,7 +37,7 @@ export class CmsController {
   @Get()
   async select(@Query('take') take = 10, @Query('page') page = 1) {
     const condition = {
-      select: 'create_at, id, name, phone, status, memo',
+      select: 'create_at, id, name, phone, status, memo, company',
       table: 'kviruslab_cms',
       where: `TRUE`,
       orderBy: 'id asc',

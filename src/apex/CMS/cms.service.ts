@@ -9,18 +9,32 @@ export class CmsService {
   async updateCms(data: elementDto[]) {
     data.map(async (v) => {
       let setCondition: string;
-      if (v.status && !v.memo) {
+      if (v.status && !v.memo && v.company) {
+        setCondition = `status = '${v.status}', company = '${v.company}'`;
+      }
+      if (!v.status && v.memo && v.company) {
+        setCondition = `memo = '${v.memo}', company = '${v.company}'`;
+      }
+      if (v.status && v.memo && v.company) {
+        setCondition = `status = '${v.status}', memo = '${v.memo}', company = '${v.company}'`;
+      }
+      if (!v.status && !v.memo && v.company) {
+        setCondition = `company = '${v.company}'`;
+      }
+
+      if (v.status && !v.memo && !v.company) {
         setCondition = `status = '${v.status}'`;
       }
-      if (!v.status && v.memo) {
+      if (!v.status && v.memo && !v.company) {
         setCondition = `memo = '${v.memo}'`;
       }
-      if (v.status && v.memo) {
+      if (v.status && v.memo && !v.company) {
         setCondition = `status = '${v.status}', memo = '${v.memo}'`;
       }
-      if (!v.status && !v.memo) {
+      if (!v.status && !v.memo && !v.company) {
         return;
       }
+
       const condition = {
         table: 'kviruslab_cms',
         set: setCondition,
