@@ -18,7 +18,7 @@ export class LogService {
 
     await this.queryRunnerService.insert(condition);
 
-    if (method === 'GET' && url === '/') return;
+    if (status_code === 404) return;
 
     sendMessageToSlack(`
     🚨 STATUS CODE : ${status_code} 🚨
