@@ -242,4 +242,18 @@ export class AdminService {
 
     return 0;
   }
+
+  async getTodayBook(take: number, page: number) {
+    const condition = {
+      select: 'today, title, content, song, image, name, active',
+      table: 'today_content',
+      where: `gubun = 6`,
+      orderBy: 'id desc',
+      limit: String(take ? take : 10),
+      offset: String(page ? take * (page - 1) : 0),
+    };
+
+    const data = await this.queryRunnerService.findAndCount(condition);
+    return data.list;
+  }
 }

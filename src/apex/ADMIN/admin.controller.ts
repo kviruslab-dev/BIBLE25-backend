@@ -116,4 +116,9 @@ export class AdminController {
   ) {
     await this.adminService.createTodayBook(files, body);
   }
+
+  @Get('todaybook')
+  async getTodayBook(@Query('take') take = 10, @Query('page') page = 1) {
+    return await this.adminService.getTodayBook(take, page);
+  }
 }
