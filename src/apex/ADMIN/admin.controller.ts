@@ -6,19 +6,23 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   advertisementInterceptor,
   SuccessInterceptor,
 } from 'src/common/interceptors/success.interceptor';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { multerOptions } from 'src/common/utils/multer.options';
 import { AdminService } from './admin.service';
-import { UpdateDto } from './dtos/update.dto';
+import { InsertDto } from './dtos/insert.dto';
+import { InsertBoardDto } from './dtos/insertBoard.dto';
 import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
-import { InsertBoardDto } from './dtos/insertBoard.dto';
-import { InsertDto } from './dtos/insert.dto';
+import { UpdateDto } from './dtos/update.dto';
+import { CreateTodayBookDto } from './dtos/uploadTodayBook.dto';
 
 @ApiTags('ADMIN')
 @Controller('admin')
@@ -102,5 +106,14 @@ export class AdminController {
   @Delete('delete')
   async delete(@Query('type') type: string, @Query('id') id: number) {
     return await this.adminService.delete(type, id);
+  }
+
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Post('todaybook')
+  async createTodayBook(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: CreateTodayBookDto,
+  ) {
+    await this.adminService.createTodayBook(files, body);
   }
 }

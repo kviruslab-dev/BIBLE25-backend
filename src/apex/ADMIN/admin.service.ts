@@ -1,16 +1,19 @@
+import * as fs from 'fs';
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ADMIN_TYPE_OBJECT } from 'src/common/const';
 import {
   arrayToFormattedString,
   formatKeyValuePairs,
   stringToArray,
 } from 'src/common/utils/functions';
+
+import { ADMIN_TYPE_OBJECT } from 'src/common/const';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
-import * as fs from 'fs';
-import { UpdateDto } from './dtos/update.dto';
+import { InsertBoardDto } from './dtos/insertBoard.dto';
 import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
-import { InsertBoardDto } from './dtos/insertBoard.dto';
+import { UpdateDto } from './dtos/update.dto';
+import { CreateTodayBookDto } from './dtos/uploadTodayBook.dto';
 
 @Injectable()
 export class AdminService {
@@ -222,5 +225,21 @@ export class AdminService {
     };
 
     return await this.queryRunnerService.delete(condition);
+  }
+
+  async createTodayBook(
+    files: Express.Multer.File[],
+    data: CreateTodayBookDto,
+  ) {
+    const fileName = files[0].filename;
+    const condition = {
+      table: 'today_content',
+      columns: `today, title, content, song, image, frame, gubun, writer, name, yojul, bible, sungchal, kido, active`,
+      values: `'${data.today}', '${data.title}', '${data.content}', '${data.song}', 'https://data.bible25.com/uploads/${fileName}', 1, 6, '', '오늘의책', '', '', '', '', 0`,
+    };
+
+    await this.queryRunnerService.insert(condition);
+
+    return 0;
   }
 }
