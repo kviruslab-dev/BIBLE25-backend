@@ -17,12 +17,14 @@ import {
 } from 'src/common/interceptors/success.interceptor';
 import { multerOptions } from 'src/common/utils/multer.options';
 import { AdminService } from './admin.service';
+import { CreateMalsumDto } from './dtos/createMalsum.dto';
+import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
 import { InsertDto } from './dtos/insert.dto';
 import { InsertBoardDto } from './dtos/insertBoard.dto';
 import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
 import { UpdateDto } from './dtos/update.dto';
-import { CreateTodayBookDto } from './dtos/uploadTodayBook.dto';
+import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
 
 @ApiTags('ADMIN')
 @Controller('admin')
@@ -115,10 +117,26 @@ export class AdminController {
     @Body() body: CreateTodayBookDto,
   ) {
     await this.adminService.createTodayBook(files, body);
+    return;
   }
 
   @Get('todaybook')
   async getTodayBook(@Query('take') take = 10, @Query('page') page = 1) {
     return await this.adminService.getTodayBook(take, page);
+  }
+
+  @Post('malsum')
+  async createMalsum(@Body() body: CreateMalsumDto) {
+    return await this.adminService.createMalsum(body);
+  }
+
+  @Get('malsum')
+  async getMalsum(@Query('take') take = 10, @Query('page') page = 1) {
+    return await this.adminService.getMalsum(take, page);
+  }
+
+  @Patch('malsum')
+  async updateMalsum(@Body() body: UpdateMalsumDto) {
+    return await this.adminService.updateMalsum(body);
   }
 }

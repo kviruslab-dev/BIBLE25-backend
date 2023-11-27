@@ -7,17 +7,25 @@ import {
   stringToArray,
 } from 'src/common/utils/functions';
 
+import { InjectRepository } from '@nestjs/typeorm';
 import { ADMIN_TYPE_OBJECT } from 'src/common/const';
+import { ToDayContent } from 'src/common/entities/todaycontent.entity';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { Repository } from 'typeorm';
+import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
 import { InsertBoardDto } from './dtos/insertBoard.dto';
 import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
 import { UpdateDto } from './dtos/update.dto';
-import { CreateTodayBookDto } from './dtos/uploadTodayBook.dto';
+import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly queryRunnerService: QueryRunnerService) {}
+  constructor(
+    private readonly queryRunnerService: QueryRunnerService,
+    @InjectRepository(ToDayContent)
+    private readonly repo: Repository<ToDayContent>,
+  ) {}
 
   async findAndCount(type: string) {
     const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
@@ -255,5 +263,58 @@ export class AdminService {
 
     const data = await this.queryRunnerService.findAndCount(condition);
     return data.list;
+  }
+
+  // async updateTodayBook(
+  //   files: Express.Multer.File[],
+  //   data: UpdateTodayBookDto,
+  // ) {
+  //   const image = files[0]?.filename
+  //     ? `https://data.bible25.com/uploads/${files[0]?.filename}`
+  //     : undefined;
+
+  //   const today = data.today ? data.today : undefined;
+  //   const title = data.title ? data.title : undefined;
+  //   const song = data.song ? data.song : undefined;
+  //   const content = data.content ? data.content : undefined;
+
+  //   await this.repo.update(
+  //     { id: Number(data.id) },
+  //     { image, today, title, song, content },
+  //   );
+  //   return;
+  // }
+
+  async createMalsum(data: any) {
+    const temp = this.repo.create(data);
+    await this.repo.save(temp);
+    return;
+  }
+
+  async getMalsum(take: number, page: number) {
+    return this.repo.find({
+      select: [
+        'id',
+        'today',
+        'name',
+        'title',
+        'yojul',
+        'song',
+        'bible',
+        'sungchal',
+        'kido',
+        'content',
+        'active',
+      ],
+      order: {
+        id: 'DESC',
+      },
+      take,
+      skip: take * (page - 1),
+    });
+  }
+
+  async updateMalsum(data: UpdateMalsumDto) {
+    await this.repo.update({ id: data.id }, data);
   }
 }
