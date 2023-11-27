@@ -47,19 +47,12 @@ export class CmsService {
   }
 
   async delete(id: number) {
-    if (
-      await this.queryRunnerService.findOne({
-        select: '*',
-        table: 'kviruslab_cms',
-        where: `id = ${id}`,
-      })
-    )
-      return null;
-
     const condition = {
       table: 'kviruslab_cms',
       where: `id = ${id}`,
     };
+
+    console.log('condition is ...', condition);
 
     return await this.queryRunnerService.delete(condition);
   }
