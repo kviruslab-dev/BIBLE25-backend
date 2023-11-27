@@ -25,6 +25,24 @@ export class CmsController {
 
   @Post()
   async createCms(@Body() body: CmsDto) {
+    // const conditionForFind = {
+    //   table: 'kviruslab_cms',
+    //   columns: 'name, phone, status, memo, company',
+    //   values: `'${body.name}', '${body.phone}', '${body.status}', '', '${body.company}'`,
+    // };
+
+    const conditionForFind = {
+      select: '*',
+      columns: 'kviruslab_cms',
+      values: `name = '${body.name}' and phone = '${body.phone}' and status = '${body.status}' and company = '${body.company}'`,
+    };
+
+    const data = await this.queryRunnerService.findOne(conditionForFind);
+
+    if (data) {
+      return;
+    }
+
     const condition = {
       table: 'kviruslab_cms',
       columns: 'name, phone, status, memo, company',
