@@ -34,7 +34,7 @@ export class CmsController {
     const conditionForFind = {
       select: '*',
       table: 'kviruslab_cms',
-      where: `name = '${body.name}' and phone = '${body.phone}' and status = '${body.status}' and company = '${body.company}'`,
+      where: `phone = '${body.phone}'`,
     };
 
     const data = await this.queryRunnerService.findOne(conditionForFind);
