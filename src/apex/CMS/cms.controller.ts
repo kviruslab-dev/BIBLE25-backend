@@ -74,7 +74,7 @@ export class CmsController {
   }
 
   @Delete()
-  async delete(@Query('phone') phone: string) {
-    await this.cmsService.delete(phone);
+  async delete(@Query('id') id: number) {
+    await this.cmsService.delete(id);
   }
 }
