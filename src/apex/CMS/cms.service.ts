@@ -45,4 +45,22 @@ export class CmsService {
 
     return;
   }
+
+  async delete(phone: string) {
+    if (
+      await this.queryRunnerService.findOne({
+        select: '*',
+        table: 'kviruslab_cms',
+        where: `phone = '${phone}'`,
+      })
+    )
+      return null;
+
+    const condition = {
+      table: 'kviruslab_cms',
+      where: `phone = '${phone}'`,
+    };
+
+    return await this.queryRunnerService.delete(condition);
+  }
 }
