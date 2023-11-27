@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -25,23 +26,14 @@ export class CmsController {
 
   @Post()
   async createCms(@Body() body: CmsDto) {
-    // const conditionForFind = {
-    //   table: 'kviruslab_cms',
-    //   columns: 'name, phone, status, memo, company',
-    //   values: `'${body.name}', '${body.phone}', '${body.status}', '', '${body.company}'`,
-    // };
-
-    const conditionForFind = {
-      select: '*',
-      table: 'kviruslab_cms',
-      where: `phone = '${body.phone}'`,
-    };
-
-    const data = await this.queryRunnerService.findOne(conditionForFind);
-
-    if (data) {
-      return;
-    }
+    if (
+      await this.queryRunnerService.findOne({
+        select: '*',
+        table: 'kviruslab_cms',
+        where: `phone = '${body.phone}'`,
+      })
+    )
+      return null;
 
     const condition = {
       table: 'kviruslab_cms',
@@ -49,7 +41,7 @@ export class CmsController {
       values: `'${body.name}', '${body.phone}', '${body.status}', '', '${body.company}'`,
     };
 
-    await this.queryRunnerService.insert(condition);
+    return await this.queryRunnerService.insert(condition);
   }
 
   @Get()
@@ -79,5 +71,10 @@ export class CmsController {
   @Patch()
   async update(@Body() body: elementDto[]) {
     await this.cmsService.updateCms(body);
+  }
+
+  @Delete()
+  async delete(@Query('phone') phone: string) {
+    await this.cmsService.delete(phone);
   }
 }
