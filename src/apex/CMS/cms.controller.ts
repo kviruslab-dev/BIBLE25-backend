@@ -33,8 +33,8 @@ export class CmsController {
 
     const conditionForFind = {
       select: '*',
-      columns: 'kviruslab_cms',
-      values: `name = '${body.name}' and phone = '${body.phone}' and status = '${body.status}' and company = '${body.company}'`,
+      table: 'kviruslab_cms',
+      where: `name = '${body.name}' and phone = '${body.phone}' and status = '${body.status}' and company = '${body.company}'`,
     };
 
     const data = await this.queryRunnerService.findOne(conditionForFind);
