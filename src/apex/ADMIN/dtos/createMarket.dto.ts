@@ -11,9 +11,6 @@ export class CreateMarketDto {
   end_date: string;
 
   @IsString()
-  page: string;
-
-  @IsString()
   location: string;
 
   @IsString()
@@ -27,7 +24,4 @@ export class CreateMarketDto {
 
   @IsString()
   city: string;
-
-  @IsString()
-  timezone: string;
 }
