@@ -25,6 +25,7 @@ import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
 import { UpdateDto } from './dtos/update.dto';
 import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
+import { UpdateTodayBookDto } from './dtos/updateTodayBook.dto';
 
 @ApiTags('ADMIN')
 @Controller('admin')
@@ -110,6 +111,7 @@ export class AdminController {
     return await this.adminService.delete(type, id);
   }
 
+  //! 오늘의책 어드민
   @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
   @Post('todaybook')
   async createTodayBook(
@@ -125,6 +127,17 @@ export class AdminController {
     return await this.adminService.getTodayBook(take, page);
   }
 
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Patch('todaybook')
+  async updateTodayBook(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: UpdateTodayBookDto,
+  ) {
+    await this.adminService.updateTodayBook(files, body);
+    return;
+  }
+
+  //! 말씀따라 어드민
   @Post('malsum')
   async createMalsum(@Body() body: CreateMalsumDto) {
     return await this.adminService.createMalsum(body);
@@ -136,7 +149,7 @@ export class AdminController {
   }
 
   @Patch('malsum')
-  async updateMalsum(@Body() body: UpdateMalsumDto) {
+  async updateMalsum(@Body() body: UpdateMalsumDto[]) {
     return await this.adminService.updateMalsum(body);
   }
 }

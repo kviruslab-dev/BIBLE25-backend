@@ -18,6 +18,7 @@ import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
 import { UpdateDto } from './dtos/update.dto';
 import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
+import { UpdateTodayBookDto } from './dtos/updateTodayBook.dto';
 
 @Injectable()
 export class AdminService {
@@ -253,7 +254,7 @@ export class AdminService {
 
   async getTodayBook(take: number, page: number) {
     const condition = {
-      select: 'today, title, content, song, image, name, active',
+      select: 'id, today, title, content, song, image, name, active',
       table: 'today_content',
       where: `gubun = 6`,
       orderBy: 'id desc',
@@ -265,25 +266,16 @@ export class AdminService {
     return data.list;
   }
 
-  // async updateTodayBook(
-  //   files: Express.Multer.File[],
-  //   data: UpdateTodayBookDto,
-  // ) {
-  //   const image = files[0]?.filename
-  //     ? `https://data.bible25.com/uploads/${files[0]?.filename}`
-  //     : undefined;
-
-  //   const today = data.today ? data.today : undefined;
-  //   const title = data.title ? data.title : undefined;
-  //   const song = data.song ? data.song : undefined;
-  //   const content = data.content ? data.content : undefined;
-
-  //   await this.repo.update(
-  //     { id: Number(data.id) },
-  //     { image, today, title, song, content },
-  //   );
-  //   return;
-  // }
+  async updateTodayBook(
+    files: Express.Multer.File[],
+    data: UpdateTodayBookDto,
+  ) {
+    const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+    const id = Number(data.id);
+    const { today, title, song, content } = data;
+    await this.repo.update({ id }, { image, today, title, song, content });
+    return;
+  }
 
   async createMalsum(data: any) {
     const temp = this.repo.create(data);
@@ -314,7 +306,9 @@ export class AdminService {
     });
   }
 
-  async updateMalsum(data: UpdateMalsumDto) {
-    await this.repo.update({ id: data.id }, data);
+  async updateMalsum(data: UpdateMalsumDto[]) {
+    data.map(async (v) => {
+      await this.repo.update({ id: v.id }, v);
+    });
   }
 }
