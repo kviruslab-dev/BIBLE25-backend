@@ -307,6 +307,7 @@ export class AdminService {
   }
 
   async createMalsum(data: any) {
+    delete data.id;
     const temp = this.repoTodayContent.create(data);
     await this.repoTodayContent.save(temp);
     return;
