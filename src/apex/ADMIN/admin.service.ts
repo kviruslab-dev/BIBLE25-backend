@@ -1,14 +1,13 @@
 import * as fs from 'fs';
 
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   arrayToFormattedString,
-  formatKeyValuePairs,
   stringToArray,
 } from 'src/common/utils/functions';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { ADMIN_TYPE_OBJECT } from 'src/common/const';
+import { ADMIN_TYPE_OBJECT, titleToPage } from 'src/common/const';
 import { Board } from 'src/common/entities/board.entity';
 import { Market } from 'src/common/entities/market.entity';
 import { MarketItem } from 'src/common/entities/product.entity';
@@ -18,10 +17,6 @@ import { Repository } from 'typeorm';
 import { CreateMarketDto } from './dtos/createMarket.dto';
 import { CreateProductDto } from './dtos/createProduct.dto';
 import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
-import { InsertBoardDto } from './dtos/insertBoard.dto';
-import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
-import { InsertProductDto } from './dtos/insertProduct.dto';
-import { UpdateDto } from './dtos/update.dto';
 import { UpdateBoardDto } from './dtos/updateBoard.dto';
 import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
 import { UpdateMarketDto } from './dtos/updateMarket.dto';
@@ -88,41 +83,6 @@ export class AdminService {
     }
   }
 
-  async update(data: UpdateDto) {
-    const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
-
-    if (data.columns.includes('id, tick, create_at')) {
-      throw new HttpException(
-        `업데이트 할 수 없는 정보입니다.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const setQuery = formatKeyValuePairs(data.columns, data.values);
-    const idString = arrayToFormattedString(data.id);
-
-    let table: string;
-    if (marketType.includes(data.type)) {
-      table = 'market';
-    }
-
-    if (data.type === 'product') {
-      table = 'market_item';
-    }
-
-    if (data.type === 'donate') {
-      table = 'board';
-    }
-
-    const conditionForUpdate = {
-      table,
-      set: setQuery,
-      where: `id in ${idString}`,
-    };
-
-    return await this.queryRunnerService.updateMySQL(conditionForUpdate);
-  }
-
   async getLocal(type: string | undefined) {
     const typeArr = stringToArray(type);
 
@@ -158,72 +118,6 @@ export class AdminService {
     } else {
       return getNeighbourhoods(typeArr);
     }
-  }
-
-  async insert(type: string, data: any) {
-    const marketType = ['main', 'bible', 'hymm', 'todays', 'lab', 'etc'];
-
-    if (marketType.includes(type)) {
-      await this.insertAd(data);
-      return;
-    }
-
-    if (type === 'product') {
-      await this.insertPd(data);
-      return;
-    }
-
-    if (type === 'donate') {
-      await this.insertBd(data);
-      return;
-    }
-
-    return;
-  }
-
-  async insertAd(data: InsertAdvertisementDto) {
-    const condition = {
-      table: 'market',
-      columns: `
-        location, page, tick, image, link, start_date, end_date, admin, note, country, city, title, timezone, showyn, active, rate
-      `,
-      values: `
-        ${data.location}, ${data.page}, ${data.tick}, '${data.image}', '${data.link}', 
-        '${data.start_date}', '${data.end_date}', '${data.admin}', '${data.note}',
-        '${data.country}',  '${data.city}', '${data.title}', '${data.timezone}', 
-        ${data.showyn}, ${data.active}, ${data.rate}
-      `,
-    };
-
-    await this.queryRunnerService.insert(condition);
-  }
-
-  async insertPd(data: InsertProductDto) {
-    const condition = {
-      table: 'market_item',
-      columns: `
-        gubun, tick, title, money, star, dc, image, link, showyn, admin, note, sequence, active
-      `,
-      values: `
-        ${data.gubun}, ${data.tick}, '${data.title}', ${data.money}, '${data.star}', 
-        ${data.dc}, '${data.image}', '${data.link}', ${data.showyn},  '${data.admin}', 
-        '${data.note}', ${data.sequence}, ${data.active}
-      `,
-    };
-
-    await this.queryRunnerService.insert(condition);
-  }
-
-  async insertBd(data: InsertBoardDto) {
-    const condition = {
-      table: 'board',
-      columns: `title, link, image, type`,
-      values: `
-        '${data.title}', '${data.link}', '${data.image}', ${data.type}
-      `,
-    };
-
-    await this.queryRunnerService.insert(condition);
   }
 
   async delete(type: string, id: number) {
@@ -345,17 +239,19 @@ export class AdminService {
 
   async createAd(files: Express.Multer.File[], data: CreateMarketDto) {
     const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+    const page = titleToPage[data.title];
+
     const temp = this.repoMarket.create({
       title: data.title,
       start_date: data.start_date,
       end_date: data.end_date,
-      page: Number(data.page),
+      page,
       location: Number(data.location),
       rate: Number(data.rate),
       link: data.link,
       active: Number(data.active),
       city: data.city,
-      timezone: data.timezone,
+      timezone: 'Asia/Seoul',
       image,
     });
     await this.repoMarket.save(temp);

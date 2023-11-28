@@ -48,47 +48,6 @@ export class AdminController {
     return await this.adminService.findAndCount(type);
   }
 
-  //! 광고 수정하기
-  // @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
-  // @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
-  // @Patch('update')
-  // async update(
-  //   @UploadedFiles() files: Array<Express.Multer.File>,
-  //   @Body() body: UpdateDto,
-  // ) {
-  //   return await this.adminService.update(files, body);
-  // }
-
-  // @ApiQuery({
-  //   name: 'type',
-  //   required: true,
-  //   type: String,
-  //   description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
-  // })
-  // @ApiOperation({ summary: '데이터 추가하기 (어드민)' })
-  // @Post('insert')
-  // async insert(@Query('type') type: string, @Body() body: InsertDto) {
-  //   return await this.adminService.insert(type, body);
-  // }
-
-  // @ApiOperation({ summary: '데이터 추가하기 (어드민, 광고)' })
-  // @Post('insertAd')
-  // async insertAd(@Body() body: InsertAdvertisementDto) {
-  //   return await this.adminService.insertAd(body);
-  // }
-
-  // @ApiOperation({ summary: '데이터 추가하기 (어드민, 상품)' })
-  // @Post('insertPd')
-  // async insertPd(@Body() body: InsertProductDto) {
-  //   return await this.adminService.insertPd(body);
-  // }
-
-  // @ApiOperation({ summary: '데이터 추가하기 (어드민, 후원)' })
-  // @Post('insertBd')
-  // async insertBd(@Body() body: InsertBoardDto) {
-  //   return await this.adminService.insertBd(body);
-  // }
-
   @ApiQuery({
     name: 'type',
     required: false,
