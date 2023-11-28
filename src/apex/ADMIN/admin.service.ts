@@ -270,11 +270,20 @@ export class AdminService {
     files: Express.Multer.File[],
     data: UpdateTodayBookDto,
   ) {
-    const image = `https://data.bible25.com/uploads/${files[0].filename}`;
-    const id = Number(data.id);
-    const { today, title, song, content } = data;
-    await this.repo.update({ id }, { image, today, title, song, content });
-    return;
+    if (files.length !== 0) {
+      const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+      const id = Number(data.id);
+      const { today, title, song, content } = data;
+      await this.repo.update({ id }, { image, today, title, song, content });
+      return;
+    }
+
+    if (files.length === 0) {
+      const id = Number(data.id);
+      const { today, title, song, content } = data;
+      await this.repo.update({ id }, { today, title, song, content });
+      return;
+    }
   }
 
   async createMalsum(data: any) {
