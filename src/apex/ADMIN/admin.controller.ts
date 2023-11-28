@@ -17,14 +17,15 @@ import {
 } from 'src/common/interceptors/success.interceptor';
 import { multerOptions } from 'src/common/utils/multer.options';
 import { AdminService } from './admin.service';
+import { CreateBoardDto } from './dtos/createBoard.dto';
 import { CreateMalsumDto } from './dtos/createMalsum.dto';
+import { CreateMarketDto } from './dtos/createMarket.dto';
+import { CreateProductDto } from './dtos/createProduct.dto';
 import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
-import { InsertDto } from './dtos/insert.dto';
-import { InsertBoardDto } from './dtos/insertBoard.dto';
-import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
-import { InsertProductDto } from './dtos/insertProduct.dto';
-import { UpdateDto } from './dtos/update.dto';
+import { UpdateBoardDto } from './dtos/updateBoard.dto';
 import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
+import { UpdateMarketDto } from './dtos/updateMarket.dto';
+import { UpdateProductDto } from './dtos/updateProduct.dto';
 import { UpdateTodayBookDto } from './dtos/updateTodayBook.dto';
 
 @ApiTags('ADMIN')
@@ -33,6 +34,7 @@ import { UpdateTodayBookDto } from './dtos/updateTodayBook.dto';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  //! 광고 가져오기
   @ApiQuery({
     name: 'type',
     required: true,
@@ -46,41 +48,46 @@ export class AdminController {
     return await this.adminService.findAndCount(type);
   }
 
-  @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
-  @Patch('update')
-  async update(@Body() body: UpdateDto) {
-    return await this.adminService.update(body);
-  }
+  //! 광고 수정하기
+  // @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  // @ApiOperation({ summary: '광고 데이터 수정하기 (어드민)' })
+  // @Patch('update')
+  // async update(
+  //   @UploadedFiles() files: Array<Express.Multer.File>,
+  //   @Body() body: UpdateDto,
+  // ) {
+  //   return await this.adminService.update(files, body);
+  // }
 
-  @ApiQuery({
-    name: 'type',
-    required: true,
-    type: String,
-    description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
-  })
-  @ApiOperation({ summary: '데이터 추가하기 (어드민)' })
-  @Post('insert')
-  async insert(@Query('type') type: string, @Body() body: InsertDto) {
-    return await this.adminService.insert(type, body);
-  }
+  // @ApiQuery({
+  //   name: 'type',
+  //   required: true,
+  //   type: String,
+  //   description: '타입 : main, bible, hymm, lab, todays, product, donate, etc',
+  // })
+  // @ApiOperation({ summary: '데이터 추가하기 (어드민)' })
+  // @Post('insert')
+  // async insert(@Query('type') type: string, @Body() body: InsertDto) {
+  //   return await this.adminService.insert(type, body);
+  // }
 
-  @ApiOperation({ summary: '데이터 추가하기 (어드민, 광고)' })
-  @Post('insertAd')
-  async insertAd(@Body() body: InsertAdvertisementDto) {
-    return await this.adminService.insertAd(body);
-  }
+  // @ApiOperation({ summary: '데이터 추가하기 (어드민, 광고)' })
+  // @Post('insertAd')
+  // async insertAd(@Body() body: InsertAdvertisementDto) {
+  //   return await this.adminService.insertAd(body);
+  // }
 
-  @ApiOperation({ summary: '데이터 추가하기 (어드민, 상품)' })
-  @Post('insertPd')
-  async insertPd(@Body() body: InsertProductDto) {
-    return await this.adminService.insertPd(body);
-  }
+  // @ApiOperation({ summary: '데이터 추가하기 (어드민, 상품)' })
+  // @Post('insertPd')
+  // async insertPd(@Body() body: InsertProductDto) {
+  //   return await this.adminService.insertPd(body);
+  // }
 
-  @ApiOperation({ summary: '데이터 추가하기 (어드민, 후원)' })
-  @Post('insertBd')
-  async insertBd(@Body() body: InsertBoardDto) {
-    return await this.adminService.insertBd(body);
-  }
+  // @ApiOperation({ summary: '데이터 추가하기 (어드민, 후원)' })
+  // @Post('insertBd')
+  // async insertBd(@Body() body: InsertBoardDto) {
+  //   return await this.adminService.insertBd(body);
+  // }
 
   @ApiQuery({
     name: 'type',
@@ -151,5 +158,71 @@ export class AdminController {
   @Patch('malsum')
   async updateMalsum(@Body() body: UpdateMalsumDto[]) {
     return await this.adminService.updateMalsum(body);
+  }
+
+  //! 광고 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Post('ad')
+  async createAd(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: CreateMarketDto,
+  ) {
+    await this.adminService.createAd(files, body);
+    return;
+  }
+
+  //! 상품 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Post('pd')
+  async createPd(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: CreateProductDto,
+  ) {
+    await this.adminService.createPd(files, body);
+    return;
+  }
+
+  //! 후원 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Post('bd')
+  async createBd(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: CreateBoardDto,
+  ) {
+    await this.adminService.createBd(files, body);
+    return;
+  }
+
+  //! 광고 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Patch('ad')
+  async updateAd(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: UpdateMarketDto,
+  ) {
+    await this.adminService.updateAd(files, body);
+    return;
+  }
+
+  //! 상품 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Patch('pd')
+  async updatePd(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: UpdateProductDto,
+  ) {
+    await this.adminService.updatePd(files, body);
+    return;
+  }
+
+  //! 후원 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Patch('bd')
+  async updateBd(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: UpdateBoardDto,
+  ) {
+    await this.adminService.updateBd(files, body);
+    return;
   }
 }

@@ -9,15 +9,23 @@ import {
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { ADMIN_TYPE_OBJECT } from 'src/common/const';
+import { Board } from 'src/common/entities/board.entity';
+import { Market } from 'src/common/entities/market.entity';
+import { MarketItem } from 'src/common/entities/product.entity';
 import { ToDayContent } from 'src/common/entities/todaycontent.entity';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { Repository } from 'typeorm';
+import { CreateMarketDto } from './dtos/createMarket.dto';
+import { CreateProductDto } from './dtos/createProduct.dto';
 import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
 import { InsertBoardDto } from './dtos/insertBoard.dto';
 import { InsertAdvertisementDto } from './dtos/insertMarket.dto';
 import { InsertProductDto } from './dtos/insertProduct.dto';
 import { UpdateDto } from './dtos/update.dto';
+import { UpdateBoardDto } from './dtos/updateBoard.dto';
 import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
+import { UpdateMarketDto } from './dtos/updateMarket.dto';
+import { UpdateProductDto } from './dtos/updateProduct.dto';
 import { UpdateTodayBookDto } from './dtos/updateTodayBook.dto';
 
 @Injectable()
@@ -25,7 +33,13 @@ export class AdminService {
   constructor(
     private readonly queryRunnerService: QueryRunnerService,
     @InjectRepository(ToDayContent)
-    private readonly repo: Repository<ToDayContent>,
+    private readonly repoTodayContent: Repository<ToDayContent>,
+    @InjectRepository(Market)
+    private readonly repoMarket: Repository<Market>,
+    @InjectRepository(MarketItem)
+    private readonly repoMarketItem: Repository<MarketItem>,
+    @InjectRepository(Board)
+    private readonly repoBoard: Repository<Board>,
   ) {}
 
   async findAndCount(type: string) {
@@ -257,7 +271,7 @@ export class AdminService {
       select: 'id, today, title, content, song, image, name, active',
       table: 'today_content',
       where: `gubun = 6`,
-      orderBy: 'id desc',
+      orderBy: 'today desc',
       limit: String(take ? take : 10),
       offset: String(page ? take * (page - 1) : 0),
     };
@@ -274,26 +288,32 @@ export class AdminService {
       const image = `https://data.bible25.com/uploads/${files[0].filename}`;
       const id = Number(data.id);
       const { today, title, song, content } = data;
-      await this.repo.update({ id }, { image, today, title, song, content });
+      await this.repoTodayContent.update(
+        { id },
+        { image, today, title, song, content },
+      );
       return;
     }
 
     if (files.length === 0) {
       const id = Number(data.id);
       const { today, title, song, content } = data;
-      await this.repo.update({ id }, { today, title, song, content });
+      await this.repoTodayContent.update(
+        { id },
+        { today, title, song, content },
+      );
       return;
     }
   }
 
   async createMalsum(data: any) {
-    const temp = this.repo.create(data);
-    await this.repo.save(temp);
+    const temp = this.repoTodayContent.create(data);
+    await this.repoTodayContent.save(temp);
     return;
   }
 
   async getMalsum(take: number, page: number) {
-    return this.repo.find({
+    return this.repoTodayContent.find({
       select: [
         'id',
         'today',
@@ -307,8 +327,9 @@ export class AdminService {
         'content',
         'active',
       ],
+      where: { gubun: 1 },
       order: {
-        id: 'DESC',
+        today: 'DESC',
       },
       take,
       skip: take * (page - 1),
@@ -317,7 +338,155 @@ export class AdminService {
 
   async updateMalsum(data: UpdateMalsumDto[]) {
     data.map(async (v) => {
-      await this.repo.update({ id: v.id }, v);
+      await this.repoTodayContent.update({ id: v.id }, v);
     });
+  }
+
+  async createAd(files: Express.Multer.File[], data: CreateMarketDto) {
+    const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+    const temp = this.repoMarket.create({
+      title: data.title,
+      start_date: data.start_date,
+      end_date: data.end_date,
+      page: Number(data.page),
+      location: Number(data.location),
+      rate: Number(data.rate),
+      link: data.link,
+      active: Number(data.active),
+      city: data.city,
+      timezone: data.timezone,
+      image,
+    });
+    await this.repoMarket.save(temp);
+    return;
+  }
+
+  async createPd(files: Express.Multer.File[], data: CreateProductDto) {
+    const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+    const temp = this.repoMarketItem.create({
+      title: data.title,
+      gubun: Number(data.gubun),
+      money: Number(data.money),
+      star: data.star,
+      dc: Number(data.dc),
+      sequence: Number(data.sequence),
+      link: data.link,
+      active: Number(data.active),
+      image,
+    });
+    await this.repoMarketItem.save(temp);
+    return;
+  }
+
+  async createBd(files: Express.Multer.File[], data: object) {
+    const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+    const temp = this.repoBoard.create({ ...data, image });
+    await this.repoBoard.save(temp);
+    return;
+  }
+
+  async updateAd(files: Express.Multer.File[], data: UpdateMarketDto) {
+    if (files.length !== 0) {
+      const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+      const id = Number(data.id);
+      await this.repoMarket.update(
+        { id },
+        {
+          title: data.title,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          page: Number(data.page),
+          location: Number(data.location),
+          rate: Number(data.rate),
+          link: data.link,
+          active: Number(data.active),
+          city: data.city,
+          timezone: data.timezone,
+          image,
+        },
+      );
+      return;
+    }
+
+    if (files.length === 0) {
+      const id = Number(data.id);
+      await this.repoMarket.update(
+        { id },
+        {
+          title: data.title,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          page: Number(data.page),
+          location: Number(data.location),
+          rate: Number(data.rate),
+          link: data.link,
+          active: Number(data.active),
+          city: data.city,
+          timezone: data.timezone,
+        },
+      );
+      return;
+    }
+  }
+
+  async updatePd(files: Express.Multer.File[], data: UpdateProductDto) {
+    if (files.length !== 0) {
+      const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+      const id = Number(data.id);
+      await this.repoMarketItem.update(
+        { id },
+        {
+          title: data.title,
+          gubun: Number(data.gubun),
+          money: Number(data.money),
+          star: data.star,
+          dc: Number(data.dc),
+          sequence: Number(data.sequence),
+          link: data.link,
+          active: Number(data.active),
+          image,
+        },
+      );
+      return;
+    }
+
+    if (files.length === 0) {
+      const id = Number(data.id);
+      await this.repoMarketItem.update(
+        { id },
+        {
+          title: data.title,
+          gubun: Number(data.gubun),
+          money: Number(data.money),
+          star: data.star,
+          dc: Number(data.dc),
+          sequence: Number(data.sequence),
+          link: data.link,
+          active: Number(data.active),
+        },
+      );
+      return;
+    }
+  }
+
+  async updateBd(files: Express.Multer.File[], data: UpdateBoardDto) {
+    if (files.length !== 0) {
+      const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+      const id = Number(data.id);
+      await this.repoBoard.update(
+        { id },
+        { title: data.title, link: data.link, type: Number(data.type), image },
+      );
+      return;
+    }
+
+    if (files.length === 0) {
+      const id = Number(data.id);
+      await this.repoBoard.update(
+        { id },
+        { title: data.title, link: data.link, type: Number(data.type) },
+      );
+      return;
+    }
   }
 }
