@@ -115,7 +115,9 @@ export class AdvertisementController {
         limit: String(take ? take : 10),
         offset: String(page ? take * (page - 1) : 0),
       };
-      const data = await this.advertisementService.findInEtc(condition);
+      const data = await this.advertisementService.findInEtcForLastAd(
+        condition,
+      );
 
       // TODO
       // TODO 불러온 마지막광고 tick 증가

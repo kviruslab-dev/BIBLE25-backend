@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { reorderArray } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { reorderArray } from 'src/common/utils/functions';
 
 @Injectable()
 export class AdvertisementService {
@@ -91,7 +91,12 @@ export class AdvertisementService {
   async findInEtc(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
 
+    return reorderArray(data.list);
+  }
+
+  async findInEtcForLastAd(condition: any) {
+    const data = await this.queryRunnerService.findAndCount(condition);
+
     return data.list.reverse();
-    // return reorderArray(data.list);
   }
 }
