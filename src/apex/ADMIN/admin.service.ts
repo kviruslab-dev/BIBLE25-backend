@@ -203,7 +203,11 @@ export class AdminService {
 
   async createMalsum(data: any) {
     delete data.id;
-    const temp = this.repoTodayContent.create(data);
+    const temp = this.repoTodayContent.create({
+      ...data,
+      gubun: 1,
+      name: '말씀따라',
+    });
     await this.repoTodayContent.save(temp);
     return;
   }
@@ -388,6 +392,70 @@ export class AdminService {
       await this.repoBoard.update(
         { id },
         { title: data.title, link: data.link, type: Number(data.type) },
+      );
+      return;
+    }
+  }
+
+  async createCalum(files: Express.Multer.File[], data: any) {
+    if (files.length !== 0) {
+      const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+      delete data.id;
+      const temp = this.repoTodayContent.create({
+        ...data,
+        image,
+        gubun: 4,
+        name: '칼럼',
+      });
+      await this.repoTodayContent.save(temp);
+      return;
+    }
+
+    delete data.id;
+    const temp = this.repoTodayContent.create({ ...data, gubun: 4 });
+    await this.repoTodayContent.save(temp);
+    return;
+  }
+
+  async getCalum(take: number, page: number) {
+    return this.repoTodayContent.find({
+      select: [
+        'id',
+        'today',
+        'title',
+        'content',
+        'song',
+        'image',
+        'name',
+        'active',
+      ],
+      where: { gubun: 4 },
+      order: {
+        today: 'DESC',
+      },
+      take,
+      skip: take * (page - 1),
+    });
+  }
+
+  async updateCalum(files: Express.Multer.File[], data: UpdateTodayBookDto) {
+    if (files.length !== 0) {
+      const image = `https://data.bible25.com/uploads/${files[0].filename}`;
+      const id = Number(data.id);
+      const { today, title, song, content } = data;
+      await this.repoTodayContent.update(
+        { id },
+        { image, today, title, song, content },
+      );
+      return;
+    }
+
+    if (files.length === 0) {
+      const id = Number(data.id);
+      const { today, title, song, content } = data;
+      await this.repoTodayContent.update(
+        { id },
+        { today, title, song, content },
       );
       return;
     }

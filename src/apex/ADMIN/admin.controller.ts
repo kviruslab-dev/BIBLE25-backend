@@ -18,11 +18,13 @@ import {
 import { multerOptions } from 'src/common/utils/multer.options';
 import { AdminService } from './admin.service';
 import { CreateBoardDto } from './dtos/createBoard.dto';
+import { CreateCalumDto } from './dtos/createCalum.dto';
 import { CreateMalsumDto } from './dtos/createMalsum.dto';
 import { CreateMarketDto } from './dtos/createMarket.dto';
 import { CreateProductDto } from './dtos/createProduct.dto';
 import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
 import { UpdateBoardDto } from './dtos/updateBoard.dto';
+import { UpdateCalumDto } from './dtos/updateCalum.dto';
 import { UpdateMalsumDto } from './dtos/updateMalsum.dto';
 import { UpdateMarketDto } from './dtos/updateMarket.dto';
 import { UpdateProductDto } from './dtos/updateProduct.dto';
@@ -103,31 +105,31 @@ export class AdminController {
     return;
   }
 
-  // //! 칼럼 어드민
-  // @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
-  // @Post('calum')
-  // async createCalum(
-  //   @UploadedFiles() files: Array<Express.Multer.File>,
-  //   @Body() body: CreateTodayBookDto,
-  // ) {
-  //   await this.adminService.createCalum(files, body);
-  //   return;
-  // }
+  //! 칼럼 어드민
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Post('calum')
+  async createCalum(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: CreateCalumDto,
+  ) {
+    await this.adminService.createCalum(files, body);
+    return;
+  }
 
-  // @Get('calum')
-  // async getCalum(@Query('take') take = 10, @Query('page') page = 1) {
-  //   return await this.adminService.getCalum(take, page);
-  // }
+  @Get('calum')
+  async getCalum(@Query('take') take = 10, @Query('page') page = 1) {
+    return await this.adminService.getCalum(take, page);
+  }
 
-  // @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
-  // @Patch('calum')
-  // async updateCalum(
-  //   @UploadedFiles() files: Array<Express.Multer.File>,
-  //   @Body() body: UpdateTodayBookDto,
-  // ) {
-  //   await this.adminService.updateCalum(files, body);
-  //   return;
-  // }
+  @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  @Patch('calum')
+  async updateCalum(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Body() body: UpdateCalumDto,
+  ) {
+    await this.adminService.updateCalum(files, body);
+    return;
+  }
 
   //! 말씀따라 어드민
   @Post('malsum')
