@@ -8,5 +8,5 @@ export class CreateBoardDto {
   link: string;
 
   @IsString()
-  city: string;
+  type: string;
 }

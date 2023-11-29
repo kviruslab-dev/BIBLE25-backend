@@ -14,6 +14,7 @@ import { MarketItem } from 'src/common/entities/product.entity';
 import { ToDayContent } from 'src/common/entities/todaycontent.entity';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { Repository } from 'typeorm';
+import { CreateBoardDto } from './dtos/createBoard.dto';
 import { CreateMarketDto } from './dtos/createMarket.dto';
 import { CreateProductDto } from './dtos/createProduct.dto';
 import { CreateTodayBookDto } from './dtos/createTodayBook.dto';
@@ -275,9 +276,14 @@ export class AdminService {
     return;
   }
 
-  async createBd(files: Express.Multer.File[], data: object) {
+  async createBd(files: Express.Multer.File[], data: CreateBoardDto) {
     const image = `https://data.bible25.com/uploads/${files[0].filename}`;
-    const temp = this.repoBoard.create({ ...data, image });
+    const temp = this.repoBoard.create({
+      title: data.title,
+      link: data.link,
+      type: Number(data.type),
+      image,
+    });
     await this.repoBoard.save(temp);
     return;
   }

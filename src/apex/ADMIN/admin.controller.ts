@@ -103,6 +103,32 @@ export class AdminController {
     return;
   }
 
+  // //! 칼럼 어드민
+  // @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  // @Post('calum')
+  // async createCalum(
+  //   @UploadedFiles() files: Array<Express.Multer.File>,
+  //   @Body() body: CreateTodayBookDto,
+  // ) {
+  //   await this.adminService.createCalum(files, body);
+  //   return;
+  // }
+
+  // @Get('calum')
+  // async getCalum(@Query('take') take = 10, @Query('page') page = 1) {
+  //   return await this.adminService.getCalum(take, page);
+  // }
+
+  // @UseInterceptors(FilesInterceptor('upload', 10, multerOptions('file')))
+  // @Patch('calum')
+  // async updateCalum(
+  //   @UploadedFiles() files: Array<Express.Multer.File>,
+  //   @Body() body: UpdateTodayBookDto,
+  // ) {
+  //   await this.adminService.updateCalum(files, body);
+  //   return;
+  // }
+
   //! 말씀따라 어드민
   @Post('malsum')
   async createMalsum(@Body() body: CreateMalsumDto) {
