@@ -6,47 +6,40 @@ export class FcmPushService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   async setDeviceID(body: any) {
-    const condition = {
-      select: 'deviceId, city, lat, lon, timezone, country, pushyn',
-      table: 'device_info',
-      where: `deviceId = '${body.deviceId}'`,
-    };
-
-    const data = await this.queryRunnerService.findOne(condition);
-
-    const address = await this.getCityDong(
-      body.lat ?? '1.2',
-      body.lon ?? '3.4',
-    );
-
-    if (!data) {
-      const condition = {
-        table: 'device_info',
-        columns: 'deviceId, city, lat, lon, timezone, country, pushyn',
-        values: `'${body.deviceId}', '${address.city}', '${body.lat}', '${body.lon}', '${address.timezone}', '${address.country}', 1`,
-      };
-
-      console.log(111, condition);
-      // await this.queryRunnerService.insert(condition);
-    }
-
-    if (data) {
-      const condition = {
-        table: 'device_info',
-        set: `
-          city='${address.city}', lat='${body.lat ?? data.lat}', lon='${
-          body.lon ?? data.lon
-        }', timezone='${address.timezone}', country='${
-          address.country
-        }', pushyn='${body.pushyn ?? data.pushyn}'
-        `,
-        where: `deviceId='${body.deviceId}'`,
-      };
-
-      console.log(222, condition);
-      // await this.queryRunnerService.updateMySQL(condition);
-    }
-
+    // const condition = {
+    //   select: 'deviceId, city, lat, lon, timezone, country, pushyn',
+    //   table: 'device_info',
+    //   where: `deviceId = '${body.deviceId}'`,
+    // };
+    // const data = await this.queryRunnerService.findOne(condition);
+    // const address = await this.getCityDong(
+    //   body.lat ?? '1.2',
+    //   body.lon ?? '3.4',
+    // );
+    // if (!data) {
+    //   const condition = {
+    //     table: 'device_info',
+    //     columns: 'deviceId, city, lat, lon, timezone, country, pushyn',
+    //     values: `'${body.deviceId}', '${address.city}', '${body.lat}', '${body.lon}', '${address.timezone}', '${address.country}', 1`,
+    //   };
+    // console.log(111, condition);
+    // await this.queryRunnerService.insert(condition);
+    // }
+    // if (data) {
+    //   const condition = {
+    //     table: 'device_info',
+    //     set: `
+    //       city='${address.city}', lat='${body.lat ?? data.lat}', lon='${
+    //       body.lon ?? data.lon
+    //     }', timezone='${address.timezone}', country='${
+    //       address.country
+    //     }', pushyn='${body.pushyn ?? data.pushyn}'
+    //     `,
+    //     where: `deviceId='${body.deviceId}'`,
+    //   };
+    // console.log(222, condition);
+    // await this.queryRunnerService.updateMySQL(condition);
+    // }
     return { code: 1000, message: 'complete', time: Date() };
   }
 
