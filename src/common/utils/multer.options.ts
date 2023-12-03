@@ -7,13 +7,13 @@ const storage = (folder: string): multer.StorageEngine => {
   return multer.diskStorage({
     destination(req, file, cb) {
       //* 어디에 저장할 지
-      // const folderName = path.join(__dirname, '../../../../', `uploads/`);
+      const folderName = path.join(__dirname, '../../../../', `uploads/`);
 
-      const folderName = path.join(
-        __dirname,
-        '../../../../../../home/databible25',
-        `uploads/`,
-      );
+      // const folderName = path.join(
+      //   __dirname,
+      //   '../../../../../../home/databible25',
+      //   `uploads/`,
+      // );
 
       cb(null, folderName);
     },

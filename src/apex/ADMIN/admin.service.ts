@@ -48,7 +48,7 @@ export class AdminService {
           'id, create_at, title, tick, start_date, end_date, page, location, rate, image, link, active, city, timezone',
         table: 'market',
         where: `page in ${pageString}`,
-        orderBy: 'id asc',
+        orderBy: 'id asc ',
         limit: String(1000),
         offset: String(0),
       };

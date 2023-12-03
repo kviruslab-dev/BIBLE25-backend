@@ -26,7 +26,8 @@ export class FcmPushService {
         values: `'${body.deviceId}', '${address.city}', '${body.lat}', '${body.lon}', '${address.timezone}', '${address.country}', 1`,
       };
 
-      await this.queryRunnerService.insert(condition);
+      console.log(111, condition);
+      // await this.queryRunnerService.insert(condition);
     }
 
     if (data) {
@@ -42,7 +43,8 @@ export class FcmPushService {
         where: `deviceId='${body.deviceId}'`,
       };
 
-      await this.queryRunnerService.updateMySQL(condition);
+      console.log(222, condition);
+      // await this.queryRunnerService.updateMySQL(condition);
     }
 
     return { code: 1000, message: 'complete', time: Date() };
