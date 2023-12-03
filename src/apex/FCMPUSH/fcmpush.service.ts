@@ -33,7 +33,7 @@ export class FcmPushService {
       const condition = {
         table: 'device_info',
         set: `
-          city='${address.city}', lat='${body.lat ?? data.let}', lon='${
+          city='${address.city}', lat='${body.lat ?? data.lat}', lon='${
           body.lon ?? data.lon
         }', timezone='${address.timezone}', country='${
           address.country
