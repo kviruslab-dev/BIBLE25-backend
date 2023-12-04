@@ -1,5 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -7,6 +5,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('error_log')
 export class ErrorLog {
@@ -57,6 +58,32 @@ export class ErrorLog {
   @IsString()
   @IsNotEmpty()
   url: string;
+
+  //! 오류 발생 시 request query
+  @ApiProperty({
+    example: 'example_query',
+    description: 'query',
+    required: true,
+  })
+  @Column({
+    comment: 'query',
+  })
+  @IsString()
+  @IsNotEmpty()
+  query: string;
+
+  //! 오류 발생 시 request body
+  @ApiProperty({
+    example: 'example_body',
+    description: 'body',
+    required: true,
+  })
+  @Column({
+    comment: 'body',
+  })
+  @IsString()
+  @IsNotEmpty()
+  body: string;
 
   //! error 내용
   @ApiProperty({

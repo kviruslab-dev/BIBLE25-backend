@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { sendMessageToSlack } from 'src/common/utils/slackBot';
-import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { ErrorLogDto } from './dtos/log.dto';
+import { Injectable } from '@nestjs/common';
+import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { sendMessageToSlack } from 'src/common/utils/slackBot';
 
 @Injectable()
 export class LogService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   async SaveError(data: ErrorLogDto) {
-    const { status_code, method, url, error } = data;
+    const { status_code, method, url, query, body, error } = data;
 
     const condition = {
       table: 'error_log',
-      columns: `status_code, method, url, error, count`,
-      values: `${status_code}, '${method}', '${url}', '${error}', '1'`,
+      columns: `status_code, method, url, query, body, error, count`,
+      values: `${status_code}, '${method}', '${url}', '${query}', '${body}', '${error}', '1'`,
     };
 
     await this.queryRunnerService.insert(condition);
@@ -21,9 +21,11 @@ export class LogService {
     if (status_code === 404) return;
 
     sendMessageToSlack(`
-    🚨 STATUS CODE : ${status_code} 🚨
-    오류 메세지 : Cannot ${method} ${url},
-    ${error}
+    🚨 상태 코드: ${status_code} 🚨
+    오류 링크: [${method}] ${url}
+    에러 내용: ${error}
+    입력 쿼리: ${query},
+    입력 바디: ${body}
     `);
 
     return;

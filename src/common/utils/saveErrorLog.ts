@@ -4,6 +4,8 @@ export const saveErrorLog = async (
   status_code: number,
   method: string,
   url: string,
+  query: string,
+  body: string,
   error: string,
 ) => {
   await axios({
@@ -14,6 +16,8 @@ export const saveErrorLog = async (
       status_code,
       method,
       url,
+      query,
+      body,
       error,
     },
     headers: {
