@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -26,7 +27,7 @@ export class FcmPushService {
       try {
         await this.queryRunnerService.insert(condition);
       } catch (err) {
-        return null;
+        throw new HttpException(`FCMPUSH 오류 01`, HttpStatus.BAD_REQUEST);
       }
     }
     if (data) {
@@ -45,7 +46,7 @@ export class FcmPushService {
       try {
         await this.queryRunnerService.updateMySQL(condition);
       } catch (err) {
-        return null;
+        throw new HttpException(`FCMPUSH 오류 02`, HttpStatus.BAD_REQUEST);
       }
     }
     return { code: 1000, message: 'complete', time: Date() };
