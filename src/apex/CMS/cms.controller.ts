@@ -25,7 +25,7 @@ export class CmsController {
   ) {}
 
   @Post()
-  async createCms(@Body() body: CmsDto) {
+  async createCms(@Body() body: CmsDto, @Query('admin') admin = 'default') {
     if (
       await this.queryRunnerService.findOne({
         select: '*',
@@ -37,19 +37,26 @@ export class CmsController {
 
     const condition = {
       table: 'kviruslab_cms',
-      columns: 'name, phone, status, memo, company',
-      values: `'${body.name}', '${body.phone}', '${body.status}', '', '${body.company}'`,
+      columns: 'name, phone, status, memo, company, admin',
+      values: `'${body.name}', '${body.phone}', '${body.status}', '', '${body.company}', '${admin}'`,
     };
 
     return await this.queryRunnerService.insert(condition);
   }
 
   @Get()
-  async select(@Query('take') take = 10, @Query('page') page = 1) {
+  async select(
+    @Query('take') take = 10,
+    @Query('page') page = 1,
+    @Query('admin') admin = 'default',
+  ) {
+    //! 현재 운영중인 cms 어드민의 로직을 건드리지 않아야 한다.
+    const whereCondition = admin === 'default' ? 'TRUE' : `admin='${admin}'`;
+
     const condition = {
       select: 'create_at, id, name, phone, status, memo, company',
       table: 'kviruslab_cms',
-      where: `TRUE`,
+      where: whereCondition,
       orderBy: 'id asc',
       limit: String(take ? take : 10),
       offset: String(page ? take * (page - 1) : 0),
