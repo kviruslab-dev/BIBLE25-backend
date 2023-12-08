@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { BIBLE_AUDIO_URL, BIBLE_PHOTO_URL } from 'src/common/const';
+
+import { Injectable } from '@nestjs/common';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -90,8 +91,7 @@ export class Bible25Service {
           {
             id: 9999999,
             content: '',
-            image:
-              'https://ch2ho.bible25.co.kr/kviruslab/intellectual/biblephoto/default.png',
+            image: 'https://data.bible25.com/bible/default.png',
           },
         ],
         total: 1,
