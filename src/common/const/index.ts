@@ -85,7 +85,7 @@ export const TODAY_SELECT_CONDITION = [
     'song',
   ],
   [`id`, `today`, `content`, `title`, `writer`, 'yojul as slogan ', 'bible'],
-  [`id`, `today`, `content`, `title`, `writer`],
+  [`id`, `today`, `content`, `title`, `writer`, 'image'],
   [
     `id`,
     `today`,
