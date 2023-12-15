@@ -96,7 +96,7 @@ export const TODAY_SELECT_CONDITION = [
     'song as bible',
     'bible as start',
   ],
-  [`id`, `today`, `content`, `title`, `writer`],
+  [`id`, `today`, `content`, `title`, `writer`, `image`],
   [`id`, `today`, `image`, `title`],
   [`id`, `today`, `image`, `title`],
 ];
