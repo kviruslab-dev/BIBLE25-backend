@@ -55,7 +55,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         request.url,
         JSON.stringify(request.query),
         JSON.stringify(request.body),
-        error.error,
+        String(error.message),
       );
     }
   }

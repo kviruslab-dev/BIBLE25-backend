@@ -1,7 +1,7 @@
-import { ErrorLogDto } from './dtos/log.dto';
 import { Injectable } from '@nestjs/common';
-import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { sendMessageToSlack } from 'src/common/utils/slackBot';
+import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { ErrorLogDto } from './dtos/log.dto';
 
 @Injectable()
 export class LogService {
@@ -16,7 +16,7 @@ export class LogService {
       values: `${status_code}, '${method}', '${url}', '${query}', '${body}', '${error}', '1'`,
     };
 
-    await this.queryRunnerService.insert(condition);
+    this.queryRunnerService.insert(condition);
 
     if (status_code === 404) return;
 
