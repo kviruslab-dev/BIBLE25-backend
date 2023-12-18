@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-
+import { Injectable } from '@nestjs/common';
+import { saveErrorLog } from 'src/common/utils/saveErrorLog';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -27,8 +27,17 @@ export class FcmPushService {
       try {
         await this.queryRunnerService.insert(condition);
       } catch (err) {
-        throw new HttpException(err, HttpStatus.BAD_REQUEST);
-        // null;
+        //! 오류 로그 저장
+        saveErrorLog(
+          0,
+          'POST',
+          'fcmpush/deviceid',
+          '{}',
+          JSON.stringify(body),
+          String(err),
+        );
+
+        return { code: 1000, message: 'complete', time: Date() };
       }
     }
 
