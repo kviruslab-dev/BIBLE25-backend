@@ -73,11 +73,8 @@ export class QueryRunnerService {
       `;
 
       await this.queryRunner.query(SQL);
-    } catch {
-      throw new HttpException(
-        `UPDATE 조건을 다시 확인해주세요.`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -90,11 +87,8 @@ export class QueryRunnerService {
       `;
 
       await this.queryRunner.query(SQL);
-    } catch {
-      throw new HttpException(
-        `UPDATE 조건을 다시 확인해주세요.`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -106,11 +100,8 @@ export class QueryRunnerService {
       `;
 
       await this.queryRunner.query(SQL);
-    } catch {
-      throw new HttpException(
-        `INSERT 조건을 다시 확인해주세요.`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -123,22 +114,16 @@ export class QueryRunnerService {
       `;
 
       await this.queryRunner.query(SQL);
-    } catch {
-      throw new HttpException(
-        `UPDATE 조건을 다시 확인해주세요.`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 
   async query(SQL: string) {
     try {
       return this.queryRunner.query(SQL);
-    } catch {
-      throw new HttpException(
-        `qeury를 다시 확인해주세요.`,
-        HttpStatus.BAD_REQUEST,
-      );
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
     }
   }
 }

@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
@@ -26,30 +27,33 @@ export class FcmPushService {
       try {
         await this.queryRunnerService.insert(condition);
       } catch (err) {
-        // throw new HttpException(`FCMPUSH 오류 01`, HttpStatus.BAD_REQUEST);
-        null;
+        throw new HttpException(err, HttpStatus.BAD_REQUEST);
+        // null;
       }
     }
-    if (data) {
-      const condition = {
-        table: 'device_info',
-        set: `
-          city='${address.city}', lat='${body.lat ?? data.lat}', lon='${
-          body.lon ?? data.lon
-        }', timezone='${address.timezone}', country='${
-          address.country
-        }', pushyn='${body.pushyn ?? data.pushyn}'
-        `,
-        where: `deviceId='${body.deviceId}'`,
-      };
 
-      try {
-        await this.queryRunnerService.updateMySQL(condition);
-      } catch (err) {
-        // throw new HttpException(`FCMPUSH 오류 02`, HttpStatus.BAD_REQUEST);
-        null;
-      }
-    }
+    //! 지역 광고 기획 (사용자의 현재 위도, 경도 정보를 DB에 최신화 시키기)
+    // if (data) {
+    //   const condition = {
+    //     table: 'device_info',
+    //     set: `
+    //       city='${address.city}', lat='${body.lat ?? data.lat}', lon='${
+    //       body.lon ?? data.lon
+    //     }', timezone='${address.timezone}', country='${
+    //       address.country
+    //     }', pushyn='${body.pushyn ?? data.pushyn}'
+    //     `,
+    //     where: `deviceId='${body.deviceId}'`,
+    //   };
+
+    //   try {
+    //     await this.queryRunnerService.updateMySQL(condition);
+    //   } catch (err) {
+    //     throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    //     // null;
+    //   }
+    // }
+
     return { code: 1000, message: 'complete', time: Date() };
   }
 
