@@ -14,6 +14,7 @@ import { CmsModule } from 'src/apex/CMS/cms.module';
 import { CommentModule } from 'src/apex/COMMENT/comment.module';
 import { DeviceModule } from 'src/apex/DEVICE/device.module';
 import { FcmPushModule } from 'src/apex/FCMPUSH/fcmpush.module';
+import { InquiryModule } from 'src/apex/INQUIRY/inquiry.module';
 import { LogModule } from 'src/apex/LOG/log.module';
 import { ProductModule } from 'src/apex/PRODUCT/product.module';
 import { SearchModule } from 'src/apex/SEARCH/search.module';
@@ -66,6 +67,7 @@ import { AppService } from './app.service';
     CommentModule,
     SmsModule,
     CmsModule,
+    InquiryModule,
   ],
   controllers: [AppController],
   providers: [
