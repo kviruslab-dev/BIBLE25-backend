@@ -1,31 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
+import { ConflictException, Injectable } from '@nestjs/common';
+
+import { MailerService } from '@nestjs-modules/mailer';
 import { InquiryDto } from './dtos/inquiry.dto';
 
 @Injectable()
 export class InquiryService {
-  constructor(private readonly queryRunnerService: QueryRunnerService) {}
+  constructor(private readonly mailerService: MailerService) {}
 
   async createInquiry(data: InquiryDto) {
-    const condition = {
-      select: 'id',
-      table: 'inquiry',
-      where: `name ='${data.name}' and phone='${data.phone}' and comment='${data.comment}'`,
-    };
-
-    const inquiry = await this.queryRunnerService.findOne(condition);
-
-    if (inquiry) {
-      return '동일한 수정/요청사항이 존재합니다.';
-    }
-
-    const conditionForInsert = {
-      table: 'inquiry',
-      columns: ['name', 'phone', 'comment'],
-      values: [`'${data.name}'`, `'${data.phone}'`, `'${data.comment}'`],
-    };
-
-    await this.queryRunnerService.insert(conditionForInsert);
-    return '수정/요청사항이 등록되었습니다.';
+    this.mailerService
+      .sendMail({
+        to: 'givemeprice@naver.com',
+        from: 'givemeprice@naver.com',
+        subject: `바이블25 수정/요청사항 (작성자: ${data.name})`,
+        text: ``,
+        html: `
+        <b>[이름] ${data.name},</b><br>
+        <b>[전화번호] ${data.phone},</b><br>
+        <b>[내용] ${data.comment}</b>
+        `,
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        new ConflictException(error);
+      });
+    return true;
   }
 }
