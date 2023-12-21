@@ -26,6 +26,6 @@ export class InquiryService {
       .catch((error) => {
         new ConflictException(error);
       });
-    return true;
+    return '수정/요청사항이 등록되었습니다.';
   }
 }
