@@ -26,15 +26,6 @@ export class CmsController {
 
   @Post()
   async createCms(@Body() body: CmsDto, @Query('admin') admin = 'default') {
-    if (
-      await this.queryRunnerService.findOne({
-        select: '*',
-        table: 'kviruslab_cms',
-        where: `phone = '${body.phone}'`,
-      })
-    )
-      return null;
-
     const condition = {
       table: 'kviruslab_cms',
       columns: 'name, phone, status, memo, company, admin',
