@@ -10,6 +10,7 @@ import {
 import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import {
   TODAY_CONTENTS,
+  TODAY_GUBUN,
   TODAY_LISTS,
   TODAY_SELECT_CONDITION,
 } from 'src/common/const';
@@ -56,6 +57,8 @@ export class TodayController {
       };
 
       const list = await this.todayService.findInMainContents(condition);
+      //! 축복기도 이름으로 들어온 데이터를 이야기메시지로 변경합니다. (2024.01.01 이후 적용)
+      list[2].name = '이야기메시지';
       return { list, total: 6 };
     }
   }
@@ -99,7 +102,7 @@ export class TodayController {
     required: true,
     type: String,
     description:
-      '이름 : malsum, good, kido, calum, today, book, cross, letter 또는 malsumlist, goodlist, kidolist, calumlist, todaylist, booklist, crosslist, letterlist',
+      '이름 : malsum, good, kido, calum, today, book, cross, letter, iyagi 또는 malsumlist, goodlist, kidolist, calumlist, todaylist, booklist, crosslist, letterlist iyagilist',
   })
   @ApiQuery({ name: 'take', required: false, type: String })
   @ApiQuery({ name: 'page', required: false, type: String })
@@ -123,12 +126,12 @@ export class TodayController {
 
     const contentName = name.replace('list', '');
     const today = getToday();
-    const gubun = Number(TODAY_CONTENTS.indexOf(contentName));
+    const gubun = TODAY_GUBUN[contentName];
     const tableCondition = gubun <= 6 ? 'today_content' : 'today_image';
 
     if (TODAY_CONTENTS.includes(name)) {
       const condition = {
-        select: TODAY_SELECT_CONDITION[gubun],
+        select: TODAY_SELECT_CONDITION[contentName],
         table: tableCondition,
         where: `today <= '${today}' and gubun=${gubun}`,
         orderBy: 'today desc',
@@ -141,10 +144,20 @@ export class TodayController {
 
     if (TODAY_LISTS.includes(name)) {
       if (keyword) {
+        let whereCondition: string;
+        //! 축복기도 데이터와 이야기메시지를 구분하기 위한 로직입니다. (2024.01.01 이후 적용)
+        if (contentName === 'iyagi') {
+          whereCondition = `title like '%${keyword.trim()}%' and today <= '${today}' and today > '2023-12-25' and gubun=${gubun}`;
+        } else if (contentName === 'kido') {
+          whereCondition = `title like '%${keyword.trim()}%' and today < '2024-01-01' and gubun=${gubun}`;
+        } else {
+          whereCondition = `title like '%${keyword.trim()}%' and today <= '${today}' and gubun=${gubun}`;
+        }
+
         const condition = {
           select: 'id, title',
           table: tableCondition,
-          where: `title like '%${keyword.trim()}%' and today <= '${today}' and gubun=${gubun}`,
+          where: whereCondition,
           orderBy: 'today desc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
@@ -154,10 +167,20 @@ export class TodayController {
       }
 
       if (!keyword) {
+        let whereCondition: string;
+        //! 축복기도 데이터와 이야기메시지를 구분하기 위한 로직입니다. (2024.01.01 이후 적용)
+        if (contentName === 'iyagi') {
+          whereCondition = `today <= '${today}' and today > '2023-12-25' and gubun=${gubun}`;
+        } else if (contentName === 'kido') {
+          whereCondition = `today < '2024-01-01' and gubun=${gubun}`;
+        } else {
+          whereCondition = `today <= '${today}' and gubun=${gubun}`;
+        }
+
         const condition = {
           select: 'id, title',
           table: tableCondition,
-          where: `today <= '${today}' and gubun=${gubun}`,
+          where: whereCondition,
           orderBy: 'today desc',
           limit: String(take ? take : 10),
           offset: String(page ? take * (page - 1) : 0),
@@ -172,7 +195,8 @@ export class TodayController {
     name: 'name',
     required: true,
     type: String,
-    description: '이름 : malsum, good, kido, calum, today, book, cross, letter',
+    description:
+      '이름 : malsum, good, kido, calum, today, book, cross, letter, iyagi',
   })
   @ApiParam({ name: 'id', required: true, type: String })
   @ApiOperation({ summary: 'id를 통해 TODAY 데이터 가져오기' })
@@ -185,11 +209,11 @@ export class TodayController {
       );
     }
 
-    const gubun = TODAY_CONTENTS.indexOf(name);
+    const gubun = TODAY_GUBUN[name];
     const tableCondition = gubun <= 6 ? 'today_content' : 'today_image';
 
     const condition = {
-      select: TODAY_SELECT_CONDITION[gubun],
+      select: TODAY_SELECT_CONDITION[name],
       table: tableCondition,
       where: `id=${id}`,
     };

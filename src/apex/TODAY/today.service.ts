@@ -18,7 +18,8 @@ export class TodayService {
         );
       }
 
-      // return data.list;
+      //! 축복기도 이름으로 들어온 데이터를 이야기메시지로 변경합니다. (2024.01.01 이후 적용)
+      data.list[2].name = '이야기메시지';
       return data;
     }
 

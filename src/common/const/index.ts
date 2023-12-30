@@ -45,6 +45,8 @@ export const TODAY_CONTENTS = [
   'book',
   'cross',
   'letter',
+  //! 이야기메시지를 추가합니다.
+  'iyagi',
 ];
 
 export const TODAY_LISTS = [
@@ -57,11 +59,25 @@ export const TODAY_LISTS = [
   'booklist',
   'crosslist',
   'letterlist',
+  //! 이야기메시지 리스트를 추가합니다.
+  'iyagilist',
 ];
 
-export const TODAY_SELECT_CONDITION = [
-  [],
-  [
+export const TODAY_GUBUN = {
+  malsum: 1,
+  good: 2,
+  kido: 3,
+  calum: 4,
+  today: 5,
+  book: 6,
+  cross: 7,
+  letter: 8,
+  //! 이야기메시지를 추가합니다.
+  iyagi: 3,
+};
+
+export const TODAY_SELECT_CONDITION = {
+  malsum: [
     `id`,
     `today`,
     `content`,
@@ -72,7 +88,7 @@ export const TODAY_SELECT_CONDITION = [
     'kido',
     'bible',
   ],
-  [
+  good: [
     `id`,
     `today`,
     `content`,
@@ -84,9 +100,17 @@ export const TODAY_SELECT_CONDITION = [
     'bible',
     'song',
   ],
-  [`id`, `today`, `content`, `title`, `writer`, 'yojul as slogan ', 'bible'],
-  [`id`, `today`, `content`, `title`, `writer`, 'image'],
-  [
+  kido: [
+    `id`,
+    `today`,
+    `content`,
+    `title`,
+    `writer`,
+    'yojul as slogan ',
+    'bible',
+  ],
+  calum: [`id`, `today`, `content`, `title`, `writer`, 'image'],
+  today: [
     `id`,
     `today`,
     `content`,
@@ -96,10 +120,11 @@ export const TODAY_SELECT_CONDITION = [
     'song as bible',
     'bible as start',
   ],
-  [`id`, `today`, `content`, `title`, `writer`, `image`],
-  [`id`, `today`, `image`, `title`],
-  [`id`, `today`, `image`, `title`],
-];
+  book: [`id`, `today`, `content`, `title`, `writer`, `image`],
+  cross: [`id`, `today`, `image`, `title`],
+  letter: [`id`, `today`, `image`, `title`],
+  iyagi: [`id`, `today`, `title`, `content`],
+};
 
 export const SEARCH_CONTENTS = [
   '',
