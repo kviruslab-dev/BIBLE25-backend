@@ -50,6 +50,8 @@ export class AdvertisementService {
       good: '굿모닝하나님',
       today: '오늘의말씀',
       kido: '축복기도',
+      //! 이야기메시지는 축복기도와 동일한 광고를 보여줍니다.
+      iyagi: '축복기도',
       calum: '칼럼',
       cross: '십자가',
       letter: '손편지',

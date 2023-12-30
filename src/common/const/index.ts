@@ -20,6 +20,8 @@ export const ONE_ADVERTISEMENT = [
   'good',
   'today',
   'kido',
+  //! 이야기메시지를 추가합니다.
+  'iyagi',
   'calum',
   'cross',
   'letter',

@@ -30,7 +30,7 @@ export class AdvertisementController {
     required: true,
     type: String,
     description:
-      '타입 : main01, main02, main03, main04, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo',
+      '타입 : main01, main02, main03, main04, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo',
   })
   @ApiQuery({ name: 'lat', required: true, type: String })
   @ApiQuery({ name: 'lon', required: true, type: String })
@@ -64,6 +64,7 @@ export class AdvertisementController {
     const lat = '0';
     const lon = '0';
 
+    //! 이야기메시지는 축복기도와 동일한 광고를 보여줍니다.
     const pageFromType = await this.advertisementService.getPageFromType(type);
 
     const { city } = await this.advertisementService.getAddress(lat, lon);
@@ -211,6 +212,10 @@ export class AdvertisementController {
           );
         }
 
+        //! 이야기메시지인 경우, title 값을 "축복기도"에서 "이야기메시지"로 변경합니다.
+        if (type === 'iyagi') {
+          data[0].title = '이야기메시지';
+        }
         return data;
       } catch (error) {
         const condition = {
@@ -222,7 +227,12 @@ export class AdvertisementController {
           offset: String(page ? take * (page - 1) : 0),
         };
 
-        return await this.advertisementService.findInEtc(condition);
+        const data = await this.advertisementService.findInEtc(condition);
+        //! 이야기메시지인 경우, title 값을 "축복기도"에서 "이야기메시지"로 변경합니다.
+        if (type === 'iyagi') {
+          data[0].title = '이야기메시지';
+        }
+        return data;
       }
     }
   }
