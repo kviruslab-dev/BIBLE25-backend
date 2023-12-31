@@ -147,7 +147,7 @@ export class TodayController {
         let whereCondition: string;
         //! 축복기도 데이터와 이야기메시지를 구분하기 위한 로직입니다. (2024.01.01 이후 적용)
         if (contentName === 'iyagi') {
-          whereCondition = `title like '%${keyword.trim()}%' and today <= '${today}' and today > '2023-12-25' and gubun=${gubun}`;
+          whereCondition = `title like '%${keyword.trim()}%' and today <= '${today}' and today >= '2024-01-01' and gubun=${gubun}`;
         } else if (contentName === 'kido') {
           whereCondition = `title like '%${keyword.trim()}%' and today < '2024-01-01' and gubun=${gubun}`;
         } else {
@@ -170,7 +170,7 @@ export class TodayController {
         let whereCondition: string;
         //! 축복기도 데이터와 이야기메시지를 구분하기 위한 로직입니다. (2024.01.01 이후 적용)
         if (contentName === 'iyagi') {
-          whereCondition = `today <= '${today}' and today > '2023-12-25' and gubun=${gubun}`;
+          whereCondition = `today <= '${today}' and today >= '2024-01-01' and gubun=${gubun}`;
         } else if (contentName === 'kido') {
           whereCondition = `today < '2024-01-01' and gubun=${gubun}`;
         } else {
