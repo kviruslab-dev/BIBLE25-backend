@@ -10,6 +10,7 @@ export class ProductService {
     const temp02 = await this.queryRunnerService.findAndCount(condition(2));
 
     const data01 = temp01.list.map((v: any) => {
+      v.money = v.money.toLocaleString('ko-KR');
       v.dc += '%할인';
       return v;
     });
@@ -20,7 +21,7 @@ export class ProductService {
       //   return v;
       // }
 
-      v.money = `월 ${v.money}`;
+      v.money = `월 ${v.money.toLocaleString('ko-KR')}`;
       v.dc += '개월';
       return v;
     });
