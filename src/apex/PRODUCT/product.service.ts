@@ -16,10 +16,10 @@ export class ProductService {
     });
 
     const data02 = temp02.list.map((v: any, i: number) => {
-      // if (i < 2) {
-      //   v.dc += '%할인';
-      //   return v;
-      // }
+      if (i < 1) {
+        v.dc += '%할인';
+        return v;
+      }
 
       v.money = `월 ${v.money.toLocaleString('ko-KR')}`;
       v.dc += '개월';
