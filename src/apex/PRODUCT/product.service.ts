@@ -17,6 +17,7 @@ export class ProductService {
 
     const data02 = temp02.list.map((v: any, i: number) => {
       if (i < 1) {
+        v.money = v.money.toLocaleString('ko-KR');
         v.dc += '%할인';
         return v;
       }
