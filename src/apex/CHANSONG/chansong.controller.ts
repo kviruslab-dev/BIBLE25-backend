@@ -19,13 +19,28 @@ export class ChansongController {
   @ApiQuery({ name: 'id', required: false, type: Number })
   @ApiQuery({ name: 'take', required: false, type: Number })
   @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'keyword', required: false, type: String })
   @ApiOperation({ summary: '찬송가 가져오기' })
   @Get('song')
   async getSong(
     @Query('id') id: number,
     @Query('take') take: number,
     @Query('page') page: number,
+    @Query('keyword') keyword: string,
   ) {
+    if (keyword) {
+      const condition = {
+        select: 'id, title, num, oldnum',
+        table: 'sys_hymm',
+        where: `title like '%${keyword.trim()}%'`,
+        orderBy: 'id asc',
+        limit: String(take ? take : 10),
+        offset: String(page ? take * (page - 1) : 0),
+      };
+
+      return await this.chansongService.findAndCount(condition);
+    }
+
     if (id) {
       const condition = {
         select: 'id, title, content, num, oldnum, audio, image',
