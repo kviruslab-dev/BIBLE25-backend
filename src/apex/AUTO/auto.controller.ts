@@ -58,7 +58,7 @@ export class AutoController {
     // TODO (오래된 데이터 삭제하기)
   }
 
-  @Cron('0 30 7 * * *')
+  @Cron('0 15 10 * * *')
   async SendAppPush() {
     if (process.env.MODE === 'production') {
       return;
@@ -82,10 +82,11 @@ export class AutoController {
 
       //! 보낼 제목, 내용 가져오기
       const { title, content } = data.list[0];
+      const modifiedTitle = `[이야기메시지 - ${title}]`;
       const modifiedContent = content.replace(/\n/g, ' ').replace(/ +/g, ' ');
 
       //! 앱 푸시 보내기
-      this.autoService.sendFcmpushAll(title, modifiedContent);
+      this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent);
     }
   }
 }
