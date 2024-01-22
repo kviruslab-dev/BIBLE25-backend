@@ -29,7 +29,7 @@ export class ProductController {
         table: 'market_item',
         where: `showyn=true and active=1 and gubun='${gubun}'`,
         orderBy: 'sequence asc',
-        limit: 12,
+        limit: 20,
         offset: 0,
       };
     };
