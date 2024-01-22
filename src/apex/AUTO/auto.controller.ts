@@ -57,4 +57,35 @@ export class AutoController {
     // TODO (today_content_his, today_image_his에 데이터 저장하기)
     // TODO (오래된 데이터 삭제하기)
   }
+
+  @Cron('0 30 7 * * *')
+  async SendAppPush() {
+    if (process.env.MODE === 'production') {
+      return;
+    }
+
+    if (process.env.MODE === 'development') {
+      //! 오늘 날짜 가져오기
+      const today = getToday();
+
+      //! (오늘 날짜 이전) 최신 이야기메시지 가져오기
+      const condition = {
+        select: 'title, content',
+        table: 'today_content',
+        where: `today = '${today}' and gubun = 3`,
+        orderBy: 'today desc',
+        limit: 1,
+        offset: 0,
+      };
+
+      const data = await this.queryRunnerService.findAndCount(condition);
+
+      //! 보낼 제목, 내용 가져오기
+      const { title, content } = data.list[0];
+      const modifiedContent = content.replace(/\n/g, ' ').replace(/ +/g, ' ');
+
+      //! 앱 푸시 보내기
+      this.autoService.sendFcmpushAll(title, modifiedContent);
+    }
+  }
 }
