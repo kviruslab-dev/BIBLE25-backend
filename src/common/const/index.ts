@@ -35,6 +35,8 @@ export const ONE_ADVERTISEMENT = [
   'muksnag',
   'qna',
   'photo',
+  //! 이야기메시지공유
+  'iyagishare',
 ];
 
 export const TODAY_CONTENTS = [
@@ -193,4 +195,5 @@ export const titleToPage = {
   묵상: 307,
   QA: 308,
   포토: 309,
+  이야기메시지공유: 404,
 };
