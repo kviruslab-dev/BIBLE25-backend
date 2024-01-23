@@ -58,7 +58,7 @@ export class AutoController {
     // TODO (오래된 데이터 삭제하기)
   }
 
-  @Cron('0 15 10 * * *')
+  @Cron('0 20 10 * * *')
   async SendAppPush() {
     if (process.env.MODE === 'production') {
       return;
