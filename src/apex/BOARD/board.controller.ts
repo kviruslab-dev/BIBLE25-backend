@@ -36,11 +36,11 @@ export class BoardController {
     name: 'type',
     required: true,
     type: String,
-    description: '타입 : 1, 2, 3',
+    description: '타입 : 1, 2, 3, 6',
   })
   @Get()
   async getData(@Query('type') type: string) {
-    if (['1', '2', '3'].includes(type)) {
+    if (['1', '2', '3', '6'].includes(type)) {
       const condition = {
         select: 'id, image, link',
         table: 'board',
