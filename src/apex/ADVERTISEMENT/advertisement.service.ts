@@ -65,6 +65,7 @@ export class AdvertisementService {
       muksnag: '묵상',
       qna: 'QA',
       photo: '포토',
+      iyagishare: '이야기메시지공유',
     };
 
     const hansulName = typeToHangul[type];

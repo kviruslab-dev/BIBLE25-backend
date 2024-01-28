@@ -30,7 +30,7 @@ export class AdvertisementController {
     required: true,
     type: String,
     description:
-      '타입 : main01, main02, main03, main04, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo',
+      '타입 : main01, main02, main03, main04, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare',
   })
   @ApiQuery({ name: 'lat', required: true, type: String })
   @ApiQuery({ name: 'lon', required: true, type: String })
@@ -190,6 +190,22 @@ export class AdvertisementController {
 
           return await this.advertisementService.findInBible(condition);
         }
+      }
+
+      if (type === 'iyagishare') {
+        const condition = {
+          select: 'id, title, image, link',
+          table: 'market',
+          where: `page=${pageFromType} and city='공유' and active=1`,
+          orderBy: 'id asc',
+          limit: String(take ? take : 10),
+          offset: String(page ? take * (page - 1) : 0),
+        };
+
+        const data = await this.advertisementService.findInEtc(condition);
+        data[0].title = '이야기메시지공유';
+
+        return data;
       }
 
       try {

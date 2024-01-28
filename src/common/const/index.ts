@@ -35,6 +35,7 @@ export const ONE_ADVERTISEMENT = [
   'muksnag',
   'qna',
   'photo',
+  'iyagishare',
 ];
 
 export const TODAY_CONTENTS = [
@@ -182,6 +183,7 @@ export const titleToPage = {
   굿모닝하나님: 202,
   오늘의말씀: 203,
   축복기도: 204,
+  이야기메시지공유: 204,
   컬럼: 205,
   오늘의책: 208,
   성경일독: 301,
