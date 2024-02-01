@@ -149,16 +149,27 @@ export class AdminService {
     files: Express.Multer.File[],
     data: CreateTodayBookDto,
   ) {
+    const { today, title, content, song } = data;
     const fileName = files[0].filename;
-    const condition = {
-      table: 'today_content',
-      columns: `today, title, content, song, image, frame, gubun, writer, name, yojul, bible, sungchal, kido, active`,
-      values: `'${data.today}', '${data.title}', '${data.content}', '${data.song}', 'https://data.bible25.com/uploads/${fileName}', 1, 6, '', '오늘의책', '', '', '', '', 0`,
-    };
 
-    await this.queryRunnerService.insert(condition);
-
-    return 0;
+    const temp = this.repoTodayContent.create({
+      today,
+      title,
+      content,
+      song,
+      image: `https://data.bible25.com/uploads/${fileName}`,
+      frame: 1,
+      gubun: 6,
+      writer: '오늘의책',
+      name: '',
+      yojul: '',
+      bible: '',
+      sungchal: '',
+      kido: '',
+      active: 0,
+    });
+    await this.repoTodayContent.save(temp);
+    return;
   }
 
   async getTodayBook(take: number, page: number) {
