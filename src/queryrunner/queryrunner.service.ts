@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, QueryRunner, Repository } from 'typeorm';
 
@@ -74,7 +74,8 @@ export class QueryRunnerService {
 
       await this.queryRunner.query(SQL);
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      // throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      return;
     }
   }
 
@@ -88,7 +89,8 @@ export class QueryRunnerService {
 
       await this.queryRunner.query(SQL);
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      // throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      return;
     }
   }
 
@@ -101,7 +103,8 @@ export class QueryRunnerService {
 
       await this.queryRunner.query(SQL);
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      // throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      return;
     }
   }
 
@@ -115,7 +118,8 @@ export class QueryRunnerService {
 
       await this.queryRunner.query(SQL);
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      // throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      return;
     }
   }
 
@@ -123,7 +127,8 @@ export class QueryRunnerService {
     try {
       return this.queryRunner.query(SQL);
     } catch (err) {
-      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      // throw new HttpException(err, HttpStatus.BAD_REQUEST);
+      return;
     }
   }
 }
