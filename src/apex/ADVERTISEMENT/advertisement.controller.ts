@@ -65,6 +65,7 @@ export class AdvertisementController {
     const lon = '0';
 
     //! 이야기메시지는 축복기도와 동일한 광고를 보여줍니다.
+    console.log('TYPE IS...:', type);
     const pageFromType = await this.advertisementService.getPageFromType(type);
 
     const { city } = await this.advertisementService.getAddress(lat, lon);
