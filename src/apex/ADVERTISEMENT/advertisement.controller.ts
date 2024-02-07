@@ -61,6 +61,11 @@ export class AdvertisementController {
     //   );
     // }
 
+    if (type === '_next') {
+      console.log('type:', type, 'take:', take, 'page:', page, 'jang:', jang);
+      return;
+    }
+
     const lat = '0';
     const lon = '0';
 
