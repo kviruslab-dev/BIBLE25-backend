@@ -58,7 +58,7 @@ export class AutoController {
     // TODO (오래된 데이터 삭제하기)
   }
 
-  @Cron('0 40 14 * * *')
+  @Cron('0 35 18 * * *')
   async SendAppPush() {
     if (process.env.MODE === 'production') {
       return;
@@ -83,7 +83,9 @@ export class AutoController {
       //! 보낼 제목, 내용 가져오기
       const { title, content, id } = data.list[0];
       const modifiedTitle = `[이야기메시지 - ${title}]`;
-      const modifiedContent = content.replace(/\n/g, ' ').replace(/ +/g, ' ');
+      const modifiedContent =
+        content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
+        `... [더보기]`;
 
       //! 앱 푸시 보내기
       console.log(
@@ -92,7 +94,7 @@ export class AutoController {
         'modifiedContent:',
         modifiedContent,
       );
-      // this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
+      this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
     }
   }
 }
