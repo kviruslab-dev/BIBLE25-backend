@@ -86,7 +86,13 @@ export class AutoController {
       const modifiedContent = content.replace(/\n/g, ' ').replace(/ +/g, ' ');
 
       //! 앱 푸시 보내기
-      this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
+      console.log(
+        'modifiedTitle:',
+        modifiedTitle,
+        'modifiedContent:',
+        modifiedContent,
+      );
+      // this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
     }
   }
 }
