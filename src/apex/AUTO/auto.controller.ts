@@ -83,7 +83,9 @@ export class AutoController {
       //! 보낼 제목, 내용 가져오기
       const { title, content, id } = data.list[0];
       const modifiedTitle = `[이야기메시지 - ${title}]`;
-      const modifiedContent = content.replace(/\n/g, ' ').replace(/ +/g, ' ');
+      const modifiedContent =
+        content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
+        `... [더보기]`;
 
       //! 앱 푸시 보내기
       this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
