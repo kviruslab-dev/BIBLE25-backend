@@ -47,6 +47,7 @@ export class AdvertisementController {
     @Query('page') page?: number,
     @Query('jang') jang?: number,
   ) {
+    console.log('type:', type, 'take:', take, 'page:', page, 'jang:', jang);
     if (!type) {
       throw new HttpException(
         `type 값을 입력하지 않았습니다.`,
