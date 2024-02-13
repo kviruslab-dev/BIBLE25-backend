@@ -8,6 +8,11 @@ export class ChansongService {
 
   async findAndCount(condition: any) {
     const data = await this.queryRunnerService.findAndCount(condition);
+    return data;
+  }
+
+  async find(condition: any) {
+    const data = await this.queryRunnerService.findAndCount(condition);
     return data.list;
   }
 

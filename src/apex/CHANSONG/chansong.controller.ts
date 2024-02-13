@@ -61,7 +61,7 @@ export class ChansongController {
         offset: String(page ? take * (page - 1) : 0),
       };
 
-      return await this.chansongService.findAndCount(condition);
+      return await this.chansongService.find(condition);
     }
   }
 
@@ -97,7 +97,7 @@ export class ChansongController {
         offset: 0,
       };
 
-      return await this.chansongService.findAndCount(condition);
+      return await this.chansongService.find(condition);
     }
   }
 
