@@ -12,18 +12,22 @@ export class AutoService {
   async sendFcmpushAll(title: string, content: string, id: number) {
     const Key = process.env.FIREBASE_FCM_SERVER_KEY;
 
-    const condition = {
-      select: 'deviceId',
-      table: 'device_info',
-      where: `pushyn = 1`,
-      orderBy: 'create_at DESC',
-      limit: 100000000,
-      offset: 0,
-    };
+    //! (데이터의 중복 없이) 디바이스 토큰 배열 가져오기
+    const list = await this.queryRunnerService.query(`
+    SELECT deviceId
+    FROM (
+        SELECT deviceId, MAX(create_at) AS max_create_at
+        FROM device_info
+        WHERE pushyn = 1
+        GROUP BY deviceId
+    ) AS recent_devices
+    ORDER BY max_create_at DESC
+    LIMIT 100000000
+    OFFSET 0;
+    `);
 
-    const { list, total } = await this.queryRunnerService.findAndCount(
-      condition,
-    );
+    //! 데이터의 전체 갯수 확인하기
+    const total = list.length;
 
     const refinedList = list.map((i: object) => i['deviceId']);
     const num = Math.floor(total / 1000) + 1;
