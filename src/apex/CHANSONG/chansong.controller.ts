@@ -32,7 +32,7 @@ export class ChansongController {
       const condition = {
         select: 'id, title, num, oldnum',
         table: 'sys_hymm',
-        where: `title like '%${keyword.trim()}%'`,
+        where: `title like '%${keyword.trim()}%' or content like '%${keyword.trim()}%'`,
         orderBy: 'id asc',
         limit: String(take ? take : 10),
         offset: String(page ? take * (page - 1) : 0),
