@@ -37,3 +37,13 @@ export class DeviceIdDto {
   @IsString()
   lon: string;
 }
+
+export class PasswordDto {
+  @ApiProperty({
+    example: '비밀번호',
+    description: '비밀번호',
+    required: true,
+  })
+  @IsString()
+  password: string;
+}
