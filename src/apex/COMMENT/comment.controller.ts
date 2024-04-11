@@ -38,7 +38,7 @@ export class CommentController {
   @Get()
   async getComment(@Query('take') take?: number, @Query('page') page?: number) {
     const condition = {
-      select: 'createAt, phone, comment',
+      select: 'createAt, phone, comment, product',
       table: 'comment',
       where: `TRUE`,
       orderBy: 'id desc',
