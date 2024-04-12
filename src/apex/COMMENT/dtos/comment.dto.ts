@@ -17,12 +17,4 @@ export class CommentDto {
   })
   @IsString()
   comment: string;
-
-  @ApiProperty({
-    example: '상품 정보입니다.',
-    description: 'product',
-    required: true,
-  })
-  @IsString()
-  product: string;
 }

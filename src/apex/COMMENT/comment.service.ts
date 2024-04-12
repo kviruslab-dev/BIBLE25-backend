@@ -26,16 +26,11 @@ export class CommentService {
 
     const filter = new Filter();
     const filteredComment = filter.clean(data.comment);
-    const filteredProduct = filter.clean(data.product);
 
     const conditionForInsert = {
       table: 'comment',
       columns: ['phone', 'comment', 'product'],
-      values: [
-        `'${data.phone}'`,
-        `'${filteredComment}'`,
-        `'${filteredProduct}'`,
-      ],
+      values: [`'${data.phone}'`, `'${filteredComment}'`],
     };
 
     await this.queryRunnerService.insert(conditionForInsert);

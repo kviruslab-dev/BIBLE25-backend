@@ -24,7 +24,6 @@ export const transformDate = (arr: any) => {
       createAt: dateOnly,
       phone: item.phone,
       comment: item.comment,
-      product: item.product,
     };
   });
 
