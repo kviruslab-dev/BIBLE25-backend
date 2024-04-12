@@ -10,19 +10,19 @@ export class CommentService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   async createComment(data: CommentDto) {
-    const condition = {
-      select: 'id',
-      table: 'comment',
-      where: `phone ='${data.phone}'`,
-    };
+    // const condition = {
+    //   select: 'id',
+    //   table: 'comment',
+    //   where: `phone ='${data.phone}'`,
+    // };
 
-    const findByPhone = await this.queryRunnerService.findOne(condition);
+    // const findByPhone = await this.queryRunnerService.findOne(condition);
 
-    if (findByPhone) {
-      return {
-        list: '이미 응원댓글을 남기셨습니다.',
-      };
-    }
+    // if (findByPhone) {
+    //   return {
+    //     list: '이미 응원댓글을 남기셨습니다.',
+    //   };
+    // }
 
     const filter = new Filter();
     const filteredComment = filter.clean(data.comment);
