@@ -22,7 +22,7 @@ export class CommentController {
     status: 200,
     description: 'success',
   })
-  @ApiOperation({ summary: '댓글 저장하기' })
+  @ApiOperation({ summary: '댓글 저장하기??' })
   @Post()
   async createComment(@Body() body: CommentDto) {
     return this.commentService.createComment(body);
