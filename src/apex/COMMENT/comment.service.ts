@@ -29,7 +29,7 @@ export class CommentService {
 
     const conditionForInsert = {
       table: 'comment',
-      columns: ['phone', 'comment', 'product'],
+      columns: ['phone', 'comment'],
       values: [`'${data.phone}'`, `'${filteredComment}'`],
     };
 
