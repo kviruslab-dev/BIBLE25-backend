@@ -30,7 +30,7 @@ export class AdvertisementController {
     required: true,
     type: String,
     description:
-      '타입 : main01, main02, main03, main04, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare',
+      '타입 : main01, main02, main03, main04, main05, main06, main07, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare',
   })
   @ApiQuery({ name: 'lat', required: true, type: String })
   @ApiQuery({ name: 'lon', required: true, type: String })
@@ -74,8 +74,26 @@ export class AdvertisementController {
 
     const { city } = await this.advertisementService.getAddress(lat, lon);
 
-    if (['main01', 'main02', 'main03', 'main04'].includes(type)) {
-      const location = { main01: 1, main02: 2, main03: 3, main04: 4 };
+    if (
+      [
+        'main01',
+        'main02',
+        'main03',
+        'main04',
+        'main05',
+        'main06',
+        'main07',
+      ].includes(type)
+    ) {
+      const location = {
+        main01: 1,
+        main02: 2,
+        main03: 3,
+        main04: 4,
+        main05: 5,
+        main06: 6,
+        main07: 7,
+      };
 
       try {
         const condition = {
