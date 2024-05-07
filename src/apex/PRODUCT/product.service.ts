@@ -22,7 +22,8 @@ export class ProductService {
         return v;
       }
 
-      v.money = `월 ${v.money.toLocaleString('ko-KR')}`;
+      //v.money = `월 ${v.money.toLocaleString('ko-KR')}`;
+      v.money = ` ${v.money.toLocaleString('ko-KR')}`;
       v.dc += '개월';
       return v;
     });
