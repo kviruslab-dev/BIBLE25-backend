@@ -30,7 +30,7 @@ export class AdvertisementController {
     required: true,
     type: String,
     description:
-      '타입 : main01, main02, main03, main04, main05, main06, main07, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare',
+      '타입 : main01, main02, main03, main04, main05, main06, main07, main08, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare',
   })
   @ApiQuery({ name: 'lat', required: true, type: String })
   @ApiQuery({ name: 'lon', required: true, type: String })
@@ -83,6 +83,7 @@ export class AdvertisementController {
         'main05',
         'main06',
         'main07',
+        'main08',
       ].includes(type)
     ) {
       const location = {
@@ -93,6 +94,7 @@ export class AdvertisementController {
         main05: 5,
         main06: 6,
         main07: 7,
+        main08: 8,
       };
 
       try {
