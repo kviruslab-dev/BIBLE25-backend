@@ -46,6 +46,7 @@ export class AdvertisementService {
       main06: '메인',
       main07: '메인',
       main08: '메인',
+      main09: '메인',
       first: '첫화면',
       last: '마지막종료',
       bible: '성경',
