@@ -170,6 +170,67 @@ export class DeviceService {
     };
   }
 
+  //! 말씀따라 일부 기기에 보내기
+  async sendMalsum(
+    deviceId: string,
+    id: number,
+    title: string,
+    yojul: string,
+    song: string,
+    bible: string,
+    sungchal: string,
+    kido: string,
+    content: string,
+    writer: string,
+  ) {
+    const Key = process.env.FIREBASE_FCM_SERVER_KEY;
+
+    const condition = {
+      select: 'id, deviceId, pushyn',
+      table: 'device_info',
+      where: `deviceId = '${deviceId}' and pushyn = 1`,
+    };
+
+    const deviceInfo = await this.queryRunnerService.findOne(condition);
+
+    if (deviceInfo) {
+      await axios
+        .post(
+          `https://fcm.googleapis.com/fcm/send`,
+          {
+            to: deviceId,
+            notification: {
+              title,
+              body: yojul,
+            },
+            data: {
+              title,
+              body: title,
+              yojul,
+              song,
+              bible,
+              sungchal,
+              kido,
+              content,
+              writer,
+              url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
+            },
+            'content-available': 1,
+            priority: 'high',
+          },
+          {
+            headers: {
+              Authorization: 'key=' + Key,
+            },
+          },
+        )
+        .then((d) => console.log('firebaseFCMPush 성공'))
+        .catch((err) => console.log(err));
+    }
+
+    return { code: 1000, message: 'complete', time: Date() };
+  }
+
   async sendIyagiAll(title: string, content: string, id: number) {
     const Key = process.env.FIREBASE_FCM_SERVER_KEY;
 

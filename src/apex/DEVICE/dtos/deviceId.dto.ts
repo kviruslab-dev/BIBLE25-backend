@@ -40,6 +40,14 @@ export class DeviceIdDto {
 
 export class PasswordDto {
   @ApiProperty({
+    example: '디바이스 아이디',
+    description: '디바이스 아이디',
+    required: false,
+  })
+  @IsString()
+  deviceId?: string;
+
+  @ApiProperty({
     example: '비밀번호',
     description: '비밀번호',
     required: true,

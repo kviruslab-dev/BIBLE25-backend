@@ -22,6 +22,52 @@ export class DeviceController {
     return user;
   }
 
+  //! (특정 기기에) 말씀따라 푸시 전송하기
+  @ApiOperation({ summary: '(특정 기기에) 말씀따라 푸시 전송하기' })
+  @Post('fcmpushmalsum')
+  async sendFcmpushMalsum(@Body() body: PasswordDto) {
+    if (body.password === 'kviruslabPush') {
+      //! 오늘 날짜 가져오기
+      const today = getToday();
+
+      //! (오늘 날짜) 최신 말씀따라 가져오기
+      const condition = {
+        select: 'id, title, yojul, song, bible, sungchal, kido, content',
+        table: 'today_content',
+        where: `today = '${today}' and gubun = 1`,
+        orderBy: 'today desc',
+        limit: 1,
+        offset: 0,
+      };
+
+      const data = await this.queryRunnerService.findAndCount(condition);
+
+      //! 보낼 데이터 가져오기
+      const { id, title, yojul, song, bible, sungchal, kido, content, writer } =
+        data.list[0];
+      const modifiedTitle = `[말씀따라 - ${title}]`;
+      const modifiedYojul =
+        yojul.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
+        `... [더보기]`;
+
+      //! 앱 푸시 보내기
+      this.deviceService.sendMalsum(
+        body.deviceId,
+        id,
+        modifiedTitle,
+        modifiedYojul,
+        song,
+        bible,
+        sungchal,
+        kido,
+        content,
+        writer,
+      );
+    }
+
+    return 0;
+  }
+
   //! (전체 기기에) 푸시 전송하기
   @ApiOperation({ summary: '(전체 기기에) 푸시 전송하기' })
   @Post('fcmpush/all')
