@@ -8,8 +8,8 @@ export class LoginService {
 
   async setLoginId(data: LoginDto) {
     const condition = {
-      select: 'id, deviceId',
-      table: 'device_info',
+      select: 'id, account_email',
+      table: 'users',
       where: `account_email = '${data.account_email}'`,
     };
 
@@ -18,7 +18,7 @@ export class LoginService {
     if (!deviceInfo) {
       const condition = {
         table: 'users',
-        columns: `profile_nickname, account_email, name`,
+        columns: `'profile_nickname', 'account_email', 'name',`,
         values: `'${data.profile_nickname}','${data.account_email}','${data.name}',`,
       };
 
