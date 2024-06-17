@@ -15,6 +15,10 @@ export class LoginService {
 
     const deviceInfo = await this.queryRunnerService.findOne(condition);
 
+    if (deviceInfo) {
+      return;
+    }
+
     if (!deviceInfo) {
       const condition = {
         table: 'users',
@@ -27,19 +31,6 @@ export class LoginService {
       };
 
       await this.queryRunnerService.insert(condition);
-    }
-
-    if (deviceInfo) {
-      const condition = {
-        table: 'users',
-        set: `
-        profile_nickname = '${data.profile_nickname}',
-        account_email = '${data.account_email}',
-        name = '${data.name}',`,
-        where: ` account_email = '${data.account_email}'`,
-      };
-
-      await this.queryRunnerService.updateMySQL(condition);
     }
   }
 }
