@@ -16,6 +16,7 @@ import { DeviceModule } from 'src/apex/DEVICE/device.module';
 import { FcmPushModule } from 'src/apex/FCMPUSH/fcmpush.module';
 import { InquiryModule } from 'src/apex/INQUIRY/inquiry.module';
 import { LogModule } from 'src/apex/LOG/log.module';
+import { LoginModule } from 'src/apex/LOGIN/login.module';
 import { ProductModule } from 'src/apex/PRODUCT/product.module';
 import { SearchModule } from 'src/apex/SEARCH/search.module';
 import { SmsModule } from 'src/apex/SMS/sms.module';
@@ -58,6 +59,7 @@ import { AppService } from './app.service';
     Bible25Module,
     BoardModule,
     DeviceModule,
+    LoginModule,
     FcmPushModule,
     ChansongModule,
     ProductModule,
