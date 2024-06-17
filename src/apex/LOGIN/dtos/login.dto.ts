@@ -8,7 +8,7 @@ export class LoginDto {
     required: false,
   })
   @IsString()
-  profile_nickname?: string;
+  profile_nickname: string;
 
   @ApiProperty({
     example: '카카오계정(이메일)',
