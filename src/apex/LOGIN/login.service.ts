@@ -18,8 +18,12 @@ export class LoginService {
     if (!deviceInfo) {
       const condition = {
         table: 'users',
-        columns: `'profile_nickname', 'account_email', 'name',`,
-        values: `'${data.profile_nickname}','${data.account_email}','${data.name}',`,
+        columns: ['profile_nickname', 'account_email', 'name'],
+        values: [
+          `'${data.profile_nickname}'`,
+          `'${data.account_email}'`,
+          `'${data.name}'`,
+        ],
       };
 
       await this.queryRunnerService.insert(condition);
