@@ -1,15 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { google } from 'googleapis';
-import * as path from 'path';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { DeviceIdDto } from './dtos/deviceId.dto';
 import { fcmpushAllDto, fcmpushDto } from './dtos/fcmpush.dto';
-
-const SERVICE_ACCOUNT_KEY_FILE = path.join(
-  __dirname,
-  './dtos/bible25-237705-firebase-adminsdk-6r1i9-3759aff0fe.json',
-);
 
 @Injectable()
 export class DeviceService {
@@ -18,12 +12,32 @@ export class DeviceService {
   private readonly logger = new Logger(DeviceService.name);
 
   private async getAccessToken() {
-    const auth = new google.auth.GoogleAuth({
-      keyFile: SERVICE_ACCOUNT_KEY_FILE, // 서비스 계정 키 파일 경로
-      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    return new Promise((resolve, reject) => {
+      try {
+        const key = require('./dtos/bible25-237705-firebase-adminsdk-6r1i9-3759aff0fe.json'); // 서비스 계정 JSON 파일 불러오기
+
+        const SCOPES = ['https://www.googleapis.com/auth/cloud-platform']; // SCOPES 설정
+
+        const jwtClient = new google.auth.JWT(
+          key.client_email,
+          null,
+          key.private_key,
+          SCOPES,
+          null,
+        );
+
+        // JWT를 사용해 Access Token 얻기
+        jwtClient.authorize((err, tokens) => {
+          if (err) {
+            reject(`Error getting access token: ${err}`);
+          } else {
+            resolve(tokens.access_token); // 성공적으로 Access Token 반환
+          }
+        });
+      } catch (error) {
+        reject(`Failed to get access token: ${error.message}`);
+      }
     });
-    const accessToken = await auth.getAccessToken();
-    return accessToken;
   }
 
   async sendFcmpush(data: fcmpushDto) {
@@ -199,57 +213,59 @@ export class DeviceService {
     content: string,
     writer: string,
   ) {
-    const accessToken = await this.getAccessToken();
+    try {
+      const accessToken = await this.getAccessToken(); // 인증 토큰 받기
 
-    const condition = {
-      select: 'id, deviceId, pushyn',
-      table: 'device_info',
-      where: `deviceId = '${deviceId}' and pushyn = 1`,
-    };
-
-    const deviceInfo = await this.queryRunnerService.findOne(condition);
-
-    if (deviceInfo) {
-      const message = {
-        message: {
-          token: deviceId,
-          notification: {
-            title,
-            body: yojul,
-          },
-          data: {
-            title,
-            body: title,
-            yojul,
-            song,
-            bible,
-            sungchal,
-            kido,
-            content,
-            writer,
-            url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
-          },
-        },
+      const condition = {
+        select: 'id, deviceId, pushyn',
+        table: 'device_info',
+        where: `deviceId = '${deviceId}' and pushyn = 1`,
       };
 
-      try {
+      const deviceInfo = await this.queryRunnerService.findOne(condition);
+
+      if (deviceInfo) {
+        const message = {
+          message: {
+            token: deviceId,
+            notification: {
+              title,
+              body: yojul,
+            },
+            data: {
+              title,
+              body: title,
+              yojul,
+              song,
+              bible,
+              sungchal,
+              kido,
+              content,
+              writer,
+              url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
+            },
+          },
+        };
+
+        // FCM 메시지 전송
         const response = await axios.post(
-          `https://fcm.googleapis.com/v1/projects/YOUR_PROJECT_ID/messages:send`,
+          `https://fcm.googleapis.com/v1/projects/bible25-237705/messages:send`,
           message,
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`,
+              Authorization: `Bearer ${accessToken}`, // Bearer 인증 토큰 적용
               'Content-Type': 'application/json',
             },
           },
         );
+
         console.log('firebaseFCMPush 성공', response.data);
-      } catch (err) {
-        console.log(
-          'firebaseFCMPush 실패',
-          err.response ? err.response.data : err.message,
-        );
       }
+    } catch (err) {
+      console.log(
+        'firebaseFCMPush 실패',
+        err.response ? err.response.data : err.message,
+      );
     }
 
     return { code: 1000, message: 'complete', time: new Date() };
