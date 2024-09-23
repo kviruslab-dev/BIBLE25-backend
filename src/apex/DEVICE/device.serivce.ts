@@ -1,14 +1,30 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import { google } from 'googleapis';
+import * as path from 'path';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { DeviceIdDto } from './dtos/deviceId.dto';
 import { fcmpushAllDto, fcmpushDto } from './dtos/fcmpush.dto';
+
+const SERVICE_ACCOUNT_KEY_FILE = path.join(
+  __dirname,
+  './dtos/bible25-237705-firebase-adminsdk-6r1i9-3759aff0fe.json',
+);
 
 @Injectable()
 export class DeviceService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {}
 
   private readonly logger = new Logger(DeviceService.name);
+
+  private async getAccessToken() {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: SERVICE_ACCOUNT_KEY_FILE, // 서비스 계정 키 파일 경로
+      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+    });
+    const accessToken = await auth.getAccessToken();
+    return accessToken;
+  }
 
   async sendFcmpush(data: fcmpushDto) {
     const Key = process.env.FIREBASE_FCM_SERVER_KEY;
@@ -183,7 +199,7 @@ export class DeviceService {
     content: string,
     writer: string,
   ) {
-    const Key = process.env.FIREBASE_FCM_SERVER_KEY;
+    const accessToken = await this.getAccessToken();
 
     const condition = {
       select: 'id, deviceId, pushyn',
@@ -194,41 +210,49 @@ export class DeviceService {
     const deviceInfo = await this.queryRunnerService.findOne(condition);
 
     if (deviceInfo) {
-      await axios
-        .post(
-          `https://fcm.googleapis.com/fcm/send`,
-          {
-            to: deviceId,
-            notification: {
-              title,
-              body: yojul,
-            },
-            data: {
-              title,
-              body: title,
-              yojul,
-              song,
-              bible,
-              sungchal,
-              kido,
-              content,
-              writer,
-              url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
-            },
-            'content-available': 1,
-            priority: 'high',
+      const message = {
+        message: {
+          token: deviceId,
+          notification: {
+            title,
+            body: yojul,
           },
+          data: {
+            title,
+            body: title,
+            yojul,
+            song,
+            bible,
+            sungchal,
+            kido,
+            content,
+            writer,
+            url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
+          },
+        },
+      };
+
+      try {
+        const response = await axios.post(
+          `https://fcm.googleapis.com/v1/projects/YOUR_PROJECT_ID/messages:send`,
+          message,
           {
             headers: {
-              Authorization: 'key=' + Key,
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
             },
           },
-        )
-        .then((d) => console.log('firebaseFCMPush 성공'))
-        .catch((err) => console.log(err));
+        );
+        console.log('firebaseFCMPush 성공', response.data);
+      } catch (err) {
+        console.log(
+          'firebaseFCMPush 실패',
+          err.response ? err.response.data : err.message,
+        );
+      }
     }
 
-    return { code: 1000, message: 'complete', time: Date() };
+    return { code: 1000, message: 'complete', time: new Date() };
   }
 
   async sendIyagiAll(title: string, content: string, id: number) {
