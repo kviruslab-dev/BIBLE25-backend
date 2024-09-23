@@ -65,7 +65,7 @@ export class DeviceController {
       );
     }
 
-    return 0;
+    return 'success';
   }
 
   //! (전체 기기에) 푸시 전송하기
