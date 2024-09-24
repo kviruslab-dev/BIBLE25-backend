@@ -19,7 +19,7 @@ export class DeviceController {
   @Post('fcmpush')
   async sendFcmpush(@Body() body: fcmpushDto) {
     const user = await this.deviceService.sendFcmpush(body);
-    return user;
+    return 'wow';
   }
 
   //! (특정 기기에) 말씀따라 푸시 전송하기

@@ -12,35 +12,6 @@ export class DeviceService {
 
   private readonly logger = new Logger(DeviceService.name);
 
-  private async getAccessToken() {
-    return new Promise((resolve, reject) => {
-      try {
-        const key = require('./dtos/bible25-237705-firebase-adminsdk-6r1i9-3759aff0fe.json'); // 서비스 계정 JSON 파일 불러오기
-
-        const SCOPES = ['https://www.googleapis.com/auth/cloud-platform']; // SCOPES 설정
-
-        const jwtClient = new google.auth.JWT(
-          key.client_email,
-          null,
-          key.private_key,
-          SCOPES,
-          null,
-        );
-
-        // JWT를 사용해 Access Token 얻기
-        jwtClient.authorize((err, tokens) => {
-          if (err) {
-            reject(`Error getting access token: ${err}`);
-          } else {
-            resolve(tokens.access_token); // 성공적으로 Access Token 반환
-          }
-        });
-      } catch (error) {
-        reject(`Failed to get access token: ${error.message}`);
-      }
-    });
-  }
-
   async sendFcmpush(data: fcmpushDto) {
     const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
     const fcmUrl =
@@ -72,7 +43,7 @@ export class DeviceService {
 
       const messagePayload = {
         message: {
-          token: data.deviceId,
+          topic: data.deviceId,
           notification: {
             title: data.title,
             body: data.content,
@@ -265,7 +236,7 @@ export class DeviceService {
 
       const message = {
         message: {
-          token: deviceId,
+          topic: deviceId,
           notification: {
             title,
             body: yojul,
