@@ -235,62 +235,70 @@ export class DeviceService {
     content: string,
     writer: string,
   ) {
-    try {
-      const accessToken = await this.getAccessToken(); // 인증 토큰 받기
+    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+    const fcmUrl =
+      'https://fcm.googleapis.com/v1/projects/bible25-237705/messages:send';
 
-      const condition = {
-        select: 'id, deviceId, pushyn',
-        table: 'device_info',
-        where: `deviceId = '${deviceId}' and pushyn = 1`,
+    const condition = {
+      select: 'id, deviceId, pushyn',
+      table: 'device_info',
+      where: `deviceId = '${deviceId}' and pushyn = 1`,
+    };
+
+    const deviceInfo = await this.queryRunnerService.findOne(condition);
+
+    if (deviceInfo) {
+      const serviceAccount = JSON.parse(
+        fs.readFileSync(serviceAccountPath, 'utf8'),
+      );
+
+      const client = new google.auth.JWT(
+        serviceAccount.client_email,
+        null,
+        serviceAccount.private_key,
+        ['https://www.googleapis.com/auth/firebase.messaging'],
+      );
+
+      await client.authorize();
+
+      const accessToken = await client.getAccessToken();
+
+      const message = {
+        message: {
+          token: deviceId,
+          notification: {
+            title,
+            body: yojul,
+          },
+          data: {
+            title,
+            body: title,
+            yojul,
+            song,
+            bible,
+            sungchal,
+            kido,
+            content,
+            writer,
+            url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
+          },
+        },
       };
 
-      const deviceInfo = await this.queryRunnerService.findOne(condition);
-
-      if (deviceInfo) {
-        const message = {
-          message: {
-            token: deviceId,
-            notification: {
-              title,
-              body: yojul,
-            },
-            data: {
-              title,
-              body: title,
-              yojul,
-              song,
-              bible,
-              sungchal,
-              kido,
-              content,
-              writer,
-              url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
-            },
+      await axios
+        .post(fcmUrl, message, {
+          headers: {
+            Authorization: `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json',
           },
-        };
-
-        // FCM 메시지 전송
-        const response = await axios.post(
-          `https://fcm.googleapis.com/v1/projects/bible25-237705/messages:send`,
-          message,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`, // Bearer 인증 토큰 적용
-              'Content-Type': 'application/json',
-            },
-          },
+        })
+        .then((response) => console.log('firebaseFCMPush 성공', response.data))
+        .catch((err) =>
+          console.error('firebaseFCMPush 실패', err.response.data),
         );
-
-        console.log('firebaseFCMPush 성공', response.data);
-      }
-    } catch (err) {
-      console.log(
-        'firebaseFCMPush 실패',
-        err.response ? err.response.data : err.message,
-      );
     }
 
-    return { code: 1000, message: 'complete', time: new Date() };
+    return { code: 1000, message: 'complete', time: new Date().toISOString() };
   }
 
   async sendIyagiAll(title: string, content: string, id: number) {
