@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import * as fs from 'fs';
 import { google } from 'googleapis';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { DeviceIdDto } from './dtos/deviceId.dto';
@@ -41,7 +42,10 @@ export class DeviceService {
   }
 
   async sendFcmpush(data: fcmpushDto) {
-    const Key = process.env.FIREBASE_FCM_SERVER_KEY;
+    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+    const fcmUrl =
+      'https://fcm.googleapis.com/v1/projects/bible25-237705/messages:send';
+
     const condition = {
       select: 'id, deviceId, pushyn',
       table: 'device_info',
@@ -51,27 +55,45 @@ export class DeviceService {
     const deviceInfo = await this.queryRunnerService.findOne(condition);
 
     if (deviceInfo) {
+      const serviceAccount = JSON.parse(
+        fs.readFileSync(serviceAccountPath, 'utf8'),
+      );
+
+      const client = new google.auth.JWT(
+        serviceAccount.client_email,
+        null,
+        serviceAccount.private_key,
+        ['https://www.googleapis.com/auth/firebase.messaging'],
+      );
+
+      await client.authorize();
+
+      const accessToken = await client.getAccessToken();
+
+      const messagePayload = {
+        message: {
+          token: data.deviceId,
+          notification: {
+            title: data.title,
+            body: data.content,
+          },
+        },
+      };
+
       await axios
-        .post(
-          `https://fcm.googleapis.com/fcm/send`,
-          {
-            to: data.deviceId,
-            notification: {
-              title: data.title,
-              body: data.content,
-            },
+        .post(fcmUrl, messagePayload, {
+          headers: {
+            Authorization: `Bearer ${accessToken.token}`,
+            'Content-Type': 'application/json',
           },
-          {
-            headers: {
-              Authorization: 'key=' + Key,
-            },
-          },
-        )
-        .then((d) => console.log('firebaseFCMPush 성공'))
-        .catch((err) => console.log(err));
+        })
+        .then((response) => console.log('firebaseFCMPush 성공', response.data))
+        .catch((err) =>
+          console.error('firebaseFCMPush 실패', err.response.data),
+        );
     }
 
-    return { code: 1000, message: 'complete', time: Date() };
+    return { code: 1000, message: 'complete', time: new Date().toISOString() };
   }
 
   async sendFcmpushAll(data: fcmpushAllDto) {
