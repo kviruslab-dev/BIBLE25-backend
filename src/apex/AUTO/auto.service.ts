@@ -1,18 +1,35 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import * as admin from 'firebase-admin';
+import { JWT } from 'google-auth-library';
+import * as serviceAccount from 'src/bible25_fcm.json';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
-//https://docs.nestjs.com/techniques/task-scheduling
 @Injectable()
 export class AutoService {
-  constructor(private readonly queryRunnerService: QueryRunnerService) {}
+  constructor(private readonly queryRunnerService: QueryRunnerService) {
+    // Firebase Admin SDK 초기화
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    });
+  }
 
   private readonly logger = new Logger(AutoService.name);
+  private readonly projectId = 'bible25-237705';
+
+  // Bearer 토큰을 얻기 위한 메서드
+  private async getAccessToken() {
+    const client = new JWT({
+      email: serviceAccount.client_email,
+      key: serviceAccount.private_key,
+      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
+    });
+
+    const tokens = await client.authorize();
+    return tokens.access_token;
+  }
 
   async sendFcmpushAll(title: string, content: string, id: number) {
-    const Key = process.env.FIREBASE_FCM_SERVER_KEY;
-
-    //! (데이터의 중복 없이) 디바이스 토큰 배열 가져오기
     const list = await this.queryRunnerService.query(`
     SELECT deviceId
     FROM (
@@ -25,7 +42,6 @@ export class AutoService {
     LIMIT 100000000
     OFFSET 0;
     `);
-
     //! 데이터의 전체 갯수 확인하기
     const total = list.length;
 
@@ -33,36 +49,46 @@ export class AutoService {
     const num = Math.floor(total / 1000) + 1;
 
     for (let i = 0; i < num; i++) {
+      const tokens =
+        i === num - 1
+          ? refinedList.slice(i * 1000)
+          : refinedList.slice(i * 1000, (i + 1) * 1000);
+
+      const message = {
+        message: {
+          notification: {
+            title,
+            body: content,
+          },
+          data: {
+            title,
+            body: content,
+            url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
+          },
+          tokens: tokens,
+        },
+      };
+
+      const accessToken = await this.getAccessToken();
+
+      // FCM v1 API를 사용하여 메시지 전송
       await axios
         .post(
-          `https://fcm.googleapis.com/fcm/send`,
-          {
-            registration_ids:
-              i === num - 1
-                ? refinedList.slice(i * 1000)
-                : refinedList.slice(i * 1000, (i + 1) * 1000),
-            notification: {
-              title,
-              body: content,
-            },
-            data: {
-              title,
-              body: content,
-              url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
-            },
-            'content-available': 1,
-            priority: 'high',
-          },
+          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+          message,
           {
             headers: {
-              Authorization: 'key=' + Key,
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
             },
           },
         )
-        .then(() => this.logger.debug(`FCM 푸시 성공 (${i}번째 루프 진행 중)`))
+        .then((response) => {
+          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
+        })
         .catch((err) => {
-          this.logger.debug(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.debug(err);
+          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
+          this.logger.error(err);
         });
     }
 
@@ -80,9 +106,6 @@ export class AutoService {
     content: string,
     writer: string,
   ) {
-    const Key = process.env.FIREBASE_FCM_SERVER_KEY;
-
-    //! (데이터의 중복 없이) 디바이스 토큰 배열 가져오기
     const list = await this.queryRunnerService.query(`
     SELECT deviceId
     FROM (
@@ -95,7 +118,6 @@ export class AutoService {
     LIMIT 100000000
     OFFSET 0;
     `);
-
     //! 데이터의 전체 갯수 확인하기
     const total = list.length;
 
@@ -103,43 +125,52 @@ export class AutoService {
     const num = Math.floor(total / 1000) + 1;
 
     for (let i = 0; i < num; i++) {
+      const tokens =
+        i === num - 1
+          ? refinedList.slice(i * 1000)
+          : refinedList.slice(i * 1000, (i + 1) * 1000);
+
+      const message = {
+        message: {
+          notification: {
+            title: yojul,
+            body: title,
+          },
+          data: {
+            title,
+            yojul,
+            song,
+            bible,
+            sungchal,
+            kido,
+            content,
+            writer,
+            url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
+          },
+          tokens: tokens,
+        },
+      };
+
+      const accessToken = await this.getAccessToken();
+
+      // FCM v1 API를 사용하여 메시지 전송
       await axios
         .post(
-          `https://fcm.googleapis.com/fcm/send`,
-          {
-            registration_ids:
-              i === num - 1
-                ? refinedList.slice(i * 1000)
-                : refinedList.slice(i * 1000, (i + 1) * 1000),
-            notification: {
-              title,
-              body: yojul,
-            },
-            data: {
-              title,
-              body: title,
-              yojul,
-              song,
-              bible,
-              sungchal,
-              kido,
-              content,
-              writer,
-              url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
-            },
-            'content-available': 1,
-            priority: 'high',
-          },
+          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+          message,
           {
             headers: {
-              Authorization: 'key=' + Key,
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
             },
           },
         )
-        .then(() => this.logger.debug(`FCM 푸시 성공 (${i}번째 루프 진행 중)`))
+        .then((response) => {
+          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
+        })
         .catch((err) => {
-          this.logger.debug(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.debug(err);
+          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
+          this.logger.error(err);
         });
     }
 
