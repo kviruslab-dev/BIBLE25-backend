@@ -1,11 +1,11 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import * as expressBasicAuth from 'express-basic-auth';
-import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
-import * as path from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
+import expressBasicAuth from 'express-basic-auth';
+import * as path from 'path';
 import { AppModule } from './app/app.module';
+import { HttpExceptionFilter } from './common/exceptions/http-exception.filter';
 
 const bootstrap = async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
