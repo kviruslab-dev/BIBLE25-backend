@@ -1,5 +1,4 @@
 import { Injectable, Logger } from '@nestjs/common';
-import axios from 'axios';
 import * as admin from 'firebase-admin';
 import { JWT } from 'google-auth-library';
 import * as serviceAccount from 'src/bible25_fcm.json';
@@ -57,39 +56,40 @@ export class AutoService {
       const message = {
         message: {
           notification: {
-            title,
+            title: title,
             body: content,
           },
           data: {
-            title,
+            title: title,
             body: content,
             url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
           },
-          tokens: tokens,
+          token: tokens,
         },
       };
 
-      const accessToken = await this.getAccessToken();
+      // const accessToken = await this.getAccessToken();
 
-      // FCM v1 API를 사용하여 메시지 전송
-      await axios
-        .post(
-          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
-          message,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        )
-        .then((response) => {
-          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
-        })
-        .catch((err) => {
-          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.error(err);
-        });
+      await admin.messaging().send(message.message);
+
+      // await axios
+      //   .post(
+      //     `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+      //     message,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${accessToken}`,
+      //         'Content-Type': 'application/json',
+      //       },
+      //     },
+      //   )
+      //   .then((response) => {
+      //     this.logger.debug(`FCM 푸시 성공: ${response.data}`);
+      //   })
+      //   .catch((err) => {
+      //     this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
+      //     this.logger.error(err);
+      //   });
     }
 
     return;
@@ -147,31 +147,32 @@ export class AutoService {
             writer,
             url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
           },
-          tokens: tokens,
+          token: tokens,
         },
       };
 
-      const accessToken = await this.getAccessToken();
+      // const accessToken = await this.getAccessToken();
 
-      // FCM v1 API를 사용하여 메시지 전송
-      await axios
-        .post(
-          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
-          message,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        )
-        .then((response) => {
-          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
-        })
-        .catch((err) => {
-          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.error(err);
-        });
+      await admin.messaging().send(message.message);
+
+      // await axios
+      //   .post(
+      //     `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+      //     message,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${accessToken}`,
+      //         'Content-Type': 'application/json',
+      //       },
+      //     },
+      //   )
+      //   .then((response) => {
+      //     this.logger.debug(`FCM 푸시 성공: ${response.data}`);
+      //   })
+      //   .catch((err) => {
+      //     this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
+      //     this.logger.error(err);
+      //   });
     }
 
     return;

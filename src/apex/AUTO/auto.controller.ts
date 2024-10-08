@@ -47,7 +47,7 @@ export class AutoController {
     }
   }
 
-  @Cron('0 30 18 * * *')
+  @Cron('0 50 18 * * *')
   async SendMalsumPush() {
     if (process.env.MODE === 'production') {
       return;
