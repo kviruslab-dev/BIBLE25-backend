@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import axios from 'axios';
 import * as admin from 'firebase-admin';
 import { JWT } from 'google-auth-library';
 import * as serviceAccount from 'src/bible25_fcm.json';
@@ -68,28 +69,28 @@ export class AutoService {
         },
       };
 
-      // const accessToken = await this.getAccessToken();
+      const accessToken = await this.getAccessToken();
 
-      await admin.messaging().send(message.message);
+      // await admin.messaging().send(message.message);
 
-      // await axios
-      //   .post(
-      //     `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
-      //     message,
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${accessToken}`,
-      //         'Content-Type': 'application/json',
-      //       },
-      //     },
-      //   )
-      //   .then((response) => {
-      //     this.logger.debug(`FCM 푸시 성공: ${response.data}`);
-      //   })
-      //   .catch((err) => {
-      //     this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-      //     this.logger.error(err);
-      //   });
+      await axios
+        .post(
+          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+          message,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+        .then((response) => {
+          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
+        })
+        .catch((err) => {
+          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
+          this.logger.error(err);
+        });
     }
 
     return;
@@ -151,28 +152,28 @@ export class AutoService {
         },
       };
 
-      // const accessToken = await this.getAccessToken();
+      const accessToken = await this.getAccessToken();
 
-      await admin.messaging().send(message.message);
+      // await admin.messaging().send(message.message);
 
-      // await axios
-      //   .post(
-      //     `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
-      //     message,
-      //     {
-      //       headers: {
-      //         Authorization: `Bearer ${accessToken}`,
-      //         'Content-Type': 'application/json',
-      //       },
-      //     },
-      //   )
-      //   .then((response) => {
-      //     this.logger.debug(`FCM 푸시 성공: ${response.data}`);
-      //   })
-      //   .catch((err) => {
-      //     this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-      //     this.logger.error(err);
-      //   });
+      await axios
+        .post(
+          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+          message,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        )
+        .then((response) => {
+          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
+        })
+        .catch((err) => {
+          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
+          this.logger.error(err);
+        });
     }
 
     return;
