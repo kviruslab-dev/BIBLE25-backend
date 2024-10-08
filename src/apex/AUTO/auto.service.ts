@@ -15,7 +15,7 @@ export class AutoService {
   }
 
   private readonly logger = new Logger(AutoService.name);
-  private readonly projectId = 'bible25-237705';
+  private readonly projectId = 'bible-app-project';
 
   // Bearer 토큰을 얻기 위한 메서드
   private async getAccessToken() {

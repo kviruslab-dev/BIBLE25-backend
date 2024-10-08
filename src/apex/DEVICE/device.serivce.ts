@@ -1,22 +1,39 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import * as admin from 'firebase-admin';
 import * as fs from 'fs';
+import { JWT } from 'google-auth-library';
 import { google } from 'googleapis';
+import * as serviceAccount from 'src/bible25_fcm.json';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { DeviceIdDto } from './dtos/deviceId.dto';
 import { fcmpushAllDto, fcmpushDto } from './dtos/fcmpush.dto';
 
 @Injectable()
 export class DeviceService {
-  constructor(private readonly queryRunnerService: QueryRunnerService) {}
+  constructor(private readonly queryRunnerService: QueryRunnerService) {
+    // Firebase Admin SDK 초기화
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    });
+  }
 
   private readonly logger = new Logger(DeviceService.name);
+  private readonly projectId = 'bible-app-project';
+
+  // Bearer 토큰을 얻기 위한 메서드
+  private async getAccessToken() {
+    const client = new JWT({
+      email: serviceAccount.client_email,
+      key: serviceAccount.private_key,
+      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
+    });
+
+    const tokens = await client.authorize();
+    return tokens.access_token;
+  }
 
   async sendFcmpush(data: fcmpushDto) {
-    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
-    const fcmUrl =
-      'https://fcm.googleapis.com/v1/projects/bible25-237705/messages:send';
-
     const condition = {
       select: 'id, deviceId, pushyn',
       table: 'device_info',
@@ -26,21 +43,6 @@ export class DeviceService {
     const deviceInfo = await this.queryRunnerService.findOne(condition);
 
     if (deviceInfo) {
-      const serviceAccount = JSON.parse(
-        fs.readFileSync(serviceAccountPath, 'utf8'),
-      );
-
-      const client = new google.auth.JWT(
-        serviceAccount.client_email,
-        null,
-        serviceAccount.private_key,
-        ['https://www.googleapis.com/auth/firebase.messaging'],
-      );
-
-      await client.authorize();
-
-      const accessToken = await client.getAccessToken();
-
       const messagePayload = {
         message: {
           topic: data.deviceId,
@@ -51,13 +53,19 @@ export class DeviceService {
         },
       };
 
+      const accessToken = await this.getAccessToken();
+
       await axios
-        .post(fcmUrl, messagePayload, {
-          headers: {
-            Authorization: `Bearer ${accessToken.token}`,
-            'Content-Type': 'application/json',
+        .post(
+          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
+          messagePayload,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
           },
-        })
+        )
         .then((response) => console.log('firebaseFCMPush 성공', response.data))
         .catch((err) =>
           console.error('firebaseFCMPush 실패', err.response.data),

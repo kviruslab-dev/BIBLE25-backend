@@ -18,7 +18,7 @@ export class DeviceController {
   @ApiOperation({ summary: '(특정 기기에) 푸시 전송하기' })
   @Post('fcmpush')
   async sendFcmpush(@Body() body: fcmpushDto) {
-    const user = await this.deviceService.sendFcmpush(body);
+    await this.deviceService.sendFcmpush(body);
     return 'wow';
   }
 
