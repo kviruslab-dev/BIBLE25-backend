@@ -16,8 +16,7 @@ export class AutoService {
 
   async sendFcmpushAll(title: string, content: string, id: number) {
     const devices = await this.queryRunnerService.query(`
-      SELECT deviceId
-      from device_info WHERE note = '박시온'
+    select deviceID from device_info order by id desc
     `);
 
     const tokens = devices.map((device) => device.deviceId);
@@ -34,17 +33,22 @@ export class AutoService {
       },
     };
 
-    try {
-      // 여러 개의 토큰으로 다중 전송
-      for (const token of tokens) {
-        await admin.messaging().send({
+    const batchSize = 500; // FCM은 한 번에 최대 500개 디바이스에 보낼 수 있음
+    for (let i = 0; i < tokens.length; i += batchSize) {
+      const batchTokens = tokens.slice(i, i + batchSize); // 500개씩 묶음으로 자름
+
+      try {
+        await admin.messaging().sendEachForMulticast({
           ...message,
-          token: token, // 각각의 기기 토큰에 메시지를 전송
+          tokens: batchTokens, // 잘라낸 토큰을 한 번에 전송
         });
+        console.log(`Successfully sent batch from ${i} to ${i + batchSize}`);
+      } catch (error) {
+        console.error(
+          `Error sending batch from ${i} to ${i + batchSize}:`,
+          error,
+        );
       }
-      console.log('Successfully sent message to all devices');
-    } catch (error) {
-      console.error('Error sending message:', error);
     }
   }
 
