@@ -43,7 +43,7 @@ export class AutoController {
         `... [더보기]`;
 
       //! 앱 푸시 보내기
-      this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
+      // this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
     }
   }
 
