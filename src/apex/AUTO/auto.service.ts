@@ -1,32 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
-import axios from 'axios';
+import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
-import { JWT } from 'google-auth-library';
-import * as serviceAccount from 'src/bible25_fcm.json';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 
 @Injectable()
 export class AutoService {
+  private firebaseApp: admin.app.App;
+
   constructor(private readonly queryRunnerService: QueryRunnerService) {
     // Firebase Admin SDK 초기화
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+    const serviceAccount = require('../../../src/bible25_fcm.json');
+    this.firebaseApp = admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
     });
-  }
-
-  private readonly logger = new Logger(AutoService.name);
-  private readonly projectId = 'bible-app-project';
-
-  // Bearer 토큰을 얻기 위한 메서드
-  private async getAccessToken() {
-    const client = new JWT({
-      email: serviceAccount.client_email,
-      key: serviceAccount.private_key,
-      scopes: ['https://www.googleapis.com/auth/firebase.messaging'],
-    });
-
-    const tokens = await client.authorize();
-    return tokens.access_token;
   }
 
   async sendFcmpushAll(title: string, content: string, id: number) {
@@ -69,28 +54,16 @@ export class AutoService {
         },
       };
 
-      const accessToken = await this.getAccessToken();
-
-      // await admin.messaging().send(message.message);
-
-      await axios
-        .post(
-          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
-          message,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        )
-        .then((response) => {
-          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
-        })
-        .catch((err) => {
-          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.error(err);
-        });
+      try {
+        const response = await this.firebaseApp
+          .messaging()
+          .send(message.message);
+        console.log('Successfully sent message:', response);
+        return response;
+      } catch (error) {
+        console.log('Error sending message:', error);
+        throw error;
+      }
     }
 
     return;
@@ -152,28 +125,16 @@ export class AutoService {
         },
       };
 
-      const accessToken = await this.getAccessToken();
-
-      // await admin.messaging().send(message.message);
-
-      await axios
-        .post(
-          `https://fcm.googleapis.com/v1/projects/${this.projectId}/messages:send`,
-          message,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
-            },
-          },
-        )
-        .then((response) => {
-          this.logger.debug(`FCM 푸시 성공: ${response.data}`);
-        })
-        .catch((err) => {
-          this.logger.error(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.error(err);
-        });
+      try {
+        const response = await this.firebaseApp
+          .messaging()
+          .send(message.message);
+        console.log('Successfully sent message:', response);
+        return response;
+      } catch (error) {
+        console.log('Error sending message:', error);
+        throw error;
+      }
     }
 
     return;
