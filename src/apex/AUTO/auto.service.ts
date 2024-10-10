@@ -5,17 +5,22 @@ import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 @Injectable()
 export class AutoService {
   constructor(private readonly queryRunnerService: QueryRunnerService) {
-    const serviceAccount = require('../../../src/bible25_fcm.json');
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-    });
+    if (!admin.apps.length) {
+      // 이미 초기화된 경우 다시 초기화하지 않도록 조건을 추가
+      const serviceAccount = require('../../../src/bible25_fcm.json');
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    }
   }
 
   async sendFcmpushAll(title: string, content: string, id: number) {
-    const list = await this.queryRunnerService.query(`
+    const devices = await this.queryRunnerService.query(`
       SELECT deviceId
       from device_info WHERE note = '박시온'
     `);
+
+    const tokens = devices.map((device) => device.deviceId);
 
     const message = {
       notification: {
@@ -27,11 +32,20 @@ export class AutoService {
         body: content,
         url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
       },
-      token: list,
     };
 
-    // FCM의 sendMulticast 사용 (여러 토큰에 동시에 메시지 전송)
-    admin.messaging().send(message);
+    try {
+      // 여러 개의 토큰으로 다중 전송
+      for (const token of tokens) {
+        await admin.messaging().send({
+          ...message,
+          token: token, // 각각의 기기 토큰에 메시지를 전송
+        });
+      }
+      console.log('Successfully sent message to all devices');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   }
 
   async sendFcmMalsumAll(
