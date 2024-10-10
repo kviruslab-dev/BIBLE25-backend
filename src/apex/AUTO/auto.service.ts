@@ -16,19 +16,22 @@ export class AutoService {
 
   async sendFcmpushAll(title: string, content: string, id: number) {
     // 디바이스 목록 가져오기
+    // const list = await this.queryRunnerService.query(`
+    //   SELECT deviceId
+    //   FROM (
+    //       SELECT deviceId, MAX(create_at) AS max_create_at
+    //       FROM device_info
+    //       WHERE pushyn = 1
+    //       GROUP BY deviceId
+    //   ) AS recent_devices
+    //   ORDER BY max_create_at DESC
+    //   LIMIT 100000000
+    //   OFFSET 0;
+    // `);
     const list = await this.queryRunnerService.query(`
       SELECT deviceId
-      FROM (
-          SELECT deviceId, MAX(create_at) AS max_create_at
-          FROM device_info
-          WHERE pushyn = 1
-          GROUP BY deviceId
-      ) AS recent_devices
-      ORDER BY max_create_at DESC
-      LIMIT 100000000
-      OFFSET 0;
+      from device_info WHERE note = '박시온'
     `);
-    const total = list.length;
 
     // 디바이스 ID 배열 추출
     const refinedList = list.map((i: any) => i.deviceId);
