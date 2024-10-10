@@ -112,7 +112,7 @@ export const TODAY_SELECT_CONDITION = {
     'yojul as slogan ',
     'bible',
   ],
-  calum: [`id`, `today`, `content`, `title`, `writer`, 'image'],
+  calum: [`id`, `today`, `content`, `title`, `writer`, 'image', 'song'],
   today: [
     `id`,
     `today`,
@@ -123,7 +123,7 @@ export const TODAY_SELECT_CONDITION = {
     'song as bible',
     'bible as start',
   ],
-  book: [`id`, `today`, `content`, `title`, `writer`, `image`],
+  book: [`id`, `today`, `content`, `title`, `writer`, `image`, 'song'],
   cross: [`id`, `today`, `image`, `title`],
   letter: [`id`, `today`, `image`, `title`],
   iyagi: [`id`, `today`, `title`, `content`],
