@@ -13,7 +13,7 @@ export class AutoController {
 
   private readonly logger = new Logger(AutoService.name);
 
-  @Cron('0 30 7 * * *')
+  @Cron('0 15 10 * * *')
   async SendAppPush() {
     if (process.env.MODE === 'production') {
       return;
@@ -43,7 +43,7 @@ export class AutoController {
         `... [더보기]`;
 
       //! 앱 푸시 보내기
-      // this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
+      this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
     }
   }
 
