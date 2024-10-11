@@ -13,7 +13,7 @@ export class AutoController {
 
   private readonly logger = new Logger(AutoService.name);
 
-  @Cron('0 45 10 * * *')
+  @Cron('0 30 7 * * *')
   async SendAppPush() {
     if (process.env.MODE === 'production') {
       return;
@@ -47,7 +47,7 @@ export class AutoController {
     }
   }
 
-  @Cron('0 30 15 * * *')
+  @Cron('0 30 18 * * *')
   async SendMalsumPush() {
     if (process.env.MODE === 'production') {
       return;

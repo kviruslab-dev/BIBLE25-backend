@@ -72,7 +72,7 @@ export class AutoService {
     content: string,
     writer: string,
   ) {
-    const list = await this.queryRunnerService.query(`
+    const devices = await this.queryRunnerService.query(`
     SELECT deviceId
     FROM (
         SELECT deviceId, MAX(create_at) AS max_create_at
@@ -84,47 +84,44 @@ export class AutoService {
     LIMIT 100000000
     OFFSET 0;
     `);
-    //! 데이터의 전체 갯수 확인하기
-    const total = list.length;
 
-    const refinedList = list.map((i: object) => i['deviceId']);
-    const num = Math.floor(total / 1000) + 1;
+    const total = devices.length;
+
+    const token = devices.map((device) => device.deviceId);
+    const num = Math.floor(total / 500) + 1;
+
+    const message = {
+      notification: {
+        title: yojul,
+        body: title,
+      },
+      data: {
+        title,
+        yojul,
+        song,
+        bible,
+        sungchal,
+        kido,
+        content,
+        writer,
+        url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
+      },
+    };
 
     for (let i = 0; i < num; i++) {
       const tokens =
         i === num - 1
-          ? refinedList.slice(i * 1000)
-          : refinedList.slice(i * 1000, (i + 1) * 1000);
-
-      const message = {
-        message: {
-          notification: {
-            title: yojul,
-            body: title,
-          },
-          data: {
-            title,
-            yojul,
-            song,
-            bible,
-            sungchal,
-            kido,
-            content,
-            writer,
-            url: `https://bible25frontend.givemeprice.co.kr/share?list=malsumlist&id=${id}`,
-          },
-          token: tokens,
-        },
-      };
+          ? token.slice(i * 500)
+          : token.slice(i * 500, (i + 1) * 500);
 
       try {
-        admin.messaging().send(message.message);
+        await admin.messaging().sendEachForMulticast({
+          ...message,
+          tokens: tokens,
+        });
       } catch (error) {
-        console.log('Error sending message:', error);
-        throw error;
+        console.error(error);
       }
     }
-
-    return;
   }
 }
