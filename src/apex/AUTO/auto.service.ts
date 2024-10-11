@@ -16,10 +16,21 @@ export class AutoService {
 
   async sendFcmpushAll(title: string, content: string, id: number) {
     const devices = await this.queryRunnerService.query(`
-    select deviceID from device_info order by id desc
+    SELECT deviceId
+    FROM (
+        SELECT deviceId, MAX(create_at) AS max_create_at
+        FROM device_info
+        WHERE pushyn = 1
+        GROUP BY deviceId
+    ) AS recent_devices
+    ORDER BY max_create_at DESC
+    LIMIT 100000000
+    OFFSET 0;
     `);
+    const total = devices.length;
 
-    const tokens = devices.map((device) => device.deviceId);
+    const token = devices.map((device) => device.deviceId);
+    const num = Math.floor(total / 500) + 1;
 
     const message = {
       notification: {
@@ -33,21 +44,19 @@ export class AutoService {
       },
     };
 
-    const batchSize = 500; // FCM은 한 번에 최대 500개 디바이스에 보낼 수 있음
-    for (let i = 0; i < tokens.length; i += batchSize) {
-      const batchTokens = tokens.slice(i, i + batchSize); // 500개씩 묶음으로 자름
+    for (let i = 0; i < num; i++) {
+      const tokens =
+        i === num - 1
+          ? token.slice(i * 500)
+          : token.slice(i * 500, (i + 1) * 500);
 
       try {
         await admin.messaging().sendEachForMulticast({
           ...message,
-          tokens: batchTokens, // 잘라낸 토큰을 한 번에 전송
+          tokens: tokens,
         });
-        console.log(`Successfully sent batch from ${i} to ${i + batchSize}`);
       } catch (error) {
-        console.error(
-          `Error sending batch from ${i} to ${i + batchSize}:`,
-          error,
-        );
+        console.error(error);
       }
     }
   }

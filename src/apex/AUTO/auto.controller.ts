@@ -13,7 +13,7 @@ export class AutoController {
 
   private readonly logger = new Logger(AutoService.name);
 
-  @Cron('0 15 10 * * *')
+  @Cron('0 45 10 * * *')
   async SendAppPush() {
     if (process.env.MODE === 'production') {
       return;
