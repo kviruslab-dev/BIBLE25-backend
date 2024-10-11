@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { getToday } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
@@ -10,8 +10,6 @@ export class AutoController {
     private readonly autoService: AutoService,
     private readonly queryRunnerService: QueryRunnerService,
   ) {}
-
-  private readonly logger = new Logger(AutoService.name);
 
   @Cron('0 30 7 * * *')
   async SendAppPush() {
@@ -47,7 +45,7 @@ export class AutoController {
     }
   }
 
-  @Cron('0 30 18 * * *')
+  @Cron('0 40 18 * * *')
   async SendMalsumPush() {
     if (process.env.MODE === 'production') {
       return;
