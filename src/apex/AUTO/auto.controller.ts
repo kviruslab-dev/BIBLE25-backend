@@ -45,7 +45,7 @@ export class AutoController {
     }
   }
 
-  @Cron('0 50 18 * * *')
+  @Cron('0 30 18 * * *')
   async SendMalsumPush() {
     if (process.env.MODE === 'production') {
       return;
@@ -76,17 +76,17 @@ export class AutoController {
         `... [더보기]`;
 
       //! 앱 푸시 보내기
-      // this.autoService.sendFcmMalsumAll(
-      //   id,
-      //   modifiedTitle,
-      //   modifiedYojul,
-      //   song,
-      //   bible,
-      //   sungchal,
-      //   kido,
-      //   content,
-      //   writer,
-      // );
+      this.autoService.sendFcmMalsumAll(
+        id,
+        modifiedTitle,
+        modifiedYojul,
+        song,
+        bible,
+        sungchal,
+        kido,
+        content,
+        writer,
+      );
     }
   }
 }
