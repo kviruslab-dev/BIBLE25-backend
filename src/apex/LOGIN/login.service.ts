@@ -22,11 +22,12 @@ export class LoginService {
     if (!deviceInfo) {
       const condition = {
         table: 'users',
-        columns: ['profile_nickname', 'account_email', 'name'],
+        columns: ['profile_nickname', 'account_email', 'name', 'points'],
         values: [
           `'${data.profile_nickname}'`,
           `'${data.account_email}'`,
           `'${data.name}'`,
+          0,
         ],
       };
 
