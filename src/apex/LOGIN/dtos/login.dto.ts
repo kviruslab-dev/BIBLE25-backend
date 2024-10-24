@@ -25,4 +25,12 @@ export class LoginDto {
   })
   @IsString()
   name: string;
+
+  @ApiProperty({
+    example: 'adid',
+    description: 'adid',
+    required: false,
+  })
+  @IsString()
+  adid: string;
 }
