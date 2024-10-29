@@ -21,7 +21,7 @@ export class LoginController {
 
   //! 유저 정보 삭제
   @ApiOperation({ summary: '유저 정보 삭제하기' })
-  @Delete()
+  @Delete('deleteid')
   async deleteId(@Query('adid') adid: string) {
     await this.deviceService.deleteId(adid);
   }
