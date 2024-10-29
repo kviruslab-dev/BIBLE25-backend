@@ -45,7 +45,7 @@ export class LoginService {
   async deleteId(adid: string) {
     const condition = {
       table: 'users',
-      where: `adid = ${adid}`,
+      where: `adid = '${adid}'`,
     };
     return await this.queryRunnerService.delete(condition);
   }
