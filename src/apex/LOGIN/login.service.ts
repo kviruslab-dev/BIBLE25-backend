@@ -13,14 +13,16 @@ export class LoginService {
       where: `adid = '${data.adid}'`,
     };
 
-    const deviceInfo = await this.queryRunnerService.findOne(condition);
+    try {
+      // 중복 확인
+      const deviceInfo = await this.queryRunnerService.findOne(condition);
 
-    if (deviceInfo) {
-      return;
-    }
+      if (deviceInfo) {
+        return; // 중복된 adid가 있으면 함수 종료
+      }
 
-    if (!deviceInfo) {
-      const condition = {
+      // 중복이 없을 때만 새 레코드 삽입
+      const insertCondition = {
         table: 'users',
         columns: [
           'profile_nickname',
@@ -38,7 +40,10 @@ export class LoginService {
         ],
       };
 
-      await this.queryRunnerService.insert(condition);
+      await this.queryRunnerService.insert(insertCondition);
+    } catch (error) {
+      console.error('Error during setLoginId:', error);
+      throw new Error('Database operation failed');
     }
   }
 
