@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { LoginDto } from './dtos/login.dto';
@@ -17,5 +17,12 @@ export class LoginController {
   @Post('kakaoid')
   async setDeviceId(@Body() body: LoginDto) {
     return await this.deviceService.setLoginId(body);
+  }
+
+  //! 유저 정보 삭제
+  @ApiOperation({ summary: '유저 정보 삭제하기' })
+  @Delete()
+  async deleteId(@Query('adid') adid: string) {
+    await this.deviceService.deleteId(adid);
   }
 }

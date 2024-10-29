@@ -8,9 +8,9 @@ export class LoginService {
 
   async setLoginId(data: LoginDto) {
     const condition = {
-      select: 'id, account_email',
+      select: 'id, adid',
       table: 'users',
-      where: `account_email = '${data.account_email}'`,
+      where: `adid = '${data.adid}'`,
     };
 
     const deviceInfo = await this.queryRunnerService.findOne(condition);
@@ -40,5 +40,13 @@ export class LoginService {
 
       await this.queryRunnerService.insert(condition);
     }
+  }
+
+  async deleteId(adid: string) {
+    const condition = {
+      table: 'users',
+      where: `adid = ${adid}`,
+    };
+    return await this.queryRunnerService.delete(condition);
   }
 }
