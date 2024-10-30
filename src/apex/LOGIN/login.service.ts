@@ -54,4 +54,14 @@ export class LoginService {
     };
     return await this.queryRunnerService.delete(condition);
   }
+
+  async findAdid(adid: string) {
+    const condition = {
+      select: 'profile_nickname, account_email, name, adid',
+      table: 'users',
+      where: `adid = '${adid}'`,
+    };
+
+    return await this.queryRunnerService.findOne(condition);
+  }
 }
