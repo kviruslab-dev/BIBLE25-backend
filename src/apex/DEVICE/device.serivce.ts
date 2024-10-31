@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import * as admin from 'firebase-admin';
 import * as fs from 'fs';
 import { google } from 'googleapis';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
@@ -8,59 +9,45 @@ import { fcmpushAllDto, fcmpushDto } from './dtos/fcmpush.dto';
 
 @Injectable()
 export class DeviceService {
-  constructor(private readonly queryRunnerService: QueryRunnerService) {}
-  private readonly logger = new Logger(DeviceService.name);
+  constructor(private readonly queryRunnerService: QueryRunnerService) {
+    if (!admin.apps.length) {
+      // 이미 초기화된 경우 다시 초기화하지 않도록 조건을 추가
+      const serviceAccount = require('../../../src/bible25_fcm.json');
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+      });
+    }
+  }
 
   async sendFcmpush(data: fcmpushDto) {
-    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
-    const fcmUrl =
-      'https://fcm.googleapis.com/v1/projects/bible25-237705/messages:send';
+    const devices = await this.queryRunnerService.query(`
+    SELECT deviceId
+    FROM device_info
+    WHERE deviceId = '${data.deviceId}'
+    `);
 
-    const condition = {
-      select: 'id, deviceId, pushyn',
-      table: 'device_info',
-      where: `deviceId = '${data.deviceId}' and pushyn = 1`,
+    const tokens = devices.map((device) => device.deviceId);
+
+    const message = {
+      notification: {
+        title: data.title,
+        body: data.content,
+        image:
+          'https://data.bible25.com/market/KakaoTalk_20240604_133855278.png',
+      },
     };
 
-    const deviceInfo = await this.queryRunnerService.findOne(condition);
-
-    if (deviceInfo) {
-      const serviceAccount = JSON.parse(
-        fs.readFileSync(serviceAccountPath, 'utf8'),
-      );
-      const client = new google.auth.JWT(
-        serviceAccount.client_email,
-        null,
-        serviceAccount.private_key,
-        ['https://www.googleapis.com/auth/firebase.messaging'],
-      );
-
-      await client.authorize();
-      const accessToken = await client.getAccessToken();
-      const messagePayload = {
-        message: {
-          topic: data.deviceId,
-          notification: {
-            title: data.title,
-            body: data.content,
-          },
-        },
-      };
-
-      await axios
-        .post(fcmUrl, messagePayload, {
-          headers: {
-            Authorization: `Bearer ${accessToken.token}`,
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((response) => console.log('firebaseFCMPush 성공', response.data))
-        .catch((err) =>
-          console.error('firebaseFCMPush 실패', err.response.data),
-        );
+    try {
+      for (const token of tokens) {
+        await admin.messaging().send({
+          ...message,
+          token: token,
+        });
+      }
+      console.log('Successfully sent message to all devices');
+    } catch (error) {
+      console.error('Error sending message:', error);
     }
-
-    return { code: 1000, message: 'complete', time: new Date().toISOString() };
   }
 
   async sendFcmpushAll(data: fcmpushAllDto) {
@@ -314,11 +301,7 @@ export class DeviceService {
             },
           },
         )
-        .then(() => this.logger.debug(`FCM 푸시 성공 (${i}번째 루프 진행 중)`))
-        .catch((err) => {
-          this.logger.debug(`FCM 푸시 실패 (${i}번째 루프 진행 중)`);
-          this.logger.debug(err);
-        });
+        .catch((err) => {});
     }
 
     return;
