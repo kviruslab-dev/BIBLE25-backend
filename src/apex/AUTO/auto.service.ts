@@ -83,15 +83,12 @@ export class AutoService {
         url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
       },
     };
-
     try {
-      for (const token of tokens) {
-        await admin.messaging().send({
-          ...message,
-          token: token,
-        });
-      }
-      console.log('Successfully sent message to all devices');
+      const response = await admin.messaging().sendEachForMulticast({
+        ...message,
+        tokens: tokens,
+      });
+      console.log('Successfully sent message to all devices', response);
     } catch (error) {
       console.error('Error sending message:', error);
     }
