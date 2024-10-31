@@ -74,8 +74,11 @@ export class AutoService {
       notification: {
         title: title,
         body: content,
-        image:
-          'https://data.bible25.com/market/KakaoTalk_20240604_133855278.png',
+      },
+      data: {
+        title: title,
+        body: content,
+        url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
       },
     };
 
