@@ -45,6 +45,7 @@ export class AutoController {
     }
   }
 
+  //! 테스트용
   @Cron('0 50 16 * * *')
   async SendAppTest() {
     if (process.env.MODE === 'production') {
@@ -52,10 +53,8 @@ export class AutoController {
     }
 
     if (process.env.MODE === 'development') {
-      //! 오늘 날짜 가져오기
       const today = getToday();
 
-      //! (오늘 날짜 이전) 최신 이야기메시지 가져오기
       const condition = {
         select: 'title, content, id',
         table: 'today_content',
@@ -67,15 +66,13 @@ export class AutoController {
 
       const data = await this.queryRunnerService.findAndCount(condition);
 
-      //! 보낼 제목, 내용 가져오기
       const { title, content, id } = data.list[0];
       const modifiedTitle = `[이야기메시지 - ${title}]`;
       const modifiedContent =
         content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
         `... [더보기]`;
 
-      //! 앱 푸시 보내기
-      this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
+      // this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
     }
   }
 
