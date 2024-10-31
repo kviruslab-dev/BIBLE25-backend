@@ -61,6 +61,42 @@ export class AutoService {
     }
   }
 
+  async sendFcmpush(title: string, content: string, id: number) {
+    const devices = await this.queryRunnerService.query(`
+    SELECT deviceId
+    FROM device_info
+    WHERE note = '박시온'
+    `);
+
+    const tokens = devices.map((device) => device.deviceId);
+
+    const message = {
+      notification: {
+        title: title,
+        body: content,
+        image:
+          'https://data.bible25.com/market/KakaoTalk_20240604_133855278.png',
+      },
+      data: {
+        title: title,
+        body: content,
+        url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
+      },
+    };
+
+    try {
+      for (const token of tokens) {
+        await admin.messaging().send({
+          ...message,
+          token: token,
+        });
+      }
+      console.log('Successfully sent message to all devices');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  }
+
   async sendFcmMalsumAll(
     id: number,
     title: string,

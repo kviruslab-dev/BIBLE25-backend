@@ -45,6 +45,40 @@ export class AutoController {
     }
   }
 
+  @Cron('0 00 15 * * *')
+  async SendAppTest() {
+    if (process.env.MODE === 'production') {
+      return;
+    }
+
+    if (process.env.MODE === 'development') {
+      //! 오늘 날짜 가져오기
+      const today = getToday();
+
+      //! (오늘 날짜 이전) 최신 이야기메시지 가져오기
+      const condition = {
+        select: 'title, content, id',
+        table: 'today_content',
+        where: `today = '${today}' and gubun = 3`,
+        orderBy: 'today desc',
+        limit: 1,
+        offset: 0,
+      };
+
+      const data = await this.queryRunnerService.findAndCount(condition);
+
+      //! 보낼 제목, 내용 가져오기
+      const { title, content, id } = data.list[0];
+      const modifiedTitle = `[이야기메시지 - ${title}]`;
+      const modifiedContent =
+        content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
+        `... [더보기]`;
+
+      //! 앱 푸시 보내기
+      this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
+    }
+  }
+
   @Cron('0 30 18 * * *')
   async SendMalsumPush() {
     if (process.env.MODE === 'production') {
