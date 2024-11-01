@@ -53,7 +53,7 @@ export class AdvertisementService {
       chansong: '찬송',
       malsum: '말씀따라',
       good: '굿모닝하나님',
-      today: '오늘의말씀',
+      today: '톨레레게',
       kido: '축복기도',
       //! 이야기메시지는 축복기도와 동일한 광고를 보여줍니다.
       iyagi: '축복기도',
