@@ -16,7 +16,7 @@ export class ProductService {
     });
     // 바이블25 후원상품 둘째줄
     const data02 = temp02.list.map((v: any, i: number) => {
-      if (i == 0 || i == 2) {
+      if (i == 0 || i == 1 || i == 2) {
         v.money = v.money.toLocaleString('ko-KR');
         v.dc += '%할인';
         return v;
