@@ -46,7 +46,7 @@ export class AutoController {
   }
 
   //! 테스트용
-  @Cron('0 50 16 * * *')
+  @Cron('0 47 18 * * *')
   async SendAppTest() {
     if (process.env.MODE === 'production') {
       return;
@@ -72,7 +72,7 @@ export class AutoController {
         content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
         `... [더보기]`;
 
-      // this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
+      this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
     }
   }
 
