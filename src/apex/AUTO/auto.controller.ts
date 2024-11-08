@@ -41,7 +41,7 @@ export class AutoController {
         `... [더보기]`;
 
       //! 앱 푸시 보내기
-      this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
+      // this.autoService.sendFcmpushAll(modifiedTitle, modifiedContent, id);
     }
   }
 
@@ -72,7 +72,7 @@ export class AutoController {
         content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
         `... [더보기]`;
 
-      this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
+      // this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
     }
   }
 
@@ -106,18 +106,18 @@ export class AutoController {
         yojul.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
         `... [더보기]`;
 
-      //! 앱 푸시 보내기
-      this.autoService.sendFcmMalsumAll(
-        id,
-        modifiedTitle,
-        modifiedYojul,
-        song,
-        bible,
-        sungchal,
-        kido,
-        content,
-        writer,
-      );
+      // //! 앱 푸시 보내기
+      // this.autoService.sendFcmMalsumAll(
+      //   id,
+      //   modifiedTitle,
+      //   modifiedYojul,
+      //   song,
+      //   bible,
+      //   sungchal,
+      //   kido,
+      //   content,
+      //   writer,
+      // );
     }
   }
 }
