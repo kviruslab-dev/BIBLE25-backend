@@ -1,11 +1,9 @@
 import {
-  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Patch,
-  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
@@ -30,7 +28,7 @@ export class AdvertisementController {
     required: true,
     type: String,
     description:
-      '타입 : main01, main02, main03, main04, main05, main06, main07, main08,main09, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare',
+      '타입 : main01, main02, main03, main04, main05, main06, main07, main08,main09, first, last, bible, chansong, malsum, good, today, kido, calum, cross, letter, book, iyagi, ildok, dic, biblemap, photodic, study, note, muksnag, qna, photo, iyagishare, push',
   })
   @ApiQuery({ name: 'lat', required: true, type: String })
   @ApiQuery({ name: 'lon', required: true, type: String })
@@ -294,25 +292,6 @@ export class AdvertisementController {
       table: 'market',
       set: 'tick=tick+1',
       where: `id=${id}`,
-    };
-
-    await this.queryRunnerService.updateMySQL(condition);
-  }
-
-  @ApiOperation({ summary: '광고 클릭 수 증가시키기 (POST 버전)' })
-  @Post()
-  async updateTickPostVer(@Body() body: object & { id: number }) {
-    if (!body.id) {
-      throw new HttpException(
-        `id 값을 입력하지 않았습니다.`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const condition = {
-      table: 'market',
-      set: 'tick=tick+1',
-      where: `id=${body.id}`,
     };
 
     await this.queryRunnerService.updateMySQL(condition);

@@ -71,6 +71,7 @@ export class AdvertisementService {
       qna: 'QA',
       photo: '포토',
       iyagishare: '이야기메시지공유',
+      push: '푸시',
     };
 
     const hansulName = typeToHangul[type];

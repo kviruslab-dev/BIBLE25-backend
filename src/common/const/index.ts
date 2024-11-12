@@ -20,7 +20,6 @@ export const ONE_ADVERTISEMENT = [
   'good',
   'today',
   'kido',
-  //! 이야기메시지를 추가합니다.
   'iyagi',
   'calum',
   'cross',
@@ -36,6 +35,7 @@ export const ONE_ADVERTISEMENT = [
   'qna',
   'photo',
   'iyagishare',
+  'push',
 ];
 
 export const TODAY_CONTENTS = [
@@ -48,7 +48,6 @@ export const TODAY_CONTENTS = [
   'book',
   'cross',
   'letter',
-  //! 이야기메시지를 추가합니다.
   'iyagi',
 ];
 
@@ -62,7 +61,6 @@ export const TODAY_LISTS = [
   'booklist',
   'crosslist',
   'letterlist',
-  //! 이야기메시지 리스트를 추가합니다.
   'iyagilist',
 ];
 
@@ -75,7 +73,6 @@ export const TODAY_GUBUN = {
   book: 6,
   cross: 7,
   letter: 8,
-  //! 이야기메시지를 추가합니다.
   iyagi: 3,
 };
 
@@ -147,7 +144,7 @@ export const SEARCH_CONTENTS = [
  * todays(투데이광고): 201, 202, 203, 204, 205, 206, 207, 208
  * product: [[market_item]]
  * donate: [[board]]
- * etc(기타 광고): 2(첫화면), 3(마지막종료), 301(성경일독)
+ * etc(기타 광고): 2(첫화면), 3(마지막종료), 301(성경일독) 400(푸시광고)
  */
 
 export const ADMIN_TYPE_OBJECT = {
@@ -158,7 +155,7 @@ export const ADMIN_TYPE_OBJECT = {
   todays: [201, 202, 203, 204, 205, 206, 207, 208, 209],
   product: [],
   donate: [],
-  etc: [2, 3, 301],
+  etc: [2, 3, 301, 400],
 };
 
 export const titleToPage = {
@@ -201,4 +198,5 @@ export const titleToPage = {
   묵상: 307,
   QA: 308,
   포토: 309,
+  푸시: 400,
 };
