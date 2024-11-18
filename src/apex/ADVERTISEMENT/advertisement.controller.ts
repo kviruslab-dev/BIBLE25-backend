@@ -257,7 +257,8 @@ export class AdvertisementController {
         if (type === 'iyagi') {
           data[0].title = '이야기메시지';
         }
-        return data;
+        const randomIndex = Math.floor(Math.random() * data.length);
+        return [data[randomIndex]];
       } catch (error) {
         const condition = {
           select: 'id, title, image, link',
@@ -273,7 +274,8 @@ export class AdvertisementController {
         if (type === 'iyagi') {
           data[0].title = '이야기메시지';
         }
-        return data;
+        const randomIndex = Math.floor(Math.random() * data.length);
+        return [data[randomIndex]];
       }
     }
   }
