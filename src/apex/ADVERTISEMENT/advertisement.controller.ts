@@ -253,10 +253,15 @@ export class AdvertisementController {
           );
         }
 
+        if (type === 'first') {
+          return data;
+        }
+
         //! 이야기메시지인 경우, title 값을 "축복기도"에서 "이야기메시지"로 변경합니다.
         if (type === 'iyagi') {
           data[0].title = '이야기메시지';
         }
+
         const randomIndex = Math.floor(Math.random() * data.length);
         return [data[randomIndex]];
       } catch (error) {
