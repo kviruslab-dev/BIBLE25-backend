@@ -48,7 +48,7 @@ export class LoginDto {
     required: false,
   })
   @IsString()
-  age: number;
+  age: string;
 
   @ApiProperty({
     example: 'gender',
