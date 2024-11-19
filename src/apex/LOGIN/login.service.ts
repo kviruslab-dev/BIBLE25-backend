@@ -30,6 +30,9 @@ export class LoginService {
           'name',
           'adid',
           'points',
+          'gender',
+          'phone_number',
+          'age',
         ],
         values: [
           `'${data.profile_nickname}'`,
@@ -37,6 +40,9 @@ export class LoginService {
           `'${data.name}'`,
           `'${data.adid}'`,
           0,
+          `'${data.gender}'`,
+          `'${data.phone_number}'`,
+          `'${data.age}'`,
         ],
       };
 

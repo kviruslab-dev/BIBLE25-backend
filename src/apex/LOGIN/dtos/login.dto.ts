@@ -33,4 +33,28 @@ export class LoginDto {
   })
   @IsString()
   adid: string;
+
+  @ApiProperty({
+    example: 'phone_number',
+    description: 'phone_number',
+    required: false,
+  })
+  @IsString()
+  phone_number: string;
+
+  @ApiProperty({
+    example: 'age',
+    description: 'age',
+    required: false,
+  })
+  @IsString()
+  age: number;
+
+  @ApiProperty({
+    example: 'gender',
+    description: 'gender',
+    required: false,
+  })
+  @IsString()
+  gender: string;
 }
