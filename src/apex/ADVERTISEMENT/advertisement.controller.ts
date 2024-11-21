@@ -319,11 +319,12 @@ export class AdvertisementController {
     await this.queryRunnerService.updateMySQL(condition);
   }
 
-  @Cron('0 59 23 * * *')
+  @Cron('0 35 19 * * *')
   async todayTick() {
     if (process.env.MODE === 'production') {
       return;
     }
+
     if (process.env.MODE === 'development') {
       try {
         const condition = {
