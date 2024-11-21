@@ -1,16 +1,17 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
   Patch,
+  Post,
   Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { getRandomNumberUpToN } from 'src/common/utils/functions';
 import { QueryRunnerService } from 'src/queryrunner/queryrunner.service';
 import { AdvertisementService } from './advertisement.service';
 
@@ -132,39 +133,6 @@ export class AdvertisementController {
       }
     }
 
-    if (type === 'last') {
-      const condition = {
-        select: 'id, title, image, link',
-        table: 'market',
-        where: `page=${pageFromType} and city='base' and active=1`,
-        orderBy: 'id asc',
-        limit: String(take ? take : 10),
-        offset: String(page ? take * (page - 1) : 0),
-      };
-      const data = await this.advertisementService.findInEtcForLastAd(
-        condition,
-      );
-
-      // TODO
-      // TODO 불러온 마지막광고 tick 증가
-      const id_array = data.map((v: any) => v.id);
-
-      if (getRandomNumberUpToN(100) < 5) {
-        await Promise.all(
-          id_array.map(async (id: string) => {
-            const condition = {
-              table: 'market',
-              set: 'tick=tick+1',
-              where: `id=${id}`,
-            };
-            await this.queryRunnerService.updateMySQL(condition);
-          }),
-        );
-      }
-
-      return data;
-    }
-
     if (ONE_ADVERTISEMENT.includes(type)) {
       if (type === 'bible') {
         if (!jang) {
@@ -253,7 +221,7 @@ export class AdvertisementController {
           );
         }
 
-        if (type === 'first') {
+        if (type === 'first' || 'last') {
           return data;
         }
 
@@ -303,21 +271,21 @@ export class AdvertisementController {
 
     await this.queryRunnerService.updateMySQL(condition);
   }
-
-  // @ApiOperation({ summary: '광고 클릭 수 증가시키기 (POST 버전)' })
-  // @Post()
-  // async updateTickPostVer(@Body() body: object & { id: number }) {
-  //   if (!body.id) {
-  //     throw new HttpException(
-  //       `id 값을 입력하지 않았습니다.`,
-  //       HttpStatus.BAD_REQUEST,
-  //     );
-  //   }
-  //   const condition = {
-  //     table: 'market',
-  //     set: 'tick=tick+1',
-  //     where: `id=${body.id}`,
-  //   };
-  //   await this.queryRunnerService.updateMySQL(condition);
-  // }
+  //! first, last 광고
+  @ApiOperation({ summary: '광고 클릭 수 증가시키기 (POST 버전)' })
+  @Post()
+  async updateTickPostVer(@Body() body: object & { id: number }) {
+    if (!body.id) {
+      throw new HttpException(
+        `id 값을 입력하지 않았습니다.`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const condition = {
+      table: 'market',
+      set: 'tick=tick+1',
+      where: `id=${body.id}`,
+    };
+    await this.queryRunnerService.updateMySQL(condition);
+  }
 }
