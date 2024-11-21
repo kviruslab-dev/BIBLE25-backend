@@ -9,6 +9,7 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
@@ -316,5 +317,41 @@ export class AdvertisementController {
       where: `id=${body.id}`,
     };
     await this.queryRunnerService.updateMySQL(condition);
+  }
+
+  @Cron('0 59 23 * * *')
+  async todayTick() {
+    if (process.env.MODE === 'production') {
+      return;
+    }
+    if (process.env.MODE === 'development') {
+      try {
+        const condition = {
+          select: 'tick',
+          table: 'market',
+          where: 'id=813',
+        };
+        const data = await this.queryRunnerService.findOne(condition);
+
+        const tickValue = data ? data.tick : 0;
+        const condition2 = {
+          table: 'todayTick',
+          columns: ['tick'],
+          values: [tickValue],
+        };
+
+        await this.queryRunnerService.insert(condition2);
+
+        const condition3 = {
+          table: 'market',
+          set: 'tick=0',
+          where: `id=813`,
+        };
+
+        await this.queryRunnerService.updateMySQL(condition3);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 }
