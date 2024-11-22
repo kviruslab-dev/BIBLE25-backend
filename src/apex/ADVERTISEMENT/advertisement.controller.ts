@@ -254,7 +254,7 @@ export class AdvertisementController {
         if (type === 'first') {
           return data;
         }
-
+        //! 종료 광고 뷰 집계
         if (type === 'last') {
           const condition = {
             table: 'market',
@@ -330,7 +330,8 @@ export class AdvertisementController {
     await this.queryRunnerService.updateMySQL(condition);
   }
 
-  @Cron('0 30 11 * * *')
+  //! 선택 광고(id) 뷰, 클릭수 일별 집계
+  @Cron('0 59 23 * * *')
   async todayTick() {
     if (process.env.MODE === 'production') {
       return;
