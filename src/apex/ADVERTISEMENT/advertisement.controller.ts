@@ -251,7 +251,18 @@ export class AdvertisementController {
           );
         }
 
-        if (type === 'first' || 'last') {
+        if (type === 'first') {
+          return data;
+        }
+
+        if (type === 'last') {
+          const condition = {
+            table: 'market',
+            set: 'showyn=showyn+1',
+            where: `id=813`,
+          };
+
+          await this.queryRunnerService.updateMySQL(condition);
           return data;
         }
 
@@ -319,7 +330,7 @@ export class AdvertisementController {
     await this.queryRunnerService.updateMySQL(condition);
   }
 
-  @Cron('0 35 19 * * *')
+  @Cron('0 30 11 * * *')
   async todayTick() {
     if (process.env.MODE === 'production') {
       return;
@@ -328,24 +339,23 @@ export class AdvertisementController {
     if (process.env.MODE === 'development') {
       try {
         const condition = {
-          select: 'tick',
+          select: 'tick, showyn',
           table: 'market',
           where: 'id=813',
         };
         const data = await this.queryRunnerService.findOne(condition);
 
-        const tickValue = data ? data.tick : 0;
         const condition2 = {
           table: 'todayTick',
-          columns: ['tick'],
-          values: [tickValue],
+          columns: ['tick', 'showyn'],
+          values: [data.tick, data.showyn],
         };
 
         await this.queryRunnerService.insert(condition2);
 
         const condition3 = {
           table: 'market',
-          set: 'tick=0',
+          set: 'tick=0, showyn=0',
           where: `id=813`,
         };
 
