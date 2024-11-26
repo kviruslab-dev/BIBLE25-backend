@@ -21,23 +21,6 @@ export class LoginService {
         return;
       }
 
-      const maxUserIdCondition = {
-        select: 'MAX(userId) as maxUserId',
-        table: 'users',
-      };
-      const maxUserIdResult = await this.queryRunnerService.findOne(
-        maxUserIdCondition,
-      );
-      const maxUserId = maxUserIdResult?.maxUserId || '0000000';
-
-      const numericId = String(
-        parseInt(maxUserId.slice(0, 7), 10) + 1,
-      ).padStart(7, '0');
-      const genderCode = data.gender === 'male' ? 'M' : 'W';
-      const ageCode = data.age.split('_')[1]?.charAt(0) || '0'; // 예: 'AGE_20_29' -> '2'
-
-      const newUserId = `${numericId}${genderCode}${ageCode}`;
-
       // 새 레코드 삽입
       const insertCondition = {
         table: 'users',
@@ -50,7 +33,6 @@ export class LoginService {
           'gender',
           'phone_number',
           'age',
-          'userId',
         ],
         values: [
           `'${data.profile_nickname}'`,
@@ -61,7 +43,6 @@ export class LoginService {
           `'${data.gender}'`,
           `'${data.phone_number}'`,
           `'${data.age}'`,
-          `'BK${newUserId}'`,
         ],
       };
 
