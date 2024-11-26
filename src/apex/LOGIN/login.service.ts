@@ -21,11 +21,15 @@ export class LoginService {
         return;
       }
       // 새로운 userId 생성
-      const numericId = String(deviceInfo.id).padStart(7, '0'); // 숫자 7자리로 채움
-      const genderCode = data.gender === 'male' ? 'M' : 'W';
+      const numericId = deviceInfo.id.padStart(7, '0'); // 숫자 7자리로 채움
+      const genderCode = !data?.gender
+        ? 'H'
+        : data.gender === 'MALE'
+        ? 'M'
+        : 'W';
       const ageCode = data.age.split('_')[1]?.charAt(0) || '0'; // 예: 'AGE_20_29' -> '2'
 
-      const userId = String(`BK${numericId}${genderCode}${ageCode}`);
+      const userId = `'BK${numericId}${genderCode}${ageCode}'`;
 
       // 새 레코드 삽입
       const insertCondition = {
@@ -50,7 +54,7 @@ export class LoginService {
           `'${data.gender}'`,
           `'${data.phone_number}'`,
           `'${data.age}'`,
-          `'${userId}'`,
+          userId,
         ],
       };
 
