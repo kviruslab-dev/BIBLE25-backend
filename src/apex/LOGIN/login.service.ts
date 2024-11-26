@@ -21,7 +21,12 @@ export class LoginService {
         return;
       }
       // 새로운 userId 생성
-      const numericId = deviceInfo.id.padStart(7, '0'); // 숫자 7자리로 채움
+      const maxIdResult = await this.queryRunnerService.query(`
+      SELECT COALESCE(MAX(CAST(SUBSTRING(userId, 3, 7) AS UNSIGNED)), 0) AS maxId FROM users
+    `);
+
+      const maxId = maxIdResult[0]?.maxId || 0;
+      const numericId = String(maxId + 1).padStart(7, '0'); // 숫자 7자리로 채움
       const genderCode = !data?.gender
         ? 'H'
         : data.gender === 'MALE'
@@ -29,7 +34,7 @@ export class LoginService {
         : 'W';
       const ageCode = data.age.split('_')[1]?.charAt(0) || '0'; // 예: 'AGE_20_29' -> '2'
 
-      const userId = `'BK${numericId}${genderCode}${ageCode}'`;
+      const userId = `BK${numericId}${genderCode}${ageCode}`;
 
       // 새 레코드 삽입
       const insertCondition = {
@@ -54,7 +59,7 @@ export class LoginService {
           `'${data.gender}'`,
           `'${data.phone_number}'`,
           `'${data.age}'`,
-          userId,
+          `'${userId}'`,
         ],
       };
 
