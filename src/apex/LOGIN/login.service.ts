@@ -26,8 +26,8 @@ export class LoginService {
       FROM users
       WHERE userId REGEXP '^BK[0-9]{7}[A-Z0-9]*$';`);
 
-      const maxId = maxIdResult[0]?.maxId || 0;
-      const numericId = String(maxId + 1).padStart(7, '0'); // 숫자 7자리로 채움
+      const maxId = Number(maxIdResult[0]?.maxId) || 0;
+      const numericId = String(maxId + 1).padStart(7, '0'); // 7자리 숫자로 패딩
       const genderCode =
         data?.gender === 'MALE' ? 'M' : data?.gender === 'FEMALE' ? 'W' : 'H';
       const ageCode = data.age.split('_')[1]?.charAt(0) || '0'; // 예: 'AGE_20_29' -> '2'
