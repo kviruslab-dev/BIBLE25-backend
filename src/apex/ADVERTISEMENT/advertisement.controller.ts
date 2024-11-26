@@ -134,35 +134,6 @@ export class AdvertisementController {
       }
     }
 
-    // if (type === 'last') {
-    //   const condition = {
-    //     select: 'id, title, image, link',
-    //     table: 'market',
-    //     where: `page=${pageFromType} and city='base' and active=1`,
-    //     orderBy: 'id asc',
-    //     limit: String(take ? take : 10),
-    //     offset: String(page ? take * (page - 1) : 0),
-    //   };
-    //   const data = await this.advertisementService.findInEtc(condition);
-
-    //   const id_array = data.map((v: any) => v.id);
-
-    //   if (getRandomNumberUpToN(100) < 5) {
-    //     await Promise.all(
-    //       id_array.map(async (id: string) => {
-    //         const condition = {
-    //           table: 'market',
-    //           set: 'tick=tick+1',
-    //           where: `id=${id}`,
-    //         };
-    //         await this.queryRunnerService.updateMySQL(condition);
-    //       }),
-    //     );
-    //   }
-
-    //   return data;
-    // }
-
     if (ONE_ADVERTISEMENT.includes(type)) {
       if (type === 'bible') {
         if (!jang) {
