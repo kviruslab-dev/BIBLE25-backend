@@ -10,7 +10,7 @@ export class LoginService {
     const condition = {
       select: 'id, account_email, name, adid',
       table: 'users',
-      where: `account_email = '${data.account_email}' and name = '${data.name}'`,
+      where: `adid = '${data.adid}'`,
     };
 
     try {
