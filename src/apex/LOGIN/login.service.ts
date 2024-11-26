@@ -27,11 +27,8 @@ export class LoginService {
 
       const maxId = maxIdResult[0]?.maxId || 0;
       const numericId = String(maxId + 1).padStart(7, '0'); // 숫자 7자리로 채움
-      const genderCode = !data?.gender
-        ? 'H'
-        : data.gender === 'MALE'
-        ? 'M'
-        : 'W';
+      const genderCode =
+        data?.gender === 'MALE' ? 'M' : data?.gender === 'FEMALE' ? 'W' : 'H';
       const ageCode = data.age.split('_')[1]?.charAt(0) || '0'; // 예: 'AGE_20_29' -> '2'
 
       const userId = `BK${numericId}${genderCode}${ageCode}`;
