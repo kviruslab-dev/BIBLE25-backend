@@ -44,7 +44,7 @@ export class LoginService {
           `'${data.gender}'`,
           `'${data.phone_number}'`,
           `'${data.age}'`,
-          'test',
+          `'BK0000001'`,
         ],
       };
 
