@@ -10,7 +10,7 @@ export class LoginService {
     const condition = {
       select: 'id, account_email, name, adid',
       table: 'users',
-      where: `adid = '${data.adid}'`,
+      where: `account_email = '${data.account_email}'`,
     };
 
     try {
@@ -33,6 +33,7 @@ export class LoginService {
           'gender',
           'phone_number',
           'age',
+          'userId',
         ],
         values: [
           `'${data.profile_nickname}'`,
@@ -43,6 +44,7 @@ export class LoginService {
           `'${data.gender}'`,
           `'${data.phone_number}'`,
           `'${data.age}'`,
+          'test',
         ],
       };
 
