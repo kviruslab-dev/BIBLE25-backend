@@ -22,8 +22,9 @@ export class LoginService {
       }
       // 새로운 userId 생성
       const maxIdResult = await this.queryRunnerService.query(`
-      SELECT COALESCE(MAX(CAST(SUBSTRING(userId, 3, 7) AS UNSIGNED)), 0) AS maxId FROM users
-    `);
+      SELECT COALESCE(MAX(CAST(SUBSTRING(userId, 3, 7) AS UNSIGNED)), 0) AS maxId 
+      FROM users
+      WHERE userId REGEXP '^BK[0-9]{7}[A-Z0-9]*$';`);
 
       const maxId = maxIdResult[0]?.maxId || 0;
       const numericId = String(maxId + 1).padStart(7, '0'); // 숫자 7자리로 채움
