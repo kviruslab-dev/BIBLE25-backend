@@ -36,7 +36,7 @@ export class AutoService {
       notification: {
         title: title,
         body: content,
-        image: 'https://data.bible25.com/uploads/push_2411261732586221786.jpeg',
+        // image: 'https://data.bible25.com/uploads/push_2411261732586221786.jpeg',
       },
       data: {
         title: title,
