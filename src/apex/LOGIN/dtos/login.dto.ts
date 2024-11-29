@@ -57,4 +57,12 @@ export class LoginDto {
   })
   @IsString()
   gender: string;
+
+  @ApiProperty({
+    example: 'model',
+    description: 'model',
+    required: false,
+  })
+  @IsString()
+  model: string;
 }
