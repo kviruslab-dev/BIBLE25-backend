@@ -48,6 +48,7 @@ export class LoginService {
           'age',
           'userId',
           'model',
+          'carrier',
         ],
         values: [
           `'${data.profile_nickname}'`,
@@ -60,6 +61,7 @@ export class LoginService {
           `'${data.age}'`,
           `'${userId}'`,
           `'${data.model}'`,
+          `'${data.carrier}'`,
         ],
       };
 

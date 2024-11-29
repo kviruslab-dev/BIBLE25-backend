@@ -65,4 +65,12 @@ export class LoginDto {
   })
   @IsString()
   model: string;
+
+  @ApiProperty({
+    example: 'carrier',
+    description: 'carrier',
+    required: false,
+  })
+  @IsString()
+  carrier: string;
 }
