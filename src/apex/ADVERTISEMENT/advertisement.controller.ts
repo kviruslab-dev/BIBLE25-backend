@@ -223,17 +223,17 @@ export class AdvertisementController {
         }
 
         if (type === 'first') {
-          return data;
-        }
-        //! 종료 광고 뷰 집계
-        if (type === 'last') {
           const condition = {
             table: 'market',
             set: 'showyn=showyn+1',
-            where: `id=813`,
+            where: `id=811`,
           };
 
           await this.queryRunnerService.updateMySQL(condition);
+          return data;
+        }
+
+        if (type === 'last') {
           return data;
         }
 
@@ -313,7 +313,7 @@ export class AdvertisementController {
         const condition = {
           select: 'tick, showyn',
           table: 'market',
-          where: 'id=813',
+          where: 'id=811',
         };
         const data = await this.queryRunnerService.findOne(condition);
 
@@ -328,7 +328,7 @@ export class AdvertisementController {
         const condition3 = {
           table: 'market',
           set: 'tick=0, showyn=0',
-          where: `id=813`,
+          where: `id=811`,
         };
 
         await this.queryRunnerService.updateMySQL(condition3);
