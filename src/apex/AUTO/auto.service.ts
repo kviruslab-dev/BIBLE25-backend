@@ -62,7 +62,7 @@ export class AutoService {
     }
   }
 
-  async sendFcmpush(title: string, content: string, id: number) {
+  async sendFcmpush(title: string, content: string) {
     const devices = await this.queryRunnerService.query(`
     SELECT deviceId
     FROM device_info
@@ -75,13 +75,9 @@ export class AutoService {
       notification: {
         title: title,
         body: content,
-        image:
-          'https://data.bible25.com/market/KakaoTalk_20240604_133855278.png',
       },
       data: {
-        title: title,
-        body: content,
-        url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
+        url: 'https://play.google.com/store/apps/details?id=com.clsk.media',
       },
     };
     try {

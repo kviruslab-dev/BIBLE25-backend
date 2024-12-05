@@ -46,33 +46,17 @@ export class AutoController {
   }
 
   //! 테스트용
-  @Cron('0 47 18 * * *')
+  @Cron('0 0 11 * * *')
   async SendAppTest() {
     if (process.env.MODE === 'production') {
       return;
     }
 
     if (process.env.MODE === 'development') {
-      const today = getToday();
+      const title = '바이블25 업데이트';
+      const content = '업데이트 해주세요';
 
-      const condition = {
-        select: 'title, content, id',
-        table: 'today_content',
-        where: `today = '${today}' and gubun = 3`,
-        orderBy: 'today desc',
-        limit: 1,
-        offset: 0,
-      };
-
-      const data = await this.queryRunnerService.findAndCount(condition);
-
-      const { title, content, id } = data.list[0];
-      const modifiedTitle = `[이야기메시지 - ${title}]`;
-      const modifiedContent =
-        content.replace(/\n/g, ' ').replace(/ +/g, ' ').substring(0, 100) +
-        `... [더보기]`;
-
-      // this.autoService.sendFcmpush(modifiedTitle, modifiedContent, id);
+      this.autoService.sendFcmpush(title, content);
     }
   }
 
