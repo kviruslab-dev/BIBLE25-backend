@@ -18,8 +18,18 @@ export class LoginService {
       const deviceInfo = await this.queryRunnerService.findOne(condition);
 
       if (deviceInfo) {
+        if (data.adid !== deviceInfo.adid) {
+          const condition = {
+            table: 'users',
+            set: `adid='${data.adid}'`,
+            where: `account_email = '${data.account_email}'`,
+          };
+
+          await this.queryRunnerService.updateMySQL(condition);
+        }
         return;
       }
+
       // 새로운 userId 생성
       const maxIdResult = await this.queryRunnerService.query(`
       SELECT COALESCE(MAX(CAST(SUBSTRING(userId, 3, 7) AS UNSIGNED)), 0) AS maxId 

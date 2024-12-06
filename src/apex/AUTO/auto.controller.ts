@@ -56,7 +56,7 @@ export class AutoController {
       const title = '바이블25 업데이트';
       const content = '업데이트 해주세요';
 
-      this.autoService.sendFcmpush(title, content);
+      // this.autoService.sendFcmpush(title, content);
     }
   }
 
