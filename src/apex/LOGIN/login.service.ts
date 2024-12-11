@@ -102,12 +102,12 @@ export class LoginService {
       where: `account_email = '${data.account_email}'`,
     };
 
-    const existingUserOut = await this.queryRunnerService.findOne(
-      findCondition,
-    );
-
-    if (existingUserOut) {
-      return;
+    if (findCondition) {
+      const deleteCondition = {
+        table: 'users',
+        where: `adid = '${adid}'`,
+      };
+      return await this.queryRunnerService.delete(deleteCondition);
     }
 
     const insertCondition = {
