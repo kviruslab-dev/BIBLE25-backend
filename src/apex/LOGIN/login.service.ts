@@ -92,13 +92,21 @@ export class LoginService {
 
     const data = await this.queryRunnerService.findOne(condition);
 
+    if (!data) {
+      throw new Error('User not found');
+    }
+
     const findCondition = {
       select: 'account_email',
       table: 'users_out',
       where: `account_email = '${data.account_email}'`,
     };
 
-    if (findCondition) {
+    const existingUserOut = await this.queryRunnerService.findOne(
+      findCondition,
+    );
+
+    if (existingUserOut) {
       return;
     }
 
