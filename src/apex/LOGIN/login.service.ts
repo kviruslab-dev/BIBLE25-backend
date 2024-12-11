@@ -92,37 +92,47 @@ export class LoginService {
 
     const data = await this.queryRunnerService.findOne(condition);
 
-    const insertCondition = {
+    const findCondition = {
+      select: 'account_email',
       table: 'users_out',
-      columns: [
-        'profile_nickname',
-        'account_email',
-        'name',
-        'adid',
-        'points',
-        'gender',
-        'phone_number',
-        'age',
-        'userId',
-        'model',
-        'carrier',
-      ],
-      values: [
-        `'${data.profile_nickname}'`,
-        `'${data.account_email}'`,
-        `'${data.name}'`,
-        `'${data.adid}'`,
-        `${data.points}`,
-        `'${data.gender}'`,
-        `'${data.phone_number}'`,
-        `'${data.age}'`,
-        `'${data.userId}'`,
-        `'${data.model}'`,
-        `'${data.carrier}'`,
-      ],
+      where: `account_email = '${data.profile_nickname}'`,
     };
 
-    await this.queryRunnerService.insert(insertCondition);
+    if (findCondition) {
+      return;
+    } else {
+      const insertCondition = {
+        table: 'users_out',
+        columns: [
+          'profile_nickname',
+          'account_email',
+          'name',
+          'adid',
+          'points',
+          'gender',
+          'phone_number',
+          'age',
+          'userId',
+          'model',
+          'carrier',
+        ],
+        values: [
+          `'${data.profile_nickname}'`,
+          `'${data.account_email}'`,
+          `'${data.name}'`,
+          `'${data.adid}'`,
+          `${data.points}`,
+          `'${data.gender}'`,
+          `'${data.phone_number}'`,
+          `'${data.age}'`,
+          `'${data.userId}'`,
+          `'${data.model}'`,
+          `'${data.carrier}'`,
+        ],
+      };
+
+      await this.queryRunnerService.insert(insertCondition);
+    }
 
     const deleteCondition = {
       table: 'users',
