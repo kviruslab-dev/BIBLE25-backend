@@ -95,7 +95,7 @@ export class LoginService {
     const findCondition = {
       select: 'account_email',
       table: 'users_out',
-      where: `account_email = '${data.profile_nickname}'`,
+      where: `account_email = '${data.account_email}'`,
     };
 
     if (findCondition) {
