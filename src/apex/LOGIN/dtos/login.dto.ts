@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class LoginDto {
   @ApiProperty({
@@ -73,4 +73,12 @@ export class LoginDto {
   })
   @IsString()
   carrier: string;
+
+  @ApiProperty({
+    example: 'marketing_information',
+    description: 'marketing_information',
+    required: false,
+  })
+  @IsNumber()
+  marketing_information: number;
 }
