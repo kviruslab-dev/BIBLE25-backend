@@ -81,4 +81,36 @@ export class LoginDto {
   })
   @IsNumber()
   marketing_information: number;
+
+  @ApiProperty({
+    example: 'receive_marketing',
+    description: 'receive_marketing',
+    required: false,
+  })
+  @IsNumber()
+  receive_marketing: number;
+
+  @ApiProperty({
+    example: 'email',
+    description: 'email',
+    required: false,
+  })
+  @IsNumber()
+  email: number;
+
+  @ApiProperty({
+    example: 'sms',
+    description: 'sms',
+    required: false,
+  })
+  @IsNumber()
+  sms: number;
+
+  @ApiProperty({
+    example: 'telephone',
+    description: 'telephone',
+    required: false,
+  })
+  @IsNumber()
+  telephone: number;
 }

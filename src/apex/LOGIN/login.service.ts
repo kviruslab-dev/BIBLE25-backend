@@ -8,25 +8,93 @@ export class LoginService {
 
   async setLoginId(data: LoginDto) {
     const condition = {
-      select: 'id, account_email, name, adid',
+      select: 'id, account_email',
       table: 'users',
+      where: `account_email = '${data.account_email}'`,
+    };
+
+    const outCondition = {
+      select: 'id, account_email',
+      table: 'users_out',
       where: `account_email = '${data.account_email}'`,
     };
 
     try {
       // 중복 확인
       const deviceInfo = await this.queryRunnerService.findOne(condition);
+      const outInfo = await this.queryRunnerService.findOne(outCondition);
+
+      if (outInfo) {
+        const insertCondition = {
+          table: 'users',
+          columns: [
+            'profile_nickname',
+            'account_email',
+            'name',
+            'adid',
+            'points',
+            'gender',
+            'phone_number',
+            'age',
+            'userId',
+            'model',
+            'carrier',
+            'marketing_information',
+            'receive_marketing',
+            'email',
+            'sms',
+            'telephone',
+          ],
+          values: [
+            `'${outInfo.profile_nickname}'`,
+            `'${outInfo.account_email}'`,
+            `'${outInfo.name}'`,
+            `'${outInfo.adid}'`,
+            `'${outInfo.points}'`,
+            `'${outInfo.gender}'`,
+            `'${outInfo.phone_number}'`,
+            `'${outInfo.age}'`,
+            `'${outInfo.userID}'`,
+            `'${outInfo.model}'`,
+            `'${outInfo.carrier}'`,
+            `${data.marketing_information}`,
+            `${data.receive_marketing}`,
+            `${data.email}`,
+            `${data.sms}`,
+            `${data.telephone}`,
+          ],
+        };
+
+        await this.queryRunnerService.insert(insertCondition);
+
+        const deleteCondition = {
+          table: 'users',
+          where: `account_email = '${data.account_email}'`,
+        };
+        return await this.queryRunnerService.delete(deleteCondition);
+      }
 
       if (deviceInfo) {
         if (data.adid !== deviceInfo.adid) {
           const condition = {
             table: 'users',
-            set: `adid='${data.adid}'`,
+            set: `adid='${data.adid}',marketing_information='${data.marketing_information}',receive_marketing='${data.receive_marketing}',email='${data.email}',sms='${data.sms}',telephone='${data.telephone}',`,
             where: `account_email = '${data.account_email}'`,
           };
 
           await this.queryRunnerService.updateMySQL(condition);
         }
+
+        if (data.phone_number !== deviceInfo.phone_number) {
+          const condition = {
+            table: 'users',
+            set: `adid='${data.adid}',marketing_information='${data.marketing_information}',receive_marketing='${data.receive_marketing}',email='${data.email}',sms='${data.sms}',telephone='${data.telephone}',`,
+            where: `account_email = '${data.account_email}'`,
+          };
+
+          await this.queryRunnerService.updateMySQL(condition);
+        }
+
         return;
       }
 
@@ -60,6 +128,10 @@ export class LoginService {
           'model',
           'carrier',
           'marketing_information',
+          'receive_marketing',
+          'email',
+          'sms',
+          'telephone',
         ],
         values: [
           `'${data.profile_nickname}'`,
@@ -74,6 +146,10 @@ export class LoginService {
           `'${data.model}'`,
           `'${data.carrier}'`,
           `${data.marketing_information}`,
+          `${data.receive_marketing}`,
+          `${data.email}`,
+          `${data.sms}`,
+          `${data.telephone}`,
         ],
       };
 
@@ -87,16 +163,12 @@ export class LoginService {
   async deleteId(adid: string) {
     const condition = {
       select:
-        'profile_nickname, account_email, name, adid, points, gender, phone_number, age, userId, model,carrier',
+        'profile_nickname, account_email, name, adid, points, gender, phone_number, age, userId, model,carrier, marketing_information, receive_marketing, email, sms, telephone ',
       table: 'users',
       where: `adid = '${adid}'`,
     };
 
     const data = await this.queryRunnerService.findOne(condition);
-
-    if (!data) {
-      throw new Error('User not found');
-    }
 
     const findCondition = {
       select: 'account_email',
@@ -105,6 +177,14 @@ export class LoginService {
     };
 
     if (findCondition) {
+      const condition = {
+        table: 'users_out,',
+        set: `adid='${data.adid}', marketing_information='${data.marketing_information}', receive_marketing='${data.receive_marketing}', email='${data.email}', sms='${data.sms}', telephone='${data.telephone}'`,
+        where: `account_email = '${data.account_email}'`,
+      };
+
+      await this.queryRunnerService.updateMySQL(condition);
+
       const deleteCondition = {
         table: 'users',
         where: `adid = '${adid}'`,
@@ -126,6 +206,11 @@ export class LoginService {
         'userId',
         'model',
         'carrier',
+        'marketing_information',
+        'receive_marketing',
+        'email',
+        'sms',
+        'telephone',
       ],
       values: [
         `'${data.profile_nickname}'`,
@@ -139,6 +224,11 @@ export class LoginService {
         `'${data.userId}'`,
         `'${data.model}'`,
         `'${data.carrier}'`,
+        `${data.marketing_information}`,
+        `${data.receive_marketing}`,
+        `${data.email}`,
+        `${data.sms}`,
+        `${data.telephone}`,
       ],
     };
 
