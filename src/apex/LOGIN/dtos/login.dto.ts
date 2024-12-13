@@ -75,7 +75,7 @@ export class LoginDto {
   carrier: string;
 
   @ApiProperty({
-    example: 'marketing_information',
+    example: 1,
     description: 'marketing_information',
     required: false,
   })
@@ -83,7 +83,7 @@ export class LoginDto {
   marketing_information: number;
 
   @ApiProperty({
-    example: 'receive_marketing',
+    example: 1,
     description: 'receive_marketing',
     required: false,
   })
@@ -91,7 +91,7 @@ export class LoginDto {
   receive_marketing: number;
 
   @ApiProperty({
-    example: 'email',
+    example: 1,
     description: 'email',
     required: false,
   })
@@ -99,7 +99,7 @@ export class LoginDto {
   email: number;
 
   @ApiProperty({
-    example: 'sms',
+    example: 1,
     description: 'sms',
     required: false,
   })
@@ -107,7 +107,7 @@ export class LoginDto {
   sms: number;
 
   @ApiProperty({
-    example: 'telephone',
+    example: 1,
     description: 'telephone',
     required: false,
   })

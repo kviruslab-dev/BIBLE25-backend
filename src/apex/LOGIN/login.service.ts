@@ -97,7 +97,7 @@ export class LoginService {
           const condition = {
             table: 'users',
             set: `
-            adid='${data.adid}',
+            phone_number='${data.phone_number}',
             marketing_information=${data.marketing_information},
             receive_marketing=${data.receive_marketing},
             email=${data.email},
@@ -185,35 +185,6 @@ export class LoginService {
 
     const data = await this.queryRunnerService.findOne(condition);
 
-    const findCondition = {
-      select: 'account_email',
-      table: 'users_out',
-      where: `account_email = '${data.account_email}'`,
-    };
-
-    if (findCondition) {
-      const condition = {
-        table: 'users_out,',
-        set: `
-        adid='${data.adid}', 
-        marketing_information=${data.marketing_information}, 
-        receive_marketing=${data.receive_marketing}, 
-        email=${data.email}, 
-        sms=${data.sms}, 
-        telephone=${data.telephone}
-        `,
-        where: `account_email = '${data.account_email}'`,
-      };
-
-      await this.queryRunnerService.updateMySQL(condition);
-
-      const deleteCondition = {
-        table: 'users',
-        where: `adid = '${adid}'`,
-      };
-      return await this.queryRunnerService.delete(deleteCondition);
-    }
-
     const insertCondition = {
       table: 'users_out',
       columns: [
@@ -228,11 +199,6 @@ export class LoginService {
         'userId',
         'model',
         'carrier',
-        'marketing_information',
-        'receive_marketing',
-        'email',
-        'sms',
-        'telephone',
       ],
       values: [
         `'${data.profile_nickname}'`,
@@ -246,11 +212,6 @@ export class LoginService {
         `'${data.userId}'`,
         `'${data.model}'`,
         `'${data.carrier}'`,
-        `${data.marketing_information}`,
-        `${data.receive_marketing}`,
-        `${data.email}`,
-        `${data.sms}`,
-        `${data.telephone}`,
       ],
     };
 
