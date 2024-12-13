@@ -8,13 +8,14 @@ export class LoginService {
 
   async setLoginId(data: LoginDto) {
     const condition = {
-      select: 'id, account_email',
+      select: 'account_email, adid',
       table: 'users',
       where: `account_email = '${data.account_email}'`,
     };
 
     const outCondition = {
-      select: 'id, account_email',
+      select:
+        'profile_nickname, account_email, name, adid, points, gender, phone_number, age, userId, model,carrier',
       table: 'users_out',
       where: `account_email = '${data.account_email}'`,
     };
@@ -68,7 +69,7 @@ export class LoginService {
         await this.queryRunnerService.insert(insertCondition);
 
         const deleteCondition = {
-          table: 'users',
+          table: 'users_out',
           where: `account_email = '${data.account_email}'`,
         };
         return await this.queryRunnerService.delete(deleteCondition);
@@ -78,7 +79,14 @@ export class LoginService {
         if (data.adid !== deviceInfo.adid) {
           const condition = {
             table: 'users',
-            set: `adid='${data.adid}',marketing_information='${data.marketing_information}',receive_marketing='${data.receive_marketing}',email='${data.email}',sms='${data.sms}',telephone='${data.telephone}',`,
+            set: `
+            adid='${data.adid}',
+            marketing_information=${data.marketing_information},
+            receive_marketing=${data.receive_marketing},
+            email=${data.email},
+            sms=${data.sms},
+            telephone=${data.telephone}
+          `,
             where: `account_email = '${data.account_email}'`,
           };
 
@@ -88,7 +96,14 @@ export class LoginService {
         if (data.phone_number !== deviceInfo.phone_number) {
           const condition = {
             table: 'users',
-            set: `adid='${data.adid}',marketing_information='${data.marketing_information}',receive_marketing='${data.receive_marketing}',email='${data.email}',sms='${data.sms}',telephone='${data.telephone}',`,
+            set: `
+            adid='${data.adid}',
+            marketing_information=${data.marketing_information},
+            receive_marketing=${data.receive_marketing},
+            email=${data.email},
+            sms=${data.sms},
+            telephone=${data.telephone}
+          `,
             where: `account_email = '${data.account_email}'`,
           };
 
@@ -179,7 +194,14 @@ export class LoginService {
     if (findCondition) {
       const condition = {
         table: 'users_out,',
-        set: `adid='${data.adid}', marketing_information='${data.marketing_information}', receive_marketing='${data.receive_marketing}', email='${data.email}', sms='${data.sms}', telephone='${data.telephone}'`,
+        set: `
+        adid='${data.adid}', 
+        marketing_information=${data.marketing_information}, 
+        receive_marketing=${data.receive_marketing}, 
+        email=${data.email}, 
+        sms=${data.sms}, 
+        telephone=${data.telephone}
+        `,
         where: `account_email = '${data.account_email}'`,
       };
 
