@@ -113,4 +113,12 @@ export class LoginDto {
   })
   @IsNumber()
   telephone: number;
+
+  @ApiProperty({
+    example: 1,
+    description: 'location',
+    required: false,
+  })
+  @IsNumber()
+  location: number;
 }

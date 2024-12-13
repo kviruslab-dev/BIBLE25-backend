@@ -45,6 +45,7 @@ export class LoginService {
             'email',
             'sms',
             'telephone',
+            'location',
           ],
           values: [
             `'${outInfo.profile_nickname}'`,
@@ -63,6 +64,7 @@ export class LoginService {
             `${data.email}`,
             `${data.sms}`,
             `${data.telephone}`,
+            `${data.location}`,
           ],
         };
 
@@ -85,7 +87,8 @@ export class LoginService {
             receive_marketing=${data.receive_marketing},
             email=${data.email},
             sms=${data.sms},
-            telephone=${data.telephone}
+            telephone=${data.telephone},
+            location=${data.location},
           `,
             where: `account_email = '${data.account_email}'`,
           };
@@ -102,7 +105,8 @@ export class LoginService {
             receive_marketing=${data.receive_marketing},
             email=${data.email},
             sms=${data.sms},
-            telephone=${data.telephone}
+            telephone=${data.telephone},
+            location=${data.location}
           `,
             where: `account_email = '${data.account_email}'`,
           };
@@ -147,6 +151,7 @@ export class LoginService {
           'email',
           'sms',
           'telephone',
+          'location',
         ],
         values: [
           `'${data.profile_nickname}'`,
@@ -165,6 +170,7 @@ export class LoginService {
           `${data.email}`,
           `${data.sms}`,
           `${data.telephone}`,
+          `${data.location}`,
         ],
       };
 
@@ -178,7 +184,7 @@ export class LoginService {
   async deleteId(adid: string) {
     const condition = {
       select:
-        'profile_nickname, account_email, name, adid, points, gender, phone_number, age, userId, model,carrier, marketing_information, receive_marketing, email, sms, telephone ',
+        'profile_nickname, account_email, name, adid, points, gender, phone_number, age, userId, model,carrier, marketing_information, receive_marketing, email, sms, telephone, location',
       table: 'users',
       where: `adid = '${adid}'`,
     };
