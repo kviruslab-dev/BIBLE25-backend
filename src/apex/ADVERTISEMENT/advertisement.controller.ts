@@ -9,7 +9,6 @@ import {
   Query,
   UseInterceptors,
 } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
 import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { ONE_ADVERTISEMENT } from 'src/common/const';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
@@ -223,13 +222,13 @@ export class AdvertisementController {
         }
 
         if (type === 'first') {
-          const condition = {
-            table: 'market',
-            set: 'showyn=showyn+1',
-            where: `id=811`,
-          };
+          // const condition = {
+          //   table: 'market',
+          //   set: 'showyn=showyn+1',
+          //   where: `id=811`,
+          // };
 
-          await this.queryRunnerService.updateMySQL(condition);
+          // await this.queryRunnerService.updateMySQL(condition);
           return data;
         }
 
@@ -302,7 +301,7 @@ export class AdvertisementController {
   }
 
   //! 선택 광고(id) 뷰, 클릭수 일별 집계
-  @Cron('0 59 23 * * *')
+  // @Cron('0 59 23 * * *')
   async todayTick() {
     if (process.env.MODE === 'production') {
       return;
