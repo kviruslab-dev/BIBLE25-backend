@@ -56,7 +56,7 @@ export class LoginService {
             `'${outInfo.gender}'`,
             `'${outInfo.phone_number}'`,
             `'${outInfo.age}'`,
-            `'${outInfo.userID}'`,
+            `'${outInfo.userId}'`,
             `'${outInfo.model}'`,
             `'${outInfo.carrier}'`,
             `${data.marketing_information}`,
