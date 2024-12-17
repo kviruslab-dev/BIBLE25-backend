@@ -244,6 +244,7 @@ export class AdvertisementController {
         const randomIndex = Math.floor(Math.random() * data.length);
         return [data[randomIndex]];
       } catch (error) {
+        //
         const condition = {
           select: 'id, title, image, link',
           table: 'market',
