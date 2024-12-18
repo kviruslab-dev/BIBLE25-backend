@@ -231,7 +231,6 @@ export class AdvertisementController {
           // await this.queryRunnerService.updateMySQL(condition);
           return data;
         }
-        //
         if (type === 'last') {
           return data;
         }
