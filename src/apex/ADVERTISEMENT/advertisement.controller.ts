@@ -227,7 +227,7 @@ export class AdvertisementController {
           //   set: 'showyn=showyn+1',
           //   where: `id=811`,
           // };
-
+          //
           // await this.queryRunnerService.updateMySQL(condition);
           return data;
         }
