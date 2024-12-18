@@ -31,7 +31,7 @@ export class AutoService {
 
     const token = devices.map((device) => device.deviceId);
     const num = Math.floor(total / 500) + 1;
-
+//
     const message = {
       notification: {
         title: title,
