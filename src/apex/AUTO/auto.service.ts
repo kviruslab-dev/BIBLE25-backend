@@ -31,7 +31,7 @@ export class AutoService {
 
     const token = devices.map((device) => device.deviceId);
     const num = Math.floor(total / 500) + 1;
-//
+    
     const message = {
       notification: {
         title: title,
@@ -44,7 +44,7 @@ export class AutoService {
         url: `https://bible25frontend.givemeprice.co.kr/share?list=iyagilist&id=${id}`,
       },
     };
-
+    
     for (let i = 0; i < num; i++) {
       const tokens =
         i === num - 1
