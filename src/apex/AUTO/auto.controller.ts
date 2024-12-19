@@ -46,7 +46,7 @@ export class AutoController {
   }
 
   //! 테스트용
-  @Cron('0 50 17 * * *')
+  @Cron('0 00 18 * * *')
   async SendAppTest() {
     if (process.env.MODE === 'production') {
       return;
